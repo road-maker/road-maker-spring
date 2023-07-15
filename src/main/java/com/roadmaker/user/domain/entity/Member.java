@@ -6,17 +6,18 @@ import lombok.Getter;
 
 @Entity
 @Getter
-@Table(name = "USER")
-public class User {
+@Table(name = "MEMBER")
+public class Member {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "USER_ID")
+    @Column(name = "MEMBER_ID")
     private Long id;
+
     private String email;
     private String password;
     private String nickname;
 
     @Builder
-    public User(String email, String password, String nickname) {
+    public Member(String email, String password, String nickname) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
