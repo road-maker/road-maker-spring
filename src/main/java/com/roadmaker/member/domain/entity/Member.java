@@ -1,4 +1,4 @@
-package com.roadmaker.user.domain.entity;
+package com.roadmaker.member.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;
