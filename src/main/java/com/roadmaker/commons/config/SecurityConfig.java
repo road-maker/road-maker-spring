@@ -18,15 +18,17 @@ public class SecurityConfig {
                 .csrf((csrf) -> csrf.disable())
                 .formLogin((httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer.disable()));
 
-        return httpSecurity
-                .authorizeHttpRequests(
-                        authorize -> authorize
-                                .requestMatchers("/users/**").permitAll()
-                                .requestMatchers("/login").permitAll()
-                                .requestMatchers("/health").permitAll()
-                                .anyRequest().authenticated()
-                )
-                .build();
+        return httpSecurity.build();
+
+//        return httpSecurity
+//                .authorizeHttpRequests(
+//                        authorize -> authorize
+//                                .requestMatchers("/users/**").permitAll()
+//                                .requestMatchers("/login").permitAll()
+//                                .requestMatchers("/health").permitAll()
+//                                .anyRequest().authenticated()
+//                )
+//                .build();
     }
     @Bean
     public PasswordEncoder passwordEncoder() {
