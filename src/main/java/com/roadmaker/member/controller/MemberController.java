@@ -3,6 +3,7 @@ package com.roadmaker.member.controller;
 import com.roadmaker.member.domain.entity.Member;
 import com.roadmaker.member.dto.SignupRequest;
 import com.roadmaker.member.service.MemberService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class MemberController {
     public final PasswordEncoder passwordEncoder;
 
     @PostMapping("/signup")
-    public ResponseEntity<HttpStatus> signup(@RequestBody SignupRequest request) {
+    public ResponseEntity<HttpStatus> signup(@Valid @RequestBody SignupRequest request) {
         // 이메일 중복 검사
         if (memberService.isUserRegistered(request.getEmail())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
