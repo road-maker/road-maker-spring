@@ -3,9 +3,11 @@ package com.roadmaker.member.domain.entity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@NoArgsConstructor
 @Table(name = "MEMBER")
 public class Member {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
