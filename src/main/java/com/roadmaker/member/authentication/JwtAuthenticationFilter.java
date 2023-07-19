@@ -26,7 +26,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
         // validateToken 으로 토큰 유효성 검사
         if (token != null && jwtProvider.validationToken(token)) {
-            //토큰이 유효할 때 Authentication 가져와 decontextualization 에 저장
+            //토큰이 유효할 때 Authentication 가져와 SecurityContext 에 저장
             Authentication authentication = jwtProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }

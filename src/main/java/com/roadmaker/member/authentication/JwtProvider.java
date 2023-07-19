@@ -4,9 +4,8 @@ import com.roadmaker.member.dto.TokenInfo;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 
-import jakarta.websocket.Decoder;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -26,16 +25,19 @@ public class JwtProvider {
     private final Key key;
     private final long tokenValidTime = 20 * 60 * 1000L; //30 분
 
-    public JwtProvider() {
-        String secret = "VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9XkHa";
-        byte[] keyBytes = Base64.getDecoder().decode(secret);
+    public JwtProvider(@Value("${jwt.secret}") String secretKey) {
+        byte[] keyBytes = Base64.getDecoder().decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
     //access 토큰, refresh 토큰 생성
+    /* generateToken 메소드는 인증 객체를 기반으로 JWT 토큰을 생성
+     이 메소드는 인증 객체에서 사용자의 이름과 권한 목록을 가져와 JWT 토큰의 payload 에 저장
+      또한, 토큰의 만료 시간을 설정하고, 서명 알고리즘으로 HS256을 사용하여 토큰에 서명합니다 */
     public TokenInfo generateToken(Authentication authentication) {
+        log.info("Token Baking Starting here, authentication: {}", authentication); //
         //권한 가지고 오기
         String authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
+                .map(GrantedAuthority::getAuthority) //
                 .collect(Collectors.joining(","));
 
         long now = (new Date()).getTime();
@@ -61,6 +63,9 @@ public class JwtProvider {
                 .build();
     }
     // 복호화된 정보 꺼내기
+    /* getAuthentication 메소드는 전달된 JWT 토큰에서 인증 객체를 가져온다.
+    이 메소드는 토큰을 복호화하여 클레임을 가져오고, 클레임에서 사용자의 이름과 권한 목록을 추출하고
+    이 정보를 기반으로 UserDetails 객체를 생성하고, 이 객체를 사용하여 Authentication 객체를 반환 */
     public Authentication getAuthentication(String accessToken) {
         //토큰 복호화
         Claims claims = parseClaims(accessToken);
@@ -81,6 +86,9 @@ public class JwtProvider {
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }
 
+    /* 메소드는 전달된 JWT 토큰의 유효성을 검사한다.
+    Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token) 코드를 사용하여 토큰을 파싱하고,
+    이 과정에서 발생하는 예외를 처리하여 토큰의 유효성을 검사한다. */
     public boolean validationToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
