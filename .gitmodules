@@ -1,0 +1,3 @@
+[submodule "Submodule-config"]
+	path = Submodule-config
+	url = https://github.com/road-maker/road-maker-spring/Submodule-config
