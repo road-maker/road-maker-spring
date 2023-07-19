@@ -19,34 +19,23 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtProvider jwtProvider;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                .httpBasic((httpSecurityHttpBasicConfigurer -> httpSecurityHttpBasicConfigurer
-                        .disable()))
-                .csrf((csrf) -> csrf
-                        .disable())
-                .formLogin((httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer
-                        .disable()))
+                .httpBasic((httpSecurityHttpBasicConfigurer -> httpSecurityHttpBasicConfigurer.disable()))
+                .csrf((csrf) -> csrf.disable())
+                .formLogin((httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer.disable()))
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/api/members/**").permitAll()
-                        .requestMatchers("/api/members/test").hasRole("USER")
+                        .requestMatchers("/api/members/test").authenticated()
                         .requestMatchers(("/health")).permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
 
-//        return httpSecurity
-//                .authorizeHttpRequests(
-//                        authorize -> authorize
-//                                .requestMatchers("/users/**").permitAll()
-//                                .requestMatchers("/login").permitAll()
-//                                .requestMatchers("/health").permitAll()
-//                                .anyRequest().authenticated()
-//                )
-//                .build();
     }
     @Bean
     public PasswordEncoder passwordEncoder() {

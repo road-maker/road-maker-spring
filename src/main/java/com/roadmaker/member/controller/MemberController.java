@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.logging.Logger;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/members")
@@ -30,7 +32,6 @@ public class MemberController {
         if (memberService.isUserRegistered(request.getEmail())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
-
         // 비밀번호 암호화
         Member member = new Member(
                 request.getEmail(),
@@ -44,10 +45,11 @@ public class MemberController {
 
     @PostMapping("/login")
     public TokenInfo login(@RequestBody LoginRequest loginRequest) {
+
         String email = loginRequest.getEmail();
         String password = loginRequest.getPassword();
-        TokenInfo tokenInfo = memberService.login(email, password);
-        return tokenInfo;
+
+        return memberService.login(email, password);
     }
     @PostMapping("/test")
     public String test() {
