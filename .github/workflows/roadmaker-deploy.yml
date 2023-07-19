@@ -26,13 +26,17 @@ jobs:
           distribution: 'temurin'
 
       - name: Setup MySQL
-        uses: mirromutth/mysql-action@v1.1
+        uses: samin/mysql-action@v1
         with:
-          host port: '3306'
-          character set server: 'utf8'
-          mysql database: 'roadmakerdb'
+          character set server: 'utf8' 
+          mysql database: 'roadmakerdb' 
           mysql user: ${{ secrets.MYSQL_USERNAME }} 
           mysql password: ${{ secrets.MYSQL_PASSWORD }}
+          
+      - name: Start Redis
+        uses: supercharge/redis-github-action@1.1.0
+        with:
+          redis-version: 7
           
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
