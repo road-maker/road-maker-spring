@@ -43,7 +43,7 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PostMapping("/login")
+    @PostMapping("/signin")
     public TokenInfo login(@RequestBody LoginRequest loginRequest) {
 
         String email = loginRequest.getEmail();
