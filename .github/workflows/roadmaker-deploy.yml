@@ -25,6 +25,15 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Setup MySQL
+        uses: mirromutth/mysql-action@v1.1
+        with:
+          host port: '3306'
+          character set server: 'utf8'
+          mysql database: 'roadmakerdb'
+          mysql user: ${{ secrets.MYSQL_USERNAME }} 
+          mysql password: ${{ secrets.MYSQL_PASSWORD }}
+          
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
         shell: bash
