@@ -2,6 +2,7 @@ package roadmap.domain.entity;
 
 import com.roadmaker.member.domain.entity.Member;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -34,4 +35,10 @@ public class Roadmap {
 
     @OneToMany(mappedBy = "roadmap")
     private List<Member> roadmapEditors;
+
+    @Builder
+    public Roadmap(String title, String description) {
+        this.title = title;
+        this.description = description;
+    }
 }
