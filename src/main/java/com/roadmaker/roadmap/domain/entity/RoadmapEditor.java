@@ -1,4 +1,4 @@
-package roadmap.domain.entity;
+package com.roadmaker.roadmap.domain.entity;
 
 import com.roadmaker.member.domain.entity.Member;
 import jakarta.persistence.*;
@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "ROADMAP_EDITOR")
 public class RoadmapEditor {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ROADMAP_EDITOR_ID")
     private Long id;
 
     @ManyToOne
