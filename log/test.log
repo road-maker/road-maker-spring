@@ -795,3 +795,9 @@ retrofit2.adapter.rxjava2.HttpException: HTTP 401
 2023-07-21T01:09:19.325+09:00  INFO 31392 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
 2023-07-21T01:09:19.354+09:00  INFO 31392 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
 2023-07-21T01:09:19.359+09:00  INFO 31392 --- [restartedMain] com.roadmaker.RoadmakerApplication       : Started RoadmakerApplication in 4.63 seconds (process running for 5.307)
+2023-07-21T01:10:01.055+09:00  INFO 31392 --- [http-nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-07-21T01:10:01.056+09:00  INFO 31392 --- [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2023-07-21T01:10:01.056+09:00  INFO 31392 --- [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms
+2023-07-21T01:14:06.423+09:00  INFO 31392 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-07-21T01:14:06.427+09:00  INFO 31392 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2023-07-21T01:14:06.528+09:00  INFO 31392 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
