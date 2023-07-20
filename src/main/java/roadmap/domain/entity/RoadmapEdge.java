@@ -22,7 +22,7 @@ public class RoadmapEdge {
     @OneToMany(mappedBy = "roadmapNode")
     private List<InProgressNode> inProgressNodes;
 
-    private Long clientEdgeId;
+    private String clientEdgeId;
 
     private String source;
 
