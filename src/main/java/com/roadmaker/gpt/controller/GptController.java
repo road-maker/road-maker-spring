@@ -10,14 +10,18 @@ import org.springframework.web.bind.annotation.*;
 import java.time.Duration;
 
 @RestController
-public class gptController {
+public class GptController {
 
-    @Value("${gpt.api-key}")
-    private static String OPENAI_API_TOKEN;
+    private final String OPENAI_API_TOKEN;
     private static final Duration DURATION = Duration.ofSeconds(30);
+
+    public GptController(@Value("${gpt.api-key}") String apiKey) {
+        this.OPENAI_API_TOKEN = apiKey;
+    }
+
     @GetMapping("/getChat/{prompt}")
     public String getPrompt(@PathVariable String prompt) {
-
+        System.out.println(OPENAI_API_TOKEN);
         OpenAiService service = new OpenAiService(OPENAI_API_TOKEN, DURATION);
         CompletionRequest completionRequest = CompletionRequest.builder().prompt(prompt).model("text-davinci-003")
                 .echo(true).build();
