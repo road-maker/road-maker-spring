@@ -12,17 +12,16 @@ import java.time.Duration;
 @RestController
 public class GptController {
 
-    private final String OPENAI_API_TOKEN;
+    private final String OPENAI_TOKEN;
     private static final Duration DURATION = Duration.ofSeconds(30);
 
     public GptController(@Value("${gpt.api-key}") String apiKey) {
-        this.OPENAI_API_TOKEN = apiKey;
+        this.OPENAI_TOKEN = apiKey;
     }
 
     @GetMapping("/getChat/{prompt}")
     public String getPrompt(@PathVariable String prompt) {
-        System.out.println(OPENAI_API_TOKEN);
-        OpenAiService service = new OpenAiService(OPENAI_API_TOKEN, DURATION);
+        OpenAiService service = new OpenAiService(OPENAI_TOKEN, DURATION);
         CompletionRequest completionRequest = CompletionRequest.builder().prompt(prompt).model("text-davinci-003")
                 .echo(true).build();
 
@@ -32,7 +31,7 @@ public class GptController {
     @PostMapping("/chat")
     public String getChatMessages(@RequestBody ChatMessagePrompt prompt) {
 
-        OpenAiService service = new OpenAiService(OPENAI_API_TOKEN, DURATION);
+        OpenAiService service = new OpenAiService(OPENAI_TOKEN, DURATION);
         ChatCompletionRequest completionRequest = ChatCompletionRequest.builder().messages(prompt.getChatMessage())
                 .model("gpt-3.5-turbo").build();
 
