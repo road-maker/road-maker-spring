@@ -1,4 +1,4 @@
-package roadmap.domain.entity;
+package com.roadmaker.roadmap.domain.entity;
 
 import com.roadmaker.member.domain.entity.Member;
 import jakarta.persistence.*;
@@ -13,7 +13,7 @@ public class InProgressNode {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "IN_PROGRESS_NODE_ID")
-    private String id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "ROADMAP_ID")
