@@ -1,7 +1,9 @@
-package roadmap.service;
+package com.roadmaker.roadmap.service;
 
-import roadmap.dto.RoadmapDto;
+import com.roadmaker.roadmap.dto.RoadmapDto;
+import org.springframework.stereotype.Service;
 
+@Service
 public class RoadmapServiceImpl implements RoadmapService{
     @Override
     public RoadmapDto findRoadmapById(Long roadmapId) {
@@ -17,4 +19,6 @@ public class RoadmapServiceImpl implements RoadmapService{
     public boolean changeRoadmapStatus(Long inProgressNodeId, Boolean done) {
         return false;
     }
+
+
 }

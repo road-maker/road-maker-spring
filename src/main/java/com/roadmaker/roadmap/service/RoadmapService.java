@@ -1,7 +1,7 @@
-package roadmap.service;
+package com.roadmaker.roadmap.service;
 
 import org.springframework.stereotype.Service;
-import roadmap.dto.RoadmapDto;
+import com.roadmaker.roadmap.dto.RoadmapDto;
 
 @Service
 public interface RoadmapService {
@@ -13,4 +13,5 @@ public interface RoadmapService {
 
     // 진행상황 변경
     public boolean changeRoadmapStatus(Long inProgressNodeId, Boolean done);
+
 }
