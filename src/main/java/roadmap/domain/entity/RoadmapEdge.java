@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -12,6 +14,13 @@ public class RoadmapEdge {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ROADMAP_EDGE")
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "ROADMAP_ID")
+    private Roadmap roadmap;
+
+    @OneToMany(mappedBy = "roadmapNode")
+    private List<InProgressNode> inProgressNodes;
 
     private Long clientEdgeId;
 

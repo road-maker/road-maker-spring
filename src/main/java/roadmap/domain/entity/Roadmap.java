@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -23,4 +25,13 @@ public class Roadmap {
     private Integer recommended_execution_time_value;
 
     private String recommended_execution_time_unit;
+
+    @OneToMany(mappedBy = "roadmap")
+    private List<RoadmapNode> roadmapNodes;
+
+    @OneToMany(mappedBy = "roadmap")
+    private List<RoadmapEdge> roadmapEdges;
+
+    @OneToMany(mappedBy = "roadmap")
+    private List<Member> roadmapEditors;
 }
