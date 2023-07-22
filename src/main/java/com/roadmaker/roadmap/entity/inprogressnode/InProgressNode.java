@@ -1,5 +1,6 @@
 package com.roadmaker.roadmap.entity.inprogressnode;
 
+import com.roadmaker.commons.BaseTimeEntity;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.roadmap.entity.inprogressroadmap.InProgressRoadmap;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @Table(name = "IN_PROGRESS_NODE")
-public class InProgressNode {
+public class InProgressNode extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

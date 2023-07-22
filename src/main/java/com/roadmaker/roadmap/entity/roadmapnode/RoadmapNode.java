@@ -1,5 +1,6 @@
 package com.roadmaker.roadmap.entity.roadmapnode;
 
+import com.roadmaker.commons.BaseTimeEntity;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -11,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "ROADMAP_NODE")
-public class RoadmapNode {
+public class RoadmapNode extends BaseTimeEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
