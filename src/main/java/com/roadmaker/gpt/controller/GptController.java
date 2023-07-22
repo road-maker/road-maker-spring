@@ -41,8 +41,6 @@ public class GptController {
 
         String gptCompletion = service.createChatCompletion(completionRequest).getChoices().get(0).getMessage().getContent();
 
-        List<Sentence> sentences = new ArrayList<>();
-
         // Parsing gptCompletion string
         String[] lines = gptCompletion.split("\n");
         List<Sentence> formattedSentences = new ArrayList<>();
