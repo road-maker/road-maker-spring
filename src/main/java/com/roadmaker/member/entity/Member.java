@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Entity @Slf4j
+@Entity
 @Data
 @Builder
 @NoArgsConstructor
@@ -73,7 +73,6 @@ public class Member implements UserDetails {
         List<GrantedAuthority> authorities = new ArrayList<>();
         // 예: authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-        log.info("here i am! Authority injected"); //지금은 모두가 ROLE_UESR지만...나중에 고쳐야 할 듯
         return authorities;
     }
 

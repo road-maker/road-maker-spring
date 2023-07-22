@@ -33,16 +33,13 @@ public class MemberServiceImpl implements MemberService {
     public TokenInfo login(String email, String password) {
         // 로그인 ID/PW를 기반으로 authentication객체 생성
         // authentication은 인증 여부를 확인하는 authenticated 값이 false
-        log.info("passed elements -> email: {} password: {}", email, password);
         UsernamePasswordAuthenticationToken authenticationToken
                 = new UsernamePasswordAuthenticationToken(email, password);
         //검증: 비밀번호 체크. authenticate 메서드가 실행될 때,
         //CustomUserDetailsService에서 만든 loadByUsername실행
-        log.info("password check ready -> authenticationToken: {}", authenticationToken);
         Authentication authentication
                 = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         //인증 정보 기반으로 JWT 토큰 생성
-        log.info("password check ok -> authentication: {}", authentication);
         return jwtProvider.generateToken(authentication);
     }
 
