@@ -1,5 +1,6 @@
 package com.roadmaker.roadmap.entity.inprogressroadmap;
 
+import com.roadmaker.commons.BaseTimeEntity;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNode;
@@ -14,7 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "IN_PROGRESS_ROADMAP")
-public class InProgressRoadmap {
+public class InProgressRoadmap extends BaseTimeEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

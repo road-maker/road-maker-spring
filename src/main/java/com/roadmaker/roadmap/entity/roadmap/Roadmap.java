@@ -1,5 +1,6 @@
 package com.roadmaker.roadmap.entity.roadmap;
 
+import com.roadmaker.commons.BaseTimeEntity;
 import com.roadmaker.roadmap.entity.roadmapedge.RoadmapEdge;
 import com.roadmaker.roadmap.entity.roadmapeditor.RoadmapEditor;
 import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNode;
@@ -15,7 +16,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "ROADMAP")
-public class Roadmap {
+public class Roadmap extends BaseTimeEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

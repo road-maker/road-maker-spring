@@ -1,5 +1,6 @@
 package com.roadmaker.member.entity;
 
+import com.roadmaker.commons.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "MEMBER")
-public class Member implements UserDetails {
+public class Member extends BaseTimeEntity implements UserDetails {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
