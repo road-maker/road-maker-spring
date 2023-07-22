@@ -1,6 +1,6 @@
-package com.roadmaker.member.domain.repository;
+package com.roadmaker.member.entity;
 
-import com.roadmaker.member.domain.entity.Member;
+import com.roadmaker.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

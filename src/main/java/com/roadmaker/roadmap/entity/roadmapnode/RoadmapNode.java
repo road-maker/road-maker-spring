@@ -1,5 +1,6 @@
-package com.roadmaker.roadmap.domain.entity;
+package com.roadmaker.roadmap.entity.roadmapnode;
 
+import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -12,7 +13,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "ROADMAP_NODE")
 public class RoadmapNode {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ROADMAP_NODE_ID")
     private Long id;
 
     @ManyToOne

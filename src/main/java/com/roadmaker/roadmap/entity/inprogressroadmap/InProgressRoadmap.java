@@ -1,10 +1,11 @@
-package com.roadmaker.roadmap.domain.entity;
+package com.roadmaker.roadmap.entity.inprogressroadmap;
 
-import com.roadmaker.member.domain.entity.Member;
+import com.roadmaker.member.entity.Member;
+import com.roadmaker.roadmap.entity.roadmap.Roadmap;
+import com.roadmaker.roadmap.entity.inprogressnode.InProgressNode;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -15,7 +16,6 @@ import java.util.List;
 @Table(name = "IN_PROGRESS_ROADMAP")
 public class InProgressRoadmap {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "IN_PROGRESS_ROADMAP_ID")
     private Long id;
 
     @ManyToOne

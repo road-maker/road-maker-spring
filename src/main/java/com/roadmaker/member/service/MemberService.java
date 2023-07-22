@@ -1,6 +1,6 @@
 package com.roadmaker.member.service;
 
-import com.roadmaker.member.domain.entity.Member;
+import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.dto.TokenInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
