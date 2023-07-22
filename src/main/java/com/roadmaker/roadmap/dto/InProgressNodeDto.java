@@ -1,6 +1,5 @@
 package com.roadmaker.roadmap.dto;
 
-import com.roadmaker.member.domain.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

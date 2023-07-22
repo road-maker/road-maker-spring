@@ -1,12 +1,13 @@
-package com.roadmaker.roadmap.domain.entity;
+package com.roadmaker.roadmap.entity.inprogressnode;
 
-import com.roadmaker.member.domain.entity.Member;
+import com.roadmaker.member.entity.Member;
+import com.roadmaker.roadmap.entity.inprogressroadmap.InProgressRoadmap;
+import com.roadmaker.roadmap.entity.roadmap.Roadmap;
+import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNode;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Entity
 @Getter

@@ -1,6 +1,6 @@
-package com.roadmaker.roadmap.domain.repository;
+package com.roadmaker.roadmap.entity.inprogressroadmap;
 
-import com.roadmaker.roadmap.domain.entity.InProgressRoadmap;
+import com.roadmaker.roadmap.entity.inprogressroadmap.InProgressRoadmap;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

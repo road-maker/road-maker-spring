@@ -1,19 +1,20 @@
 package com.roadmaker.roadmap.controller;
 
-import com.roadmaker.roadmap.domain.entity.RoadmapNode;
+import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNode;
+import com.roadmaker.roadmap.entity.inprogressnode.InProgressNode;
+import com.roadmaker.roadmap.entity.inprogressroadmap.InProgressRoadmap;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.roadmaker.roadmap.domain.entity.Roadmap;
-import com.roadmaker.roadmap.domain.entity.RoadmapEdge;
-import com.roadmaker.roadmap.domain.repository.RoadmapEdgeRepository;
-import com.roadmaker.roadmap.domain.repository.RoadmapNodeRepository;
-import com.roadmaker.roadmap.domain.repository.RoadmapRepository;
-import com.roadmaker.member.domain.entity.Member;
-import com.roadmaker.member.domain.repository.MemberRepository;
-import com.roadmaker.roadmap.domain.entity.*;
-import com.roadmaker.roadmap.domain.repository.InProgressRoadmapRepository;
+import com.roadmaker.roadmap.entity.roadmap.Roadmap;
+import com.roadmaker.roadmap.entity.roadmapedge.RoadmapEdge;
+import com.roadmaker.roadmap.entity.roadmapedge.RoadmapEdgeRepository;
+import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNodeRepository;
+import com.roadmaker.roadmap.entity.roadmap.RoadmapRepository;
+import com.roadmaker.member.entity.Member;
+import com.roadmaker.member.entity.MemberRepository;
+import com.roadmaker.roadmap.entity.inprogressroadmap.InProgressRoadmapRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.*;
 

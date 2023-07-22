@@ -1,6 +1,8 @@
-package com.roadmaker.roadmap.domain.entity;
+package com.roadmaker.roadmap.entity.roadmap;
 
-import com.roadmaker.member.domain.entity.Member;
+import com.roadmaker.roadmap.entity.roadmapedge.RoadmapEdge;
+import com.roadmaker.roadmap.entity.roadmapeditor.RoadmapEditor;
+import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNode;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
