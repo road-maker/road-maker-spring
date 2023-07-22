@@ -2,8 +2,11 @@ package com.roadmaker.roadmap.domain.entity;
 
 import com.roadmaker.member.domain.entity.Member;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -20,12 +23,24 @@ public class InProgressNode {
     private Roadmap roadmap;
 
     @ManyToOne
+    @JoinColumn(name = "IN_PROGRESS_ROADMAP_ID")
+    private InProgressRoadmap inProgressRoadmap;
+
+    @ManyToOne
     @JoinColumn(name = "ROADMAP_NODE_ID")
-    private RoadmapNode roadmapNode;
+    RoadmapNode roadmapNode;
 
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
     private Boolean done;
+
+    @Builder
+    public InProgressNode(Roadmap roadmap, RoadmapNode roadmapNode, Member member, Boolean done) {
+        this.roadmap = roadmap;
+        this.roadmapNode = roadmapNode;
+        this.member = member;
+        this.done = done;
+    }
 }

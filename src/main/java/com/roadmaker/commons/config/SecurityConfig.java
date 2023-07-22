@@ -32,6 +32,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/members/**").permitAll()
                         .requestMatchers("/api/members/test").authenticated()
                         .requestMatchers(("/health")).permitAll()
+                        .requestMatchers(("/getChat/{prompt}")).permitAll()
+                        .requestMatchers(("/chat")).permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();

@@ -20,7 +20,7 @@ public class RoadmapEditor {
 
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
-    private Member member;
+private Member member;
 
     private Boolean isOwner;
 }

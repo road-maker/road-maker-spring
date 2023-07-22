@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.logging.Logger;
-
 @Slf4j
 @RestController
 @RequestMapping("/api/members")
@@ -43,7 +41,7 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PostMapping("/login")
+    @PostMapping("/signin")
     public TokenInfo login(@RequestBody LoginRequest loginRequest) {
 
         String email = loginRequest.getEmail();
