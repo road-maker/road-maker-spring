@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 public class GptController {
     private final String OPENAI_TOKEN;
-    private static final Duration DURATION = Duration.ofSeconds(60);
+    private static final Duration DURATION = Duration.ofSeconds(120);
 
     public GptController(@Value("${gpt.api-key}") String apiKey) {
         this.OPENAI_TOKEN = apiKey;
