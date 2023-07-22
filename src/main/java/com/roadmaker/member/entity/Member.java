@@ -1,4 +1,4 @@
-package com.roadmaker.member.domain.entity;
+package com.roadmaker.member.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

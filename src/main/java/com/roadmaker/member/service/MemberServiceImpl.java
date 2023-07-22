@@ -1,8 +1,8 @@
 package com.roadmaker.member.service;
 
 import com.roadmaker.member.authentication.JwtProvider;
-import com.roadmaker.member.domain.entity.Member;
-import com.roadmaker.member.domain.repository.MemberRepository;
+import com.roadmaker.member.entity.Member;
+import com.roadmaker.member.entity.MemberRepository;
 import com.roadmaker.member.dto.TokenInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +12,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 @Service @Slf4j

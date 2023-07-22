@@ -1,6 +1,6 @@
 package com.roadmaker.member.controller;
 
-import com.roadmaker.member.domain.entity.Member;
+import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.dto.LoginRequest;
 import com.roadmaker.member.dto.SignupRequest;
 import com.roadmaker.member.dto.TokenInfo;
