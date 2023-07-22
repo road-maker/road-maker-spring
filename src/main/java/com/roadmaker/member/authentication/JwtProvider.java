@@ -34,7 +34,6 @@ public class JwtProvider {
      이 메소드는 인증 객체에서 사용자의 이름과 권한 목록을 가져와 JWT 토큰의 payload 에 저장
       또한, 토큰의 만료 시간을 설정하고, 서명 알고리즘으로 HS256을 사용하여 토큰에 서명합니다 */
     public TokenInfo generateToken(Authentication authentication) {
-        log.info("Token Baking Starting here, authentication: {}", authentication); //
         //권한 가지고 오기
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority) //
