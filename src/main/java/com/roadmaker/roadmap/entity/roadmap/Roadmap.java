@@ -25,9 +25,9 @@ public class Roadmap {
 
     private String thumbnailUrl;
 
-    private Integer recommended_execution_time_value;
+    private Integer recommendedExecutionTimeValue;
 
-    private String recommended_execution_time_unit;
+    private String recommendedExecutionTimeUnit;
 
     @OneToMany(mappedBy = "roadmap")
     private List<RoadmapNode> roadmapNodes;
@@ -39,11 +39,11 @@ public class Roadmap {
     private List<RoadmapEditor> roadmapEditors;
 
     @Builder
-    public Roadmap(String title, String description, String thumbnailUrl, Integer recommended_execution_time_value, String recommended_execution_time_unit) {
+    public Roadmap(String title, String description, String thumbnailUrl, Integer recommendedExecutionTimeValue, String recommendedExecutionTimeUnit) {
         this.title = title;
         this.description = description;
         this.thumbnailUrl = thumbnailUrl;
-        this.recommended_execution_time_value = recommended_execution_time_value;
-        this.recommended_execution_time_unit = recommended_execution_time_unit;
+        this.recommendedExecutionTimeValue = recommendedExecutionTimeValue;
+        this.recommendedExecutionTimeUnit = recommendedExecutionTimeUnit;
     }
 }

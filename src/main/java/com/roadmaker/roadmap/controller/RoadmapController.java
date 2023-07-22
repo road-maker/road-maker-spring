@@ -33,7 +33,6 @@ public class RoadmapController {
 
     @PostMapping("/dummy")
     public void createDummyRoadmap() {
-//        Roadmap roadmap = new Roadmap("백엔드 개발자 로드맵", "어느 한 천재가 만든 백엔드 개발자 로드맵입니다.");
         Roadmap roadmap = Roadmap.builder()
                 .title("백엔드 개발자 로드맵")
                 .description("어느 한 천재가 만든 백엔드 개발자 로드맵입니다.")
@@ -44,7 +43,6 @@ public class RoadmapController {
         RoadmapNode node1 = RoadmapNode.builder()
                 .roadmap(roadmap)
                 .clientNodeId("1")
-                .type("input")
                 .label("Java 기초 다지기")
                 .xPosition(250)
                 .yPosition(0)
@@ -54,7 +52,6 @@ public class RoadmapController {
         RoadmapNode node2 = RoadmapNode.builder()
                 .roadmap(roadmap)
                 .clientNodeId("1")
-                .type("input")
                 .label("스프링 기초 다지기")
                 .xPosition(260)
                 .yPosition(100)
@@ -64,7 +61,6 @@ public class RoadmapController {
         RoadmapNode node3 = RoadmapNode.builder()
                 .roadmap(roadmap)
                 .clientNodeId("1")
-                .type("input")
                 .label("크래프톤 정글 수료하기")
                 .xPosition(240)
                 .yPosition(210)
