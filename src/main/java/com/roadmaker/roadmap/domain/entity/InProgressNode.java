@@ -15,7 +15,6 @@ import java.util.List;
 public class InProgressNode {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "IN_PROGRESS_NODE_ID")
     private Long id;
 
     @ManyToOne

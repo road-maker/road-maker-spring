@@ -22,7 +22,6 @@ import java.util.List;
 public class Member implements UserDetails {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "MEMBER_ID")
     private Long id;
 
     @Column(unique = true)

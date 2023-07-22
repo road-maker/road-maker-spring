@@ -15,7 +15,6 @@ import java.util.List;
 @Table(name = "ROADMAP")
 public class Roadmap {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ROADMAP_ID")
     private Long id;
 
     private String title;

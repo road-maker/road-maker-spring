@@ -15,7 +15,6 @@ import java.util.List;
 @Table(name = "IN_PROGRESS_ROADMAP")
 public class InProgressRoadmap {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "IN_PROGRESS_ROADMAP_ID")
     private Long id;
 
     @ManyToOne

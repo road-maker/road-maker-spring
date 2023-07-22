@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "ROADMAP_NODE")
 public class RoadmapNode {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ROADMAP_NODE_ID")
     private Long id;
 
     @ManyToOne
