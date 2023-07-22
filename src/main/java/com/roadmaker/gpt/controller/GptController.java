@@ -27,7 +27,6 @@ public class GptController {
         OpenAiService service = new OpenAiService(OPENAI_TOKEN, DURATION);
 
         String message = String.format("%s",prompt);
-        System.out.println(message);
 
         CompletionRequest completionRequest = CompletionRequest.builder().prompt(message).model("text-davinci-003")
                 .echo(true).build();

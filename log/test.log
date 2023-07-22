@@ -2348,3 +2348,6 @@ java.lang.IndexOutOfBoundsException: Index 1 out of bounds for length 1
 2023-07-22T13:21:30.377+09:00  INFO 3852 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
 2023-07-22T13:21:30.407+09:00  INFO 3852 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
 2023-07-22T13:21:30.413+09:00  INFO 3852 --- [restartedMain] com.roadmaker.RoadmakerApplication       : Started RoadmakerApplication in 4.409 seconds (process running for 5.039)
+2023-07-22T13:21:39.088+09:00  INFO 3852 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-07-22T13:21:39.088+09:00  INFO 3852 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2023-07-22T13:21:39.089+09:00  INFO 3852 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
