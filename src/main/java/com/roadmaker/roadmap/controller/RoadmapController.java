@@ -2,6 +2,7 @@ package com.roadmaker.roadmap.controller;
 
 import com.roadmaker.roadmap.domain.entity.RoadmapNode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
-@RestController
+@RestController @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/api/roadmaps")
 public class RoadmapController {
@@ -106,8 +107,6 @@ public class RoadmapController {
         result.put("nodes", roadmapNodes);
         result.put("edges", roadmapEdges);
 
-        System.out.println(result); // 확인
-
         for (Map.Entry<String, Object> eachResult: result.entrySet()) {
             Object value = eachResult.getValue();
             if (value == null) {
@@ -131,7 +130,7 @@ public class RoadmapController {
         Roadmap roadmap = roadmapOptional.orElse(null);
         Member member = memberOptional.orElse(null);
         if (roadmap == null || member == null) {
-            System.out.println("Roadmap or Member not found");
+            log.info("Roadmap or Member not found");
             return;
         }
 
@@ -153,8 +152,6 @@ public class RoadmapController {
                 .done(false)
                 .build();
 
-        System.out.println("Roadmap Joined");
-
         response.setStatus(HttpServletResponse.SC_CREATED);
     }
 
@@ -172,7 +169,7 @@ public class RoadmapController {
             inProgressRoadmap.setDone(true);
             response.setStatus(HttpServletResponse.SC_OK);
         } else {
-            System.out.println("cant find specified node");
+            log.info("Can not find specified node");
         }
     }
 

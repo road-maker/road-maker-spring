@@ -36,7 +36,7 @@ public class JwtProvider {
     public TokenInfo generateToken(Authentication authentication) {
         //권한 가지고 오기
         String authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority) //
+                .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
         long now = (new Date()).getTime();
