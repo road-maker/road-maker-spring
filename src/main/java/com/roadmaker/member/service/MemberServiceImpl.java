@@ -11,6 +11,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.roadmaker.member.authentication.SecurityUtil;
+
 
 import java.util.Optional;
 
@@ -48,4 +50,17 @@ public class MemberServiceImpl implements MemberService {
         Optional<Member> member = memberRepository.findByEmail(email);
         return member.isPresent();
     }
+
+    public Member getLoggedInMember() {
+        String email = SecurityUtil.getLoggedInMemberEmail();
+        Optional<Member> memberOptional = memberRepository.findByEmail(email);
+        Member member = memberOptional.orElse(null);
+        if (member != null) {
+            return member;
+        } else {
+            log.info("Can not find member from database");
+            return null;
+        }
+    }
+
 }
