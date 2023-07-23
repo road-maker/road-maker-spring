@@ -1,19 +1,23 @@
 package com.roadmaker.boj.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 public class BojController {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @GetMapping("/api/crawl")
     public boolean checkProb(@RequestParam String bojName, @RequestParam String probNumber) {
@@ -56,8 +60,8 @@ public class BojController {
                     high = mid - 1;
                 }
             }
-        } catch (IOException | NumberFormatException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            logger.debug("Error:", e);
         }
         // 원하는 정보를 찾지 못했을 경우 false를 반환합니다.
         return false;
