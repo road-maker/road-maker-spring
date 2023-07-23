@@ -33,6 +33,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/members/test").authenticated()
                         .requestMatchers(("/health")).permitAll()
                         .requestMatchers(("/api/chat")).permitAll()
+                        .requestMatchers(("/api/crawl")).permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
