@@ -21,7 +21,7 @@ public class GptController {
         this.OPENAI_TOKEN = apiKey;
     }
 
-    @PostMapping("/chat")
+    @PostMapping("api/chat")
     public List<Sentence> getChatMessages(@RequestParam String prompt) {
 
         OpenAiService service = new OpenAiService(OPENAI_TOKEN, DURATION);
