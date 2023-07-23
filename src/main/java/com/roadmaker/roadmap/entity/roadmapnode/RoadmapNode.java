@@ -70,9 +70,13 @@ public class RoadmapNode extends BaseTimeEntity {
     private RoadmapNodePositionAbsolute positionAbsolute;
 
     @Builder
-    public RoadmapNode(Roadmap roadmap, String clientNodeId, String type, Integer xPosition, Integer yPosition, String label, String background, String border, Integer borderRadius, Integer fontSize, String detailedContent, RoadmapNodeStyle style, RoadmapNodeData data, RoadmapNodePosition position, RoadmapNodePositionAbsolute positionAbsolute) {
+    public RoadmapNode(Roadmap roadmap, Integer width, Integer height, String sourcePosition, String targetPosition, String clientNodeId, String type, Integer xPosition, Integer yPosition, String label, String background, String border, Integer borderRadius, Integer fontSize, String detailedContent, RoadmapNodeStyle style, RoadmapNodeData data, RoadmapNodePosition position, RoadmapNodePositionAbsolute positionAbsolute) {
         this.roadmap = roadmap;
         this.clientNodeId = clientNodeId;
+        this.width = width;
+        this.height = height;
+        this.sourcePosition = sourcePosition;
+        this.targetPosition = targetPosition;
         this.type = type;
         this.xPosition = xPosition;
         this.yPosition = yPosition;
