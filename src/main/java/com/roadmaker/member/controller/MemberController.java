@@ -1,10 +1,12 @@
 package com.roadmaker.member.controller;
 
-import com.roadmaker.member.domain.entity.Member;
+import com.roadmaker.member.authentication.SecurityUtil;
+import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.dto.LoginRequest;
 import com.roadmaker.member.dto.SignupRequest;
 import com.roadmaker.member.dto.TokenInfo;
 import com.roadmaker.member.service.MemberService;
+import com.roadmaker.member.service.MemberServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.logging.Logger;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -53,6 +56,11 @@ public class MemberController {
     }
     @PostMapping("/test")
     public String test() {
-        return "success";
+        Member member = memberService.getLoggedInMember();
+        List<String> memberdetail = new ArrayList<>();
+        memberdetail.add(String.valueOf(member.getId()));
+        memberdetail.add(member.getUsername());
+        memberdetail.add(member.getNickname());
+        return memberdetail.toString();
     }
 }
