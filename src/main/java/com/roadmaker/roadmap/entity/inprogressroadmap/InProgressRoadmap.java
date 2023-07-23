@@ -1,5 +1,7 @@
 package com.roadmaker.roadmap.entity.inprogressroadmap;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.roadmaker.commons.BaseTimeEntity;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
@@ -21,13 +23,16 @@ public class InProgressRoadmap extends BaseTimeEntity {
 
     @ManyToOne
     @JoinColumn(name = "ROADMAP_ID")
+    @JsonBackReference
     private Roadmap roadmap;
 
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
+    @JsonBackReference
     private Member member;
 
     @OneToMany(mappedBy="inProgressRoadmap")
+    @JsonManagedReference
     private List<InProgressNode> inProgressNodes;
 
     private Boolean done;

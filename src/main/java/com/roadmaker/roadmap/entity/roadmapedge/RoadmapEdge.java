@@ -1,5 +1,6 @@
 package com.roadmaker.roadmap.entity.roadmapedge;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.roadmaker.commons.BaseTimeEntity;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import jakarta.persistence.*;
@@ -18,6 +19,7 @@ public class RoadmapEdge extends BaseTimeEntity {
 
     @ManyToOne
     @JoinColumn(name = "ROADMAP_ID")
+    @JsonBackReference
     private Roadmap roadmap;
 
     private String clientEdgeId;
