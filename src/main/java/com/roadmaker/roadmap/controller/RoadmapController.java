@@ -1,10 +1,17 @@
 package com.roadmaker.roadmap.controller;
 
+import com.roadmaker.member.service.MemberService;
+import com.roadmaker.roadmap.dto.RoadmapRequest;
+import com.roadmaker.roadmap.entity.roadmapeditor.RoadmapEditor;
+import com.roadmaker.roadmap.entity.roadmapeditor.RoadmapEditorRepository;
 import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNode;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNode;
 import com.roadmaker.roadmap.entity.inprogressroadmap.InProgressRoadmap;
+import com.roadmaker.roadmap.service.RoadmapService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,13 +32,43 @@ import java.util.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/roadmaps")
 public class RoadmapController {
+    private final MemberService memberService;
+    private final RoadmapService roadmapService;
+
     private final RoadmapRepository roadmapRepository;
     private final RoadmapEdgeRepository roadmapEdgeRepository;
     private final RoadmapNodeRepository roadmapNodeRepository;
     private final MemberRepository memberRepository;
     private final InProgressRoadmapRepository inProgressRoadmapRepository;
+    private final RoadmapEditorRepository roadmapEditorRepository;
 
 
+
+    // 로드맵 초기화
+    @PostMapping("/init")
+    public Long initRoadmap() {
+        // 임시 유저
+
+        Member member = Member.builder()
+                .email("test@gmail.com")
+                .password("12345678")
+                .nickname("테스터")
+                .build();
+        Member savedMember = memberRepository.save(member);
+
+//        Roadmap roadmap = roadmapRequest.toEntity();
+
+        Roadmap roadmap = Roadmap.builder().build();
+
+
+        RoadmapEditor.builder()
+                .roadmap(roadmap)
+                .member(savedMember)
+                .isOwner(true)
+                .build();
+
+        return roadmap.getId();
+    }
 
     //리턴 방법도 프론트와 협의
     @GetMapping(path = "/api/load-roadmap/{roadmapId}")
