@@ -15,10 +15,10 @@ public class RoadmapNodeStyle {
     private String background;
     private String border;
     private Integer borderRadius;
-    private String fontSize;
+    private Integer fontSize;
 
     @Builder
-    public RoadmapNodeStyle(String background, String border, Integer borderRadius, String fontSize) {
+    public RoadmapNodeStyle(String background, String border, Integer borderRadius, Integer fontSize) {
         this.background = background;
         this.border = border;
         this.borderRadius = borderRadius;
