@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Builder;
 
 
 @Entity
@@ -13,4 +14,10 @@ public class RoadmapNodePositionAbsolute {
     private Long id;
     private Integer x;
     private Integer y;
+
+    @Builder
+    public RoadmapNodePositionAbsolute(Integer x, Integer y) {
+        this.x = x;
+        this.y = y;
+    }
 }
