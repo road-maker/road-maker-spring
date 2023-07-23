@@ -26,6 +26,14 @@ public class RoadmapNode extends BaseTimeEntity {
 
     private String clientNodeId;
 
+    private Integer width;
+
+    private Integer height;
+
+    private String targetPosition;
+
+    private String sourcePosition;
+
     private String type;
 
     private Integer xPosition;
