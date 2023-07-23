@@ -4,6 +4,7 @@ import com.roadmaker.commons.BaseTimeEntity;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -24,4 +25,11 @@ public class RoadmapEditor extends BaseTimeEntity {
     private Member member;
 
     private Boolean isOwner;
+
+    @Builder
+    public RoadmapEditor(Roadmap roadmap, Member member, Boolean isOwner) {
+        this.roadmap = roadmap;
+        this.member = member;
+        this.isOwner = isOwner;
+    }
 }
