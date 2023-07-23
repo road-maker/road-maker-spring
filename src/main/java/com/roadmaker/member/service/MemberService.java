@@ -16,4 +16,6 @@ public interface MemberService {
 
     // 중복 가입 검사
     public boolean isUserRegistered(String email);
+
+    public Member getLoggedInMember();
 }

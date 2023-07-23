@@ -92,7 +92,7 @@ public class RoadmapController {
     }
 
     //리턴 방법도 프론트와 협의
-    @GetMapping(path = "/api/load-roadmap/{roadmapId}")
+    @GetMapping(path = "/load-roadmap/{roadmapId}")
     public Map<String, Object> loadRoadmap(@PathVariable Long roadmapId) {
 
         Optional<Roadmap> roadmap = roadmapRepository.findById(roadmapId);
@@ -113,7 +113,7 @@ public class RoadmapController {
         return result;
     }
 
-    @PostMapping(path="/api/roadmaps/{roadmapId}/join")
+    @PostMapping(path="/{roadmapId}/join")
     public void joinRoadmap(HttpServletResponse response, @PathVariable Long roadmapId) {
         //초기화가 필요한 것들-> id(자동 생성), roadmap: 로드맵 id주소로 전달, member: jwt추출
 
@@ -152,7 +152,7 @@ public class RoadmapController {
         response.setStatus(HttpServletResponse.SC_CREATED);
     }
 
-    @PatchMapping("/api/inProgressNodes/{inProgressNodeId}/done")
+    @PatchMapping("/inProgressNodes/{inProgressNodeId}/done")
     public void nodeDone (@PathVariable Long inProgressNodeId, HttpServletResponse response) {
         // inProgressNode테이블에서 정보를 가져와 업데이트
         // 유저 정보도 가져와야 할 것 같다. jwt를 사용. -> 프론트와 협의
