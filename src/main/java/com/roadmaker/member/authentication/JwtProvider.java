@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class JwtProvider {
 
     private final Key key;
-    private final long tokenValidTime = 20 * 60 * 1000L; //30 분
+    private final long tokenValidTime = 60 * 60 * 24 * 7L; // 일주일
 
     public JwtProvider(@Value("${jwt.secret}") String secretKey) {
         byte[] keyBytes = Base64.getDecoder().decode(secretKey);
