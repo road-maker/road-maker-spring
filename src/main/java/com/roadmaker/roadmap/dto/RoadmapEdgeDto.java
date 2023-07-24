@@ -14,7 +14,7 @@ public class RoadmapEdgeDto {
     private String source;
     private String target;
     private String type;
-    private Boolean isAnimated;
+    private Boolean animated;
 
     public RoadmapEdge toEntity(Roadmap roadmap) {
         return RoadmapEdge.builder()
@@ -23,7 +23,7 @@ public class RoadmapEdgeDto {
                 .source(this.source)
                 .target(this.target)
                 .type(this.type)
-                .animated(this.isAnimated)
+                .animated(this.animated)
                 .build();
     }
 }
