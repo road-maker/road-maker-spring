@@ -36,20 +36,6 @@ public class RoadmapNode extends BaseTimeEntity {
 
     private String type;
 
-    private Integer xPosition;
-
-    private Integer yPosition;
-
-    private String label;
-
-    private String background;
-
-    private String border;
-
-    private Integer borderRadius;
-
-    private Integer fontSize;
-
     @Column(columnDefinition = "TEXT")
     private String detailedContent;
 
@@ -70,7 +56,7 @@ public class RoadmapNode extends BaseTimeEntity {
     private RoadmapNodePositionAbsolute positionAbsolute;
 
     @Builder
-    public RoadmapNode(Roadmap roadmap, Integer width, Integer height, String sourcePosition, String targetPosition, String clientNodeId, String type, Integer xPosition, Integer yPosition, String label, String background, String border, Integer borderRadius, Integer fontSize, String detailedContent, RoadmapNodeStyle style, RoadmapNodeData data, RoadmapNodePosition position, RoadmapNodePositionAbsolute positionAbsolute) {
+    public RoadmapNode(Roadmap roadmap, Integer width, Integer height, String sourcePosition, String targetPosition, String clientNodeId, String type, String detailedContent, RoadmapNodeStyle style, RoadmapNodeData data, RoadmapNodePosition position, RoadmapNodePositionAbsolute positionAbsolute) {
         this.roadmap = roadmap;
         this.clientNodeId = clientNodeId;
         this.width = width;
@@ -78,13 +64,6 @@ public class RoadmapNode extends BaseTimeEntity {
         this.sourcePosition = sourcePosition;
         this.targetPosition = targetPosition;
         this.type = type;
-        this.xPosition = xPosition;
-        this.yPosition = yPosition;
-        this.label = label;
-        this.background = background;
-        this.border = border;
-        this.borderRadius = borderRadius;
-        this.fontSize = fontSize;
         this.detailedContent = detailedContent;
         this.style = style;
         this.data = data;
