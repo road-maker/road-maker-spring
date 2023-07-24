@@ -2,7 +2,7 @@ package com.roadmaker.roadmap.service;
 
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.service.MemberService;
-import com.roadmaker.roadmap.dto.CreateRoadmapRequest;
+import com.roadmaker.roadmap.dto.RoadmapRequest;
 import com.roadmaker.roadmap.dto.RoadmapDto;
 import com.roadmaker.roadmap.dto.RoadmapEdgeDto;
 import com.roadmaker.roadmap.dto.RoadmapNodeDto;
@@ -34,18 +34,18 @@ public class RoadmapServiceImpl implements RoadmapService{
     private final RoadmapViewportRepository roadmapViewportRepository;
 
     @Override
-    public Long createRoadmap(CreateRoadmapRequest createRoadmapRequest, Member member) {
+    public Long createRoadmap(RoadmapRequest roadmapRequest, Member member) {
         // roadmap 저장하기
-        Roadmap roadmap = createRoadmapRequest.getRoadmap().toEntity();
+        Roadmap roadmap = roadmapRequest.getRoadmap().toEntity();
         roadmapRepository.save(roadmap);
 
         // viewport 저장하기
-        RoadmapViewport viewport = createRoadmapRequest.getViewport().toEntity();
+        RoadmapViewport viewport = roadmapRequest.getViewport().toEntity();
         roadmapViewportRepository.save(viewport);
 
 
         // edge 저장하기
-        List<RoadmapEdgeDto> roadmapEdgeDtos = createRoadmapRequest.getRoadmapEdges();
+        List<RoadmapEdgeDto> roadmapEdgeDtos = roadmapRequest.getRoadmapEdges();
         List<RoadmapEdge> roadmapEdges = roadmapEdgeDtos.stream()
                 .map(edgeDto -> edgeDto.toEntity(roadmap))
                 .collect(Collectors.toList());
@@ -53,7 +53,7 @@ public class RoadmapServiceImpl implements RoadmapService{
 //
 //
 //        // 노드 저장하기
-        List<RoadmapNodeDto> roadmapNodeDtos = createRoadmapRequest.getRoadmapNodes();
+        List<RoadmapNodeDto> roadmapNodeDtos = roadmapRequest.getRoadmapNodes();
         List<RoadmapNode> roadmapNodes = roadmapNodeDtos.stream()
                 .map(nodeDto -> {
                     System.out.println("nodeDto = " + nodeDto.toString());

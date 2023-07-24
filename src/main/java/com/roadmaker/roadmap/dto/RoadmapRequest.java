@@ -1,47 +1,18 @@
 package com.roadmaker.roadmap.dto;
 
-import com.roadmaker.member.entity.Member;
-import com.roadmaker.roadmap.entity.roadmap.Roadmap;
-import com.roadmaker.roadmap.entity.roadmapedge.RoadmapEdge;
-import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNode;
-import jakarta.validation.constraints.NotEmpty;
-import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.validator.constraints.Length;
+import lombok.*;
 
 import java.util.List;
 
-
 @Getter
-@Setter
+@ToString
+@Builder
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class RoadmapRequest {
-    @NotEmpty
-    @Length(max = 100, message = "제목은 최대 100글자를 넘을 수 없습니다.")
-    private String title;
-
-    @NotEmpty
-    private String description;
-
-    private String thumbnailUrl;
-
-    @NotEmpty
-    private Integer recommendedExecutionTimeValue;
-
-    @NotEmpty
-    private String recommendedExecutionTimeUnit;
-
-    private List<RoadmapNodeRequest> roadmapNodes;
-
-    private List<RoadmapEdgeRequest> roadmapEdges;
-
-
-    public Roadmap toEntity() {
-        return Roadmap.builder()
-                .title(this.title)
-                .description(this.description)
-                .thumbnailUrl(this.thumbnailUrl)
-                .recommendedExecutionTimeValue(this.recommendedExecutionTimeValue)
-                .recommendedExecutionTimeUnit(this.recommendedExecutionTimeUnit)
-                .build();
-    }
+    private RoadmapDto roadmap;
+    private RoadmapViewportDto viewport;
+    private List<RoadmapEdgeDto> roadmapEdges;
+    private List<RoadmapNodeDto> roadmapNodes;
 }
+
