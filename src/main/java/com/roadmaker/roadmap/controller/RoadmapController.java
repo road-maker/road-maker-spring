@@ -4,6 +4,7 @@ import com.roadmaker.member.service.MemberService;
 import com.roadmaker.roadmap.dto.CreateRoadmapRequest;
 import com.roadmaker.roadmap.dto.RoadmapEdgeDto;
 import com.roadmaker.roadmap.dto.RoadmapNodeDto;
+import com.roadmaker.roadmap.entity.roadmapeditor.RoadmapEditor;
 import com.roadmaker.roadmap.entity.roadmapeditor.RoadmapEditorRepository;
 import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNode;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNode;
@@ -83,6 +84,15 @@ public class RoadmapController {
                 .collect(Collectors.toList());
 
         roadmapNodeRepository.saveAll(roadmapNodes);
+
+        // 로드맵 생성자 만들기
+        RoadmapEditor roadmapEditor = RoadmapEditor.builder()
+                .isOwner(true)
+                .member(member)
+                .roadmap(roadmap)
+                .build();
+
+        roadmapEditorRepository.save(roadmapEditor);
 
         // roadmapId 반환
         return new ResponseEntity<>(roadmap.getId(), HttpStatus.CREATED);
