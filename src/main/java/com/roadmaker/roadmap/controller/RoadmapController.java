@@ -50,52 +50,13 @@ public class RoadmapController {
     private final RoadmapViewportRepository roadmapViewportRepository;
 
     // 로드맵 발행
-    // create roadmap dto 생성하기
     @PostMapping
-    @Transactional
     public ResponseEntity<Long> createRoadmap(@RequestBody CreateRoadmapRequest createRoadmapRequest) {
-        // 로그인 한 유저 가져오기
         Member member = memberService.getLoggedInMember();
 
-        // roadmap과 cascade 엔티티 생성하기
-        Roadmap roadmap = createRoadmapRequest.getRoadmap().toEntity();
-        roadmapRepository.save(roadmap);
+        Long roadmapId = roadmapService.createRoadmap(createRoadmapRequest, member);
 
-        // viewport 저장하기
-        RoadmapViewport viewport = createRoadmapRequest.getViewport().toEntity();
-        roadmapViewportRepository.save(viewport);
-
-
-        // edge 저장하기
-        List<RoadmapEdgeDto> roadmapEdgeDtos = createRoadmapRequest.getRoadmapEdges();
-        List<RoadmapEdge> roadmapEdges = roadmapEdgeDtos.stream()
-                .map(edgeDto -> edgeDto.toEntity(roadmap))
-                .collect(Collectors.toList());
-        roadmapEdgeRepository.saveAll(roadmapEdges);
-//
-//
-//        // 노드 저장하기
-        List<RoadmapNodeDto> roadmapNodeDtos = createRoadmapRequest.getRoadmapNodes();
-        List<RoadmapNode> roadmapNodes = roadmapNodeDtos.stream()
-                .map(nodeDto -> {
-                    System.out.println("nodeDto = " + nodeDto.toString());
-                    return nodeDto.toEntity(roadmap);
-                })
-                .collect(Collectors.toList());
-
-        roadmapNodeRepository.saveAll(roadmapNodes);
-
-        // 로드맵 생성자 만들기
-        RoadmapEditor roadmapEditor = RoadmapEditor.builder()
-                .isOwner(true)
-                .member(member)
-                .roadmap(roadmap)
-                .build();
-
-        roadmapEditorRepository.save(roadmapEditor);
-
-        // roadmapId 반환
-        return new ResponseEntity<>(roadmap.getId(), HttpStatus.CREATED);
+        return new ResponseEntity<>(roadmapId, HttpStatus.CREATED);
     }
 
     //리턴 방법도 프론트와 협의
