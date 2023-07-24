@@ -1,17 +1,21 @@
 package com.roadmaker.roadmap.controller;
 
 import com.roadmaker.member.service.MemberService;
-import com.roadmaker.roadmap.dto.RoadmapRequest;
-import com.roadmaker.roadmap.entity.roadmapeditor.RoadmapEditor;
+import com.roadmaker.roadmap.dto.CreateRoadmapRequest;
+import com.roadmaker.roadmap.dto.RoadmapEdgeDto;
+import com.roadmaker.roadmap.dto.RoadmapNodeDto;
 import com.roadmaker.roadmap.entity.roadmapeditor.RoadmapEditorRepository;
 import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNode;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNode;
 import com.roadmaker.roadmap.entity.inprogressroadmap.InProgressRoadmap;
+import com.roadmaker.roadmap.entity.roadmapviewport.RoadmapViewport;
+import com.roadmaker.roadmap.entity.roadmapviewport.RoadmapViewportRepository;
 import com.roadmaker.roadmap.service.RoadmapService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +31,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController @Slf4j
 @RequiredArgsConstructor
@@ -41,33 +46,51 @@ public class RoadmapController {
     private final MemberRepository memberRepository;
     private final InProgressRoadmapRepository inProgressRoadmapRepository;
     private final RoadmapEditorRepository roadmapEditorRepository;
+    private final RoadmapViewportRepository roadmapViewportRepository;
+
+    // 로드맵 발행
+    // create roadmap dto 생성하기
+    @PostMapping
+    @Transactional
+    public ResponseEntity<Long> createRoadmap(@RequestBody CreateRoadmapRequest createRoadmapRequest) {
+        // 로그인 한 유저 가져오기
+        Member member = memberService.getLoggedInMember();
+
+        // roadmap과 cascade 엔티티 생성하기
+        Roadmap roadmap = createRoadmapRequest.getRoadmap().toEntity();
+        roadmapRepository.save(roadmap);
+
+        System.out.println("roadmapDto = " + createRoadmapRequest.getRoadmap());
+        System.out.println("viewportDto = " + createRoadmapRequest.getViewport());
+        System.out.println("edgeDto = " + createRoadmapRequest.getRoadmapEdges());
+        System.out.println("nodeDto = " + createRoadmapRequest.getRoadmapNodes());
+
+        // viewport 저장하기
+        RoadmapViewport viewport = createRoadmapRequest.getViewport().toEntity();
+        roadmapViewportRepository.save(viewport);
 
 
+        // edge 저장하기
+        List<RoadmapEdgeDto> roadmapEdgeDtos = createRoadmapRequest.getRoadmapEdges();
+        List<RoadmapEdge> roadmapEdges = roadmapEdgeDtos.stream()
+                .map(edgeDto -> edgeDto.toEntity(roadmap))
+                .collect(Collectors.toList());
+        roadmapEdgeRepository.saveAll(roadmapEdges);
+//
+//
+//        // 노드 저장하기
+        List<RoadmapNodeDto> roadmapNodeDtos = createRoadmapRequest.getRoadmapNodes();
+        List<RoadmapNode> roadmapNodes = roadmapNodeDtos.stream()
+                .map(nodeDto -> {
+                    System.out.println("nodeDto = " + nodeDto.toString());
+                    return nodeDto.toEntity(roadmap);
+                })
+                .collect(Collectors.toList());
 
-    // 로드맵 초기화
-    @PostMapping("/init")
-    public Long initRoadmap() {
-        // 임시 유저
+        roadmapNodeRepository.saveAll(roadmapNodes);
 
-        Member member = Member.builder()
-                .email("test@gmail.com")
-                .password("12345678")
-                .nickname("테스터")
-                .build();
-        Member savedMember = memberRepository.save(member);
-
-//        Roadmap roadmap = roadmapRequest.toEntity();
-
-        Roadmap roadmap = Roadmap.builder().build();
-
-
-        RoadmapEditor.builder()
-                .roadmap(roadmap)
-                .member(savedMember)
-                .isOwner(true)
-                .build();
-
-        return roadmap.getId();
+        // roadmapId 반환
+        return new ResponseEntity<>(roadmap.getId(), HttpStatus.CREATED);
     }
 
     //리턴 방법도 프론트와 협의
@@ -148,65 +171,4 @@ public class RoadmapController {
             log.info("Can not find specified node");
         }
     }
-
-    @PostMapping("/dummy")
-    public void createDummyRoadmap() {
-        Roadmap roadmap = Roadmap.builder()
-                .title("백엔드 개발자 로드맵")
-                .description("어느 한 천재가 만든 백엔드 개발자 로드맵입니다.")
-                .build();
-        roadmapRepository.save(roadmap);
-
-        // 노드랑 엣지 만들기
-        RoadmapNode node1 = RoadmapNode.builder()
-                .roadmap(roadmap)
-                .clientNodeId("1")
-                .label("Java 기초 다지기")
-                .xPosition(250)
-                .yPosition(0)
-                .detailedContent("<p>Java is general-purpose language, primarily used for Internet-based applications. It was created in 1995 by James Gosling at Sun Microsystems and is one of the most popular options for backend developers.</p>")
-                .build();
-
-        RoadmapNode node2 = RoadmapNode.builder()
-                .roadmap(roadmap)
-                .clientNodeId("1")
-                .label("스프링 기초 다지기")
-                .xPosition(260)
-                .yPosition(100)
-                .detailedContent("<p>Spring is an open-source framework that provides a comprehensive programming and configuration model for modern Java-based enterprise applications. The core module of Spring, also known as the “Spring Core” module, is at the heart of the framework and provides the fundamental functionality for dependency injection (DI) and inversion of control (IoC). In addition to dependency injection, the Spring Core module also provides several other features, such as:</p>")
-                .build();
-
-        RoadmapNode node3 = RoadmapNode.builder()
-                .roadmap(roadmap)
-                .clientNodeId("1")
-                .label("크래프톤 정글 수료하기")
-                .xPosition(240)
-                .yPosition(210)
-                .detailedContent("<p>더이상의 자세한 설명은 생략한다.</p>")
-                .build();
-
-        RoadmapEdge edge1 = RoadmapEdge.builder()
-                .roadmap(roadmap)
-                .clientEdgeId("e1-2")
-                .source("1")
-                .target("2")
-                .build();
-
-        RoadmapEdge edge2 = RoadmapEdge.builder()
-                .roadmap(roadmap)
-                .clientEdgeId("e1-3")
-                .source("2")
-                .target("3")
-                .build();
-
-        // 로드맵을 쿼리했을 때 원래 값으로 돌려줘야 한다.
-        // 로드맵 제목이랑 이런 것을 동적으로 바꿀 수 있게 하자
-
-        roadmapNodeRepository.save(node1);
-        roadmapNodeRepository.save(node2);
-        roadmapNodeRepository.save(node3);
-        roadmapEdgeRepository.save(edge1);
-        roadmapEdgeRepository.save(edge2);
-    }
-
 }
