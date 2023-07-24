@@ -1,14 +1,14 @@
 package com.roadmaker.roadmap.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.List;
 
 @Getter
-@Setter
 @ToString
+@Builder
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class CreateRoadmapRequest {
     private RoadmapDto roadmap;
     private RoadmapViewportDto viewport;

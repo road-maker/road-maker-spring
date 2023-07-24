@@ -1,13 +1,13 @@
 package com.roadmaker.roadmap.dto;
 
 import com.roadmaker.roadmap.entity.roadmapnodestyle.RoadmapNodeStyle;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
-@Setter
+@Builder
 @ToString
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class RoadmapNodeStyleDto {
     private String background;
     private String border;

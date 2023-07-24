@@ -1,13 +1,13 @@
 package com.roadmaker.roadmap.dto;
 
 import com.roadmaker.roadmap.entity.roadmapnodeposition.RoadmapNodePosition;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
-@Setter
+@Builder
 @ToString
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class RoadmapNodePositionDto {
     private Integer x;
     private Integer y;

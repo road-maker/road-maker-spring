@@ -6,13 +6,13 @@ import com.roadmaker.roadmap.entity.roadmapnodedata.RoadmapNodeData;
 import com.roadmaker.roadmap.entity.roadmapnodeposition.RoadmapNodePosition;
 import com.roadmaker.roadmap.entity.roadmapnodepositionabsolute.RoadmapNodePositionAbsolute;
 import com.roadmaker.roadmap.entity.roadmapnodestyle.RoadmapNodeStyle;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
-@Setter
+@Builder
 @ToString
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class RoadmapNodeDto {
     private String id;
     private String type;
