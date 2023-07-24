@@ -4,6 +4,7 @@ import com.roadmaker.member.service.MemberService;
 import com.roadmaker.roadmap.dto.CreateRoadmapRequest;
 import com.roadmaker.roadmap.dto.RoadmapEdgeDto;
 import com.roadmaker.roadmap.dto.RoadmapNodeDto;
+import com.roadmaker.roadmap.entity.roadmapeditor.RoadmapEditor;
 import com.roadmaker.roadmap.entity.roadmapeditor.RoadmapEditorRepository;
 import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNode;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNode;
@@ -49,48 +50,13 @@ public class RoadmapController {
     private final RoadmapViewportRepository roadmapViewportRepository;
 
     // 로드맵 발행
-    // create roadmap dto 생성하기
     @PostMapping
-    @Transactional
     public ResponseEntity<Long> createRoadmap(@RequestBody CreateRoadmapRequest createRoadmapRequest) {
-        // 로그인 한 유저 가져오기
         Member member = memberService.getLoggedInMember();
 
-        // roadmap과 cascade 엔티티 생성하기
-        Roadmap roadmap = createRoadmapRequest.getRoadmap().toEntity();
-        roadmapRepository.save(roadmap);
+        Long roadmapId = roadmapService.createRoadmap(createRoadmapRequest, member);
 
-        System.out.println("roadmapDto = " + createRoadmapRequest.getRoadmap());
-        System.out.println("viewportDto = " + createRoadmapRequest.getViewport());
-        System.out.println("edgeDto = " + createRoadmapRequest.getRoadmapEdges());
-        System.out.println("nodeDto = " + createRoadmapRequest.getRoadmapNodes());
-
-        // viewport 저장하기
-        RoadmapViewport viewport = createRoadmapRequest.getViewport().toEntity();
-        roadmapViewportRepository.save(viewport);
-
-
-        // edge 저장하기
-        List<RoadmapEdgeDto> roadmapEdgeDtos = createRoadmapRequest.getRoadmapEdges();
-        List<RoadmapEdge> roadmapEdges = roadmapEdgeDtos.stream()
-                .map(edgeDto -> edgeDto.toEntity(roadmap))
-                .collect(Collectors.toList());
-        roadmapEdgeRepository.saveAll(roadmapEdges);
-//
-//
-//        // 노드 저장하기
-        List<RoadmapNodeDto> roadmapNodeDtos = createRoadmapRequest.getRoadmapNodes();
-        List<RoadmapNode> roadmapNodes = roadmapNodeDtos.stream()
-                .map(nodeDto -> {
-                    System.out.println("nodeDto = " + nodeDto.toString());
-                    return nodeDto.toEntity(roadmap);
-                })
-                .collect(Collectors.toList());
-
-        roadmapNodeRepository.saveAll(roadmapNodes);
-
-        // roadmapId 반환
-        return new ResponseEntity<>(roadmap.getId(), HttpStatus.CREATED);
+        return new ResponseEntity<>(roadmapId, HttpStatus.CREATED);
     }
 
     //리턴 방법도 프론트와 협의
