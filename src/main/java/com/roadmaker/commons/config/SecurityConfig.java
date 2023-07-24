@@ -34,6 +34,7 @@ public class SecurityConfig {
                         .requestMatchers(("/health")).permitAll()
                         .requestMatchers(("/api/chat")).permitAll()
                         .requestMatchers(("/api/roadmaps/**")).permitAll()
+                        .requestMatchers(("/api/crawl")).permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
