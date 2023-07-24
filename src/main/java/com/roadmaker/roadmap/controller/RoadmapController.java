@@ -60,11 +60,6 @@ public class RoadmapController {
         Roadmap roadmap = createRoadmapRequest.getRoadmap().toEntity();
         roadmapRepository.save(roadmap);
 
-        System.out.println("roadmapDto = " + createRoadmapRequest.getRoadmap());
-        System.out.println("viewportDto = " + createRoadmapRequest.getViewport());
-        System.out.println("edgeDto = " + createRoadmapRequest.getRoadmapEdges());
-        System.out.println("nodeDto = " + createRoadmapRequest.getRoadmapNodes());
-
         // viewport 저장하기
         RoadmapViewport viewport = createRoadmapRequest.getViewport().toEntity();
         roadmapViewportRepository.save(viewport);
