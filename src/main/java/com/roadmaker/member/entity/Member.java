@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Builder @Getter
+@Builder @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "MEMBER")
@@ -28,19 +28,25 @@ public class Member extends BaseTimeEntity implements UserDetails {
     @Column(nullable = false)
     private String nickname;
 
-//    @ElementCollection(fetch = FetchType.EAGER)
-//    @Builder.Default
-//    private List<String> roles = new ArrayList<>();
+    @Column
+    private String bio;
+    @Column
+    private String avatarUrl;
+    @Column
+    private String githubUrl;
+    @Column
+    private String blogUrl;
+    @Column
+    private String baekjoonId;
+    @Column(nullable = false)
+    private int level;
+    @Column(nullable = false)
+    private int exp;
 
-    @Override
-    public String getPassword() {
-        return password;
-    }
     @Override
     public String getUsername() {
         return email;
     }
-
 
     @Override
     public boolean isAccountNonExpired() {
@@ -72,11 +78,17 @@ public class Member extends BaseTimeEntity implements UserDetails {
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
         return authorities;
     }
-
     @Builder
-    public Member(String email, String password, String nickname) {
+    public Member(String email, String password, String nickname, String bio, String avatarUrl, String githubUrl, String blogUrl, String baekjoonId, int level, int exp) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
+        this.bio = bio;
+        this.avatarUrl = avatarUrl;
+        this.githubUrl = githubUrl;
+        this.blogUrl = blogUrl;
+        this.baekjoonId = baekjoonId;
+        this.level = level;
+        this.exp = exp;
     }
 }

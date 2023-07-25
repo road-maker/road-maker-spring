@@ -100,8 +100,8 @@ public class RoadmapController {
     public Map<String, Object> loadRoadmap(HttpServletResponse response, @PathVariable Long roadmapId) {
 
         Optional<Roadmap> roadmap = roadmapRepository.findById(roadmapId);
-        List<RoadmapNode> roadmapNodes = roadmapNodeRepository.findByRoadmapId(roadmapId); //없다면 빈 리스트
-        List<RoadmapEdge> roadmapEdges = roadmapEdgeRepository.findByRoadmapId(roadmapId);
+//        List<RoadmapNode> roadmapNodes = roadmapNodeRepository.findByRoadmapId(roadmapId); //없다면 빈 리스트
+//        List<RoadmapEdge> roadmapEdges = roadmapEdgeRepository.findByRoadmapId(roadmapId);
 
         Map<String, Object> result = new HashMap<>();
         result.put("roadmap", roadmap.orElse(null));

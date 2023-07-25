@@ -7,15 +7,14 @@ import com.roadmaker.member.entity.Member;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNode;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "IN_PROGRESS_ROADMAP")
 public class InProgressRoadmap extends BaseTimeEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

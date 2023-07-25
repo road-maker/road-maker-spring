@@ -1,9 +1,16 @@
 package com.roadmaker.member.service;
 
 import com.roadmaker.member.authentication.JwtProvider;
+import com.roadmaker.member.dto.MypageRequest;
+import com.roadmaker.member.dto.MypageResponse;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.entity.MemberRepository;
 import com.roadmaker.member.dto.TokenInfo;
+import com.roadmaker.roadmap.dto.InProgressRoadmapDto;
+import com.roadmaker.roadmap.entity.inprogressnode.InProgressNode;
+import com.roadmaker.roadmap.entity.inprogressnode.InProgressNodeRepository;
+import com.roadmaker.roadmap.entity.inprogressroadmap.InProgressRoadmap;
+import com.roadmaker.roadmap.entity.inprogressroadmap.InProgressRoadmapRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.roadmaker.member.authentication.SecurityUtil;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service @Slf4j
@@ -23,6 +32,8 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtProvider jwtProvider;
+    private final InProgressNodeRepository inProgressNodeRepository;
+    private final InProgressRoadmapRepository inProgressRoadmapRepository;
 
     @Override
     @Transactional
@@ -61,6 +72,69 @@ public class MemberServiceImpl implements MemberService {
             log.info("Can not find member from database");
             return null;
         }
+    }
+
+    @Override
+    @Transactional
+    public MypageResponse callMyPage(Long memberId) {
+        Optional<Member> memberOptional = memberRepository.findById(memberId);
+        Member member = memberOptional.orElse(null);
+        if (member == null) {
+            return null;
+        }
+
+        Optional<InProgressRoadmap> inProgressRoadmaps = (inProgressRoadmapRepository.findByMemberId(memberId));
+        List<InProgressRoadmapDto> inProgressRoadmapDtos = new ArrayList<>();
+
+        if(inProgressRoadmaps.isPresent()) {
+            InProgressRoadmap inProgressRoadmap = inProgressRoadmaps.get();
+
+            int totalNodeCount = (inProgressRoadmap.getInProgressNodes()).size();
+            List<InProgressNode> inProgressNodes = inProgressNodeRepository.findByRoadmapAndDone(inProgressRoadmap.getRoadmap(), true);
+            int doneNodeCount = inProgressNodes.size();
+
+            double progress = Math.round(((double)doneNodeCount/totalNodeCount)*10000) / 100.0; //
+
+            InProgressRoadmapDto inProgressRoadmapDto = InProgressRoadmapDto.builder()
+                    .id(inProgressRoadmap.getId())
+                    .title(inProgressRoadmap.getRoadmap().getTitle())
+                    .thumbnail(inProgressRoadmap.getRoadmap().getThumbnailUrl())
+                    .process(progress)
+                    .build();
+            inProgressRoadmapDtos.add(inProgressRoadmapDto);
+        }
+
+        return MypageResponse.builder()
+                .memberId(memberId)
+                .email(member.getEmail())
+                .nickname(member.getNickname())
+                .bio(member.getBio())
+                .avatarUrl(member.getAvatarUrl())
+                .githubUrl(member.getGithubUrl())
+                .blogUrl(member.getBlogUrl())
+                .backjoonId(member.getBaekjoonId())
+                .level(member.getLevel())
+                .exp(member.getExp())
+                .inProcessRoadmapDto(inProgressRoadmapDtos)
+                .build();
+    }
+
+
+    @Override
+    @Transactional
+    public Boolean saveProfile(MypageRequest request) {
+        //1. 비즈니스 로직 처리
+        Member member = getLoggedInMember();
+        if (!member.getId().equals(request.getMemberId())) {
+            return false;
+        }
+        member.setBio(request.getBio());
+        member.setNickname(request.getNickname());
+        member.setBaekjoonId(request.getBaekjoonId());
+        member.setBlogUrl(request.getBlogUrl());
+        member.setGithubUrl(request.getGithubUrl());
+        memberRepository.save(member);
+        return true;
     }
 
 }
