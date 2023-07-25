@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Builder @Getter
+@Builder @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "MEMBER")
@@ -28,6 +28,20 @@ public class Member extends BaseTimeEntity implements UserDetails {
     @Column(nullable = false)
     private String nickname;
 
+    @Column
+    private String bio;
+    @Column
+    private String avatarUrl;
+    @Column
+    private String githubUrl;
+    @Column
+    private String blogUrl;
+    @Column
+    private String baekjoonId;
+    @Column(nullable = false)
+    private int level;
+    @Column(nullable = false)
+    private int exp;
 //    @ElementCollection(fetch = FetchType.EAGER)
 //    @Builder.Default
 //    private List<String> roles = new ArrayList<>();
