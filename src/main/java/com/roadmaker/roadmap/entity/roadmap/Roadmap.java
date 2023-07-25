@@ -1,5 +1,6 @@
 package com.roadmaker.roadmap.entity.roadmap;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.roadmaker.commons.BaseTimeEntity;
 import com.roadmaker.roadmap.entity.roadmapedge.RoadmapEdge;
 import com.roadmaker.roadmap.entity.roadmapeditor.RoadmapEditor;
@@ -30,12 +31,15 @@ public class Roadmap extends BaseTimeEntity {
     private String recommendedExecutionTimeUnit;
 
     @OneToMany(mappedBy = "roadmap")
+    @JsonManagedReference
     private List<RoadmapNode> roadmapNodes;
 
     @OneToMany(mappedBy = "roadmap")
+    @JsonManagedReference
     private List<RoadmapEdge> roadmapEdges;
 
     @OneToMany(mappedBy = "roadmap")
+    @JsonManagedReference
     private List<RoadmapEditor> roadmapEditors;
 
     @OneToOne

@@ -1,5 +1,6 @@
 package com.roadmaker.roadmap.controller;
 
+import com.roadmaker.roadmap.entity.inprogressnode.InProgressNodeRepository;
 import com.roadmaker.member.service.MemberService;
 import com.roadmaker.roadmap.dto.RoadmapDto;
 import com.roadmaker.roadmap.dto.RoadmapRequest;
@@ -29,6 +30,7 @@ import com.roadmaker.roadmap.entity.inprogressroadmap.InProgressRoadmapRepositor
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Security;
 import java.util.*;
 
 @RestController @Slf4j
@@ -41,8 +43,9 @@ public class RoadmapController {
     private final RoadmapRepository roadmapRepository;
     private final RoadmapEdgeRepository roadmapEdgeRepository;
     private final RoadmapNodeRepository roadmapNodeRepository;
-    private final MemberRepository memberRepository;
+    private final MemberService memberService;
     private final InProgressRoadmapRepository inProgressRoadmapRepository;
+    private final InProgressNodeRepository inProgressNodeRepository;
     private final RoadmapEditorRepository roadmapEditorRepository;
     private final RoadmapViewportRepository roadmapViewportRepository;
 
@@ -56,8 +59,8 @@ public class RoadmapController {
         return new ResponseEntity<>(roadmapId, HttpStatus.CREATED);
     }
 
-    //리턴 방법도 프론트와 협의
     @GetMapping(path = "/load-roadmap/{roadmapId}")
+
     public ResponseEntity<RoadmapResponse> loadRoadmap(@PathVariable Long roadmapId) {
 
         Optional<Roadmap> roadmap = roadmapRepository.findById(roadmapId);
@@ -75,16 +78,21 @@ public class RoadmapController {
     public void joinRoadmap(HttpServletResponse response, @PathVariable Long roadmapId) {
         //초기화가 필요한 것들-> id(자동 생성), roadmap: 로드맵 id주소로 전달, member: jwt추출
 
-        String memberId = "awhidte@gmail.com"; //
-
         Optional<Roadmap> roadmapOptional = roadmapRepository.findById(roadmapId);
         List<RoadmapNode> roadmapNodes = roadmapNodeRepository.findByRoadmapId(roadmapId);
-        Optional<Member> memberOptional = memberRepository.findByEmail(memberId);
+        Member member = memberService.getLoggedInMember();
 
         Roadmap roadmap = roadmapOptional.orElse(null);
-        Member member = memberOptional.orElse(null);
-        if (roadmap == null || member == null) {
-            log.info("Roadmap or Member not found");
+        if (roadmap == null) {
+            log.info("Roadmap not found");
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        
+        //해당 유저가 이미 join하고 있다면 오류 발생
+        if (inProgressRoadmapRepository.findByRoadmapIdAndMemberId(roadmapId, member.getId()).isPresent()) {
+            log.info("해당 유저는 이미 이 roadmap 을 join 하고 있음");
+            response.setStatus(HttpServletResponse.SC_CONFLICT);
             return;
         }
 
@@ -96,34 +104,61 @@ public class RoadmapController {
                         .member(member)
                         .done(false)
                         .build();
+                    inProgressNodeRepository.save(inProgressNode);
                     inProgressNodes.add(inProgressNode);
                 });
 
-        InProgressRoadmap.builder()
+        InProgressRoadmap inProgressRoadmap= InProgressRoadmap.builder()
                 .roadmap(roadmap)
                 .member(member)
                 .inProgressNodes(inProgressNodes)
                 .done(false)
                 .build();
+        inProgressRoadmapRepository.save(inProgressRoadmap);
+
+//        List<String> roadmapDetail = new ArrayList<>();
+//        List<String> roadmapNodesDetail = new ArrayList<>();
+//        roadmapDetail.add(inProgressRoadmap.toString());
+//        roadmapNodesDetail.add(inProgressNodes.toString());
+//        List<String> all = new ArrayList<>();
+//        all.add(roadmapDetail.toString());
+//        all.add(roadmapNodesDetail.toString());
 
         response.setStatus(HttpServletResponse.SC_CREATED);
+//        System.out.println(all);
     }
 
-    @PatchMapping("/inProgressNodes/{inProgressNodeId}/done")
+    @PatchMapping("/in-progress-nodes/{inProgressNodeId}/done")
     public void nodeDone (@PathVariable Long inProgressNodeId, HttpServletResponse response) {
-        // inProgressNode테이블에서 정보를 가져와 업데이트
-        // 유저 정보도 가져와야 할 것 같다. jwt를 사용. -> 프론트와 협의
-        //1. 프론트에서 유저정보 거를 수 없을 때
-//        Long memberId = 1999999L;
-//        Optional<InProgressRoadmap> inProgressNodeOptional = inProgressRoadmapRepository.findByIdAndMemberId(inProgressNodeId, memberId);
-        //2. 프론트에서 유저정보 걸러줄 때
-        Optional<InProgressRoadmap> inProgressRoadmapOptional = inProgressRoadmapRepository.findById(inProgressNodeId);
-        InProgressRoadmap inProgressRoadmap = inProgressRoadmapOptional.orElse(null);
-        if (inProgressRoadmap != null) {
-            inProgressRoadmap.setDone(true);
-            response.setStatus(HttpServletResponse.SC_OK);
+        Optional<InProgressNode> inProgressNodeOptional = inProgressNodeRepository.findById(inProgressNodeId);
+        InProgressNode inProgressNode = inProgressNodeOptional.orElse(null);
+        String memberEmail = SecurityUtil.getLoggedInMemberEmail();
+        Member member = inProgressNode.getMember();
+
+        if(member == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+
+        if (inProgressNode.getMember().getEmail().equals(memberEmail)) {
+            if (Boolean.TRUE.equals(inProgressNode.getDone())) {
+                inProgressNode.setDone(false);
+                inProgressNodeRepository.save(inProgressNode);
+                response.setStatus(HttpServletResponse.SC_OK);
+            } else {
+                inProgressNode.setDone(true);
+                inProgressNodeRepository.save(inProgressNode);
+                response.setStatus(HttpServletResponse.SC_OK);
+            }
+
+//            List<String> node = new ArrayList<>();
+//            node.add("Node Id: " + inProgressNode.getId());
+//            node.add("UserEmail: " + inProgressNode.getMember().getEmail());
+//            node.add("Roadmap: " + inProgressNode.getRoadmap().getTitle());
+//            node.add("Done: " + inProgressNode.getDone());
+//            System.out.println(node);
         } else {
-            log.info("Can not find specified node");
+            log.info("not a progressing member");
         }
     }
 }
