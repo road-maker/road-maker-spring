@@ -1,5 +1,7 @@
 package com.roadmaker.member.service;
 
+import com.roadmaker.member.dto.MypageRequest;
+import com.roadmaker.member.dto.MypageResponse;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.dto.TokenInfo;
 import org.springframework.stereotype.Service;
@@ -18,4 +20,8 @@ public interface MemberService {
     public boolean isUserRegistered(String email);
 
     public Member getLoggedInMember();
+
+    public MypageResponse callMyPage(Long memberId);
+
+    public Boolean saveProfile(MypageRequest request);
 }

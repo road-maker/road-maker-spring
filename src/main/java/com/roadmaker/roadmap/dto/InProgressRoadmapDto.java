@@ -8,8 +8,10 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class InProgressRoadmapDto {
-    private String id;
+    private Long id;
     private String roadmapId;
-    private String memberId;
+    private String title;
     private Boolean done;
+    private String thumbnail;
+    private double process;
 }
