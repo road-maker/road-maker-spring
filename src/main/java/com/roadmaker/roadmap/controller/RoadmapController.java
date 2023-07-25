@@ -1,5 +1,6 @@
 package com.roadmaker.roadmap.controller;
 
+import com.roadmaker.member.authentication.SecurityUtil;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNodeRepository;
 import com.roadmaker.member.service.MemberService;
 import com.roadmaker.roadmap.dto.RoadmapDto;
@@ -39,11 +40,9 @@ import java.util.*;
 public class RoadmapController {
     private final MemberService memberService;
     private final RoadmapService roadmapService;
-
     private final RoadmapRepository roadmapRepository;
     private final RoadmapEdgeRepository roadmapEdgeRepository;
     private final RoadmapNodeRepository roadmapNodeRepository;
-    private final MemberService memberService;
     private final InProgressRoadmapRepository inProgressRoadmapRepository;
     private final InProgressNodeRepository inProgressNodeRepository;
     private final RoadmapEditorRepository roadmapEditorRepository;
@@ -71,7 +70,7 @@ public class RoadmapController {
 
         RoadmapResponse roadmapResponse = RoadmapResponse.of(roadmap.get());
 
-        return new ResponseEntity<RoadmapResponse>(roadmapResponse, HttpStatus.OK);
+        return new ResponseEntity<>(roadmapResponse, HttpStatus.OK);
     }
 
     @PostMapping(path="/{roadmapId}/join")
