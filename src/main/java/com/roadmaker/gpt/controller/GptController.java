@@ -1,4 +1,5 @@
 package com.roadmaker.gpt.controller;
+import com.roadmaker.commons.annotation.LoginRequired;
 import com.roadmaker.gpt.dto.Sentence;
 import com.theokanning.openai.completion.chat.ChatCompletionRequest;
 import com.theokanning.openai.completion.chat.ChatMessage;
@@ -21,6 +22,7 @@ public class GptController {
         this.OPENAI_TOKEN = apiKey;
     }
 
+    @LoginRequired
     @PostMapping("api/chat")
     public List<Sentence> getChatMessages(@RequestParam String prompt) {
 

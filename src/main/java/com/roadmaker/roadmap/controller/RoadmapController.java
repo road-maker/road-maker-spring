@@ -1,5 +1,7 @@
 package com.roadmaker.roadmap.controller;
 
+import com.roadmaker.commons.annotation.LoginMember;
+import com.roadmaker.commons.annotation.LoginRequired;
 import com.roadmaker.member.authentication.SecurityUtil;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNodeRepository;
 import com.roadmaker.member.service.MemberService;
@@ -49,10 +51,9 @@ public class RoadmapController {
     private final RoadmapViewportRepository roadmapViewportRepository;
 
     // 로드맵 발행
+    @LoginRequired
     @PostMapping
-    public ResponseEntity<Long> createRoadmap(@RequestBody RoadmapRequest roadmapRequest) {
-        Member member = memberService.getLoggedInMember();
-
+    public ResponseEntity<Long> createRoadmap(@RequestBody RoadmapRequest roadmapRequest, @LoginMember Member member) {
         Long roadmapId = roadmapService.createRoadmap(roadmapRequest, member);
 
         return new ResponseEntity<>(roadmapId, HttpStatus.CREATED);
@@ -73,13 +74,13 @@ public class RoadmapController {
         return new ResponseEntity<>(roadmapResponse, HttpStatus.OK);
     }
 
+    @LoginRequired
     @PostMapping(path="/{roadmapId}/join")
-    public void joinRoadmap(HttpServletResponse response, @PathVariable Long roadmapId) {
+    public void joinRoadmap(HttpServletResponse response, @PathVariable Long roadmapId, @LoginMember Member member) {
         //초기화가 필요한 것들-> id(자동 생성), roadmap: 로드맵 id주소로 전달, member: jwt추출
 
         Optional<Roadmap> roadmapOptional = roadmapRepository.findById(roadmapId);
         List<RoadmapNode> roadmapNodes = roadmapNodeRepository.findByRoadmapId(roadmapId);
-        Member member = memberService.getLoggedInMember();
 
         Roadmap roadmap = roadmapOptional.orElse(null);
         if (roadmap == null) {
@@ -127,6 +128,7 @@ public class RoadmapController {
 //        System.out.println(all);
     }
 
+    @LoginRequired
     @PatchMapping("/in-progress-nodes/{inProgressNodeId}/done")
     public void nodeDone (@PathVariable Long inProgressNodeId, HttpServletResponse response) {
         Optional<InProgressNode> inProgressNodeOptional = inProgressNodeRepository.findById(inProgressNodeId);

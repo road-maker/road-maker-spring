@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ExceptionAdvice {
     @ExceptionHandler(UnAuthenticatedException.class)
-    public ResponseEntity<HttpStatus> AuthenticatedException() {
+    public ResponseEntity<HttpStatus> authenticatedException() {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 }

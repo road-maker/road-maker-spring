@@ -25,21 +25,13 @@ public class LoginRequiredInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        System.out.println("LOGGGGGGG");
-        System.out.println(handler instanceof HandlerMethod);
-        System.out.println(((HandlerMethod) handler).hasMethodAnnotation(LoginRequired.class));
 
         if (handler instanceof HandlerMethod && ((HandlerMethod) handler).hasMethodAnnotation(LoginRequired.class)) {
             // Request Header에서 JWT 추출
             String token = resolveToken((HttpServletRequest) request);
 
-            System.out.println("token = " + token);
-
-            System.out.println("jwtProvider.validationToken(token) = " + jwtProvider.validationToken(token));
-
             if (token != null && jwtProvider.validationToken(token)) {
                 Authentication authentication = jwtProvider.getAuthentication(token);
-                System.out.println("authentication = " + authentication);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
 
