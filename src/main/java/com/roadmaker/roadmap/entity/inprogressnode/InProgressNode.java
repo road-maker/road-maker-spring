@@ -1,5 +1,6 @@
 package com.roadmaker.roadmap.entity.inprogressnode;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.roadmaker.commons.BaseTimeEntity;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.roadmap.entity.inprogressroadmap.InProgressRoadmap;
@@ -10,10 +11,11 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter @Setter
+@NoArgsConstructor
 @Table(name = "IN_PROGRESS_NODE")
 public class InProgressNode extends BaseTimeEntity {
     @Id
@@ -22,15 +24,18 @@ public class InProgressNode extends BaseTimeEntity {
 
     @ManyToOne
     @JoinColumn(name = "ROADMAP_ID")
+    @JsonBackReference
     private Roadmap roadmap;
 
     @ManyToOne
     @JoinColumn(name = "IN_PROGRESS_ROADMAP_ID")
+    @JsonBackReference
     private InProgressRoadmap inProgressRoadmap;
 
     @ManyToOne
     @JoinColumn(name = "ROADMAP_NODE_ID")
-    RoadmapNode roadmapNode;
+    @JsonBackReference
+    private RoadmapNode roadmapNode;
 
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
