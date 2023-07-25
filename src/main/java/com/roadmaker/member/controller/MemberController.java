@@ -1,5 +1,7 @@
 package com.roadmaker.member.controller;
 
+import com.roadmaker.commons.annotation.LoginMember;
+import com.roadmaker.commons.annotation.LoginRequired;
 import com.roadmaker.member.authentication.SecurityUtil;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.dto.LoginRequest;
@@ -49,18 +51,22 @@ public class MemberController {
     @PostMapping("/signin")
     public TokenInfo login(@RequestBody LoginRequest loginRequest) {
 
+        System.out.println("POST /signin APIIIIIIIIII");
+
         String email = loginRequest.getEmail();
         String password = loginRequest.getPassword();
 
         return memberService.login(email, password);
     }
+
+    @LoginRequired
     @PostMapping("/test")
-    public String test() {
-        Member member = memberService.getLoggedInMember();
-        List<String> memberdetail = new ArrayList<>();
-        memberdetail.add(String.valueOf(member.getId()));
-        memberdetail.add(member.getUsername());
-        memberdetail.add(member.getNickname());
-        return memberdetail.toString();
+    public String test(@LoginMember Member member) {
+//        Member member = memberService.getLoggedInMember();
+//        List<String> memberdetail = new ArrayList<>();
+//        memberdetail.add(String.valueOf(member.getId()));
+//        memberdetail.add(member.getUsername());
+//        memberdetail.add(member.getNickname());
+        return member.toString();
     }
 }
