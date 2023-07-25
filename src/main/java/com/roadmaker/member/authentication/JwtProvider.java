@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class JwtProvider {
 
     private final Key key;
-    private final long tokenValidTime = 60 * 60 * 24 * 7L; // 일주일
+    private final long TOKEN_VALID_TIME = 1000L * 60 * 60 * 24 * 7;
 
     public JwtProvider(@Value("${jwt.secret}") String secretKey) {
         byte[] keyBytes = Base64.getDecoder().decode(secretKey);
@@ -41,7 +41,7 @@ public class JwtProvider {
 
         long now = (new Date()).getTime();
         //access token 생성
-        Date accessTokenExpiresIn = new Date(now + tokenValidTime);
+        Date accessTokenExpiresIn = new Date(now + TOKEN_VALID_TIME);
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim("auth", authorities)
@@ -51,7 +51,7 @@ public class JwtProvider {
 
         //refresh token 생성
         String refreshToken = Jwts.builder()
-                .setExpiration(new Date(now + tokenValidTime))
+                .setExpiration(new Date(now + TOKEN_VALID_TIME))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
