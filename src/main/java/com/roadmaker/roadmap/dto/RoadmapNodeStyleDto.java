@@ -22,4 +22,13 @@ public class RoadmapNodeStyleDto {
                 .fontSize(this.fontSize)
                 .build();
     }
+
+    public static RoadmapNodeStyleDto of(RoadmapNodeStyle roadmapNodeStyle) {
+        return RoadmapNodeStyleDto.builder()
+                .background(roadmapNodeStyle.getBackground())
+                .border(roadmapNodeStyle.getBorder())
+                .borderRadius(roadmapNodeStyle.getBorderRadius())
+                .fontSize(roadmapNodeStyle.getFontSize())
+                .build();
+    }
 }

@@ -22,4 +22,12 @@ public class RoadmapViewportDto {
                 .zoom(this.zoom)
                 .build();
     }
+
+    public static RoadmapViewportDto of(RoadmapViewport roadmapViewport) {
+        return RoadmapViewportDto.builder()
+                .x(roadmapViewport.getX())
+                .y(roadmapViewport.getY())
+                .zoom(roadmapViewport.getZoom())
+                .build();
+    }
 }

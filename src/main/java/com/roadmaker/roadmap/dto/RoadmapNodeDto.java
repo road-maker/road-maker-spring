@@ -46,4 +46,20 @@ public class RoadmapNodeDto {
                 .positionAbsolute(this.positionAbsolute.toEntity())
                 .build();
     }
+
+    public static RoadmapNodeDto of(RoadmapNode roadmapNode) {
+        return RoadmapNodeDto.builder()
+                .id(roadmapNode.getClientNodeId())
+                .type(roadmapNode.getType())
+                .width(roadmapNode.getWidth())
+                .height(roadmapNode.getHeight())
+                .sourcePosition(roadmapNode.getSourcePosition())
+                .targetPosition(roadmapNode.getTargetPosition())
+                .detailedContent(roadmapNode.getDetailedContent())
+                .style(RoadmapNodeStyleDto.of(roadmapNode.getStyle()))
+                .data(RoadmapNodeDataDto.of(roadmapNode.getData()))
+                .position(RoadmapNodePositionDto.of(roadmapNode.getPosition()))
+                .positionAbsolute(RoadmapNodePositionAbsoluteDto.of(roadmapNode.getPositionAbsolute()))
+                .build();
+    }
 }

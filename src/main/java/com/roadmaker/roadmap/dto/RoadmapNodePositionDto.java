@@ -18,4 +18,11 @@ public class RoadmapNodePositionDto {
                 .y(this.y)
                 .build();
     }
+
+    public static RoadmapNodePositionDto of(RoadmapNodePosition roadmapNodePosition) {
+        return RoadmapNodePositionDto.builder()
+                .x(roadmapNodePosition.getX())
+                .y(roadmapNodePosition.getY())
+                .build();
+    }
 }

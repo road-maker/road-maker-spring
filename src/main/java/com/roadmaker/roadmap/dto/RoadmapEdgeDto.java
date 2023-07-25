@@ -26,4 +26,14 @@ public class RoadmapEdgeDto {
                 .animated(this.animated)
                 .build();
     }
+
+    public static RoadmapEdgeDto of(RoadmapEdge roadmapEdge) {
+        return RoadmapEdgeDto.builder()
+                .id(roadmapEdge.getClientEdgeId())
+                .source(roadmapEdge.getSource())
+                .target(roadmapEdge.getTarget())
+                .type(roadmapEdge.getType())
+                .animated(roadmapEdge.getAnimated())
+                .build();
+    }
 }

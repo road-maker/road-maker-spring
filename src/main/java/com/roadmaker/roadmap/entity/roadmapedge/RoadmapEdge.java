@@ -3,10 +3,7 @@ package com.roadmaker.roadmap.entity.roadmapedge;
 import com.roadmaker.commons.BaseTimeEntity;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter

@@ -16,4 +16,10 @@ public class RoadmapNodeDataDto {
                 .label(this.label)
                 .build();
     }
+
+    public static RoadmapNodeDataDto of(RoadmapNodeData roadmapNodeData) {
+        return RoadmapNodeDataDto.builder()
+                .label(roadmapNodeData.getLabel())
+                .build();
+    }
 }

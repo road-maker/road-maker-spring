@@ -18,4 +18,11 @@ public class RoadmapNodePositionAbsoluteDto {
                 .y(this.y)
                 .build();
     }
+
+    public static RoadmapNodePositionAbsoluteDto of(RoadmapNodePositionAbsolute roadmapNodePositionAbsolute) {
+        return RoadmapNodePositionAbsoluteDto.builder()
+                .x(roadmapNodePositionAbsolute.getX())
+                .y(roadmapNodePositionAbsolute.getY())
+                .build();
+    }
 }

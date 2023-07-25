@@ -24,4 +24,14 @@ public class RoadmapDto {
                 .recommendedExecutionTimeUnit(this.recommendedExecutionTimeUnit)
                 .build();
     };
+
+    public static RoadmapDto of(Roadmap roadmap) {
+        return RoadmapDto.builder()
+                .title(roadmap.getTitle())
+                .description(roadmap.getDescription())
+                .thumbnailUrl(roadmap.getThumbnailUrl())
+                .recommendedExecutionTimeValue(roadmap.getRecommendedExecutionTimeValue())
+                .recommendedExecutionTimeUnit(roadmap.getRecommendedExecutionTimeUnit())
+                .build();
+    }
 }

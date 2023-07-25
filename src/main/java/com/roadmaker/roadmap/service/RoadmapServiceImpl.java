@@ -35,14 +35,14 @@ public class RoadmapServiceImpl implements RoadmapService{
 
     @Override
     public Long createRoadmap(RoadmapRequest roadmapRequest, Member member) {
-        // roadmap 저장하기
-        Roadmap roadmap = roadmapRequest.getRoadmap().toEntity();
-        roadmapRepository.save(roadmap);
-
         // viewport 저장하기
         RoadmapViewport viewport = roadmapRequest.getViewport().toEntity();
         roadmapViewportRepository.save(viewport);
 
+        // roadmap 저장하기
+        Roadmap roadmap = roadmapRequest.getRoadmap().toEntity();
+        roadmap.setRoadmapViewport(viewport);
+        roadmapRepository.save(roadmap);
 
         // edge 저장하기
         List<RoadmapEdgeDto> roadmapEdgeDtos = roadmapRequest.getRoadmapEdges();
