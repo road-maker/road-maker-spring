@@ -5,16 +5,15 @@ import com.roadmaker.commons.BaseTimeEntity;
 import com.roadmaker.roadmap.entity.roadmapedge.RoadmapEdge;
 import com.roadmaker.roadmap.entity.roadmapeditor.RoadmapEditor;
 import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNode;
+import com.roadmaker.roadmap.entity.roadmapviewport.RoadmapViewport;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 @Entity
 @Getter
+@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "ROADMAP")
 public class Roadmap extends BaseTimeEntity {
@@ -42,6 +41,12 @@ public class Roadmap extends BaseTimeEntity {
     @OneToMany(mappedBy = "roadmap")
     @JsonManagedReference
     private List<RoadmapEditor> roadmapEditors;
+
+    @OneToOne
+    @JoinColumn(name = "ROADMAP_VIEWPORT_ID")
+    @Setter
+    private RoadmapViewport roadmapViewport;
+
 
     @Builder
     public Roadmap(String title, String description, String thumbnailUrl, Integer recommendedExecutionTimeValue, String recommendedExecutionTimeUnit) {

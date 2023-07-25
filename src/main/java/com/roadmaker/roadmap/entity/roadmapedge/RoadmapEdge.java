@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.roadmaker.commons.BaseTimeEntity;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
@@ -30,15 +27,15 @@ public class RoadmapEdge extends BaseTimeEntity {
 
     private String type;
 
-    private Boolean isAnimated;
+    private Boolean animated;
 
     @Builder
-    public RoadmapEdge(Roadmap roadmap, String clientEdgeId, String source, String target, String type, Boolean isAnimated) {
+    public RoadmapEdge(Roadmap roadmap, String clientEdgeId, String source, String target, String type, Boolean animated) {
         this.roadmap = roadmap;
         this.clientEdgeId = clientEdgeId;
         this.source = source;
         this.target = target;
         this.type = type;
-        this.isAnimated = isAnimated;
+        this.animated = animated;
     }
 }
