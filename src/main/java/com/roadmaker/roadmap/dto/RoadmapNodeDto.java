@@ -6,13 +6,13 @@ import com.roadmaker.roadmap.entity.roadmapnodedata.RoadmapNodeData;
 import com.roadmaker.roadmap.entity.roadmapnodeposition.RoadmapNodePosition;
 import com.roadmaker.roadmap.entity.roadmapnodepositionabsolute.RoadmapNodePositionAbsolute;
 import com.roadmaker.roadmap.entity.roadmapnodestyle.RoadmapNodeStyle;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
-@Setter
+@Builder
 @ToString
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class RoadmapNodeDto {
     private String id;
     private String type;
@@ -44,6 +44,22 @@ public class RoadmapNodeDto {
                 .data(this.data.toEntity())
                 .position(this.position.toEntity())
                 .positionAbsolute(this.positionAbsolute.toEntity())
+                .build();
+    }
+
+    public static RoadmapNodeDto of(RoadmapNode roadmapNode) {
+        return RoadmapNodeDto.builder()
+                .id(roadmapNode.getClientNodeId())
+                .type(roadmapNode.getType())
+                .width(roadmapNode.getWidth())
+                .height(roadmapNode.getHeight())
+                .sourcePosition(roadmapNode.getSourcePosition())
+                .targetPosition(roadmapNode.getTargetPosition())
+                .detailedContent(roadmapNode.getDetailedContent())
+                .style(RoadmapNodeStyleDto.of(roadmapNode.getStyle()))
+                .data(RoadmapNodeDataDto.of(roadmapNode.getData()))
+                .position(RoadmapNodePositionDto.of(roadmapNode.getPosition()))
+                .positionAbsolute(RoadmapNodePositionAbsoluteDto.of(roadmapNode.getPositionAbsolute()))
                 .build();
     }
 }

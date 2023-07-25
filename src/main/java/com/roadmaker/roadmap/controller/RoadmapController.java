@@ -1,10 +1,9 @@
 package com.roadmaker.roadmap.controller;
 
 import com.roadmaker.member.service.MemberService;
-import com.roadmaker.roadmap.dto.CreateRoadmapRequest;
-import com.roadmaker.roadmap.dto.RoadmapEdgeDto;
-import com.roadmaker.roadmap.dto.RoadmapNodeDto;
-import com.roadmaker.roadmap.entity.roadmapeditor.RoadmapEditor;
+import com.roadmaker.roadmap.dto.RoadmapDto;
+import com.roadmaker.roadmap.dto.RoadmapRequest;
+import com.roadmaker.roadmap.dto.RoadmapResponse;
 import com.roadmaker.roadmap.entity.roadmapeditor.RoadmapEditorRepository;
 import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNode;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNode;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
-import com.roadmaker.roadmap.entity.roadmapedge.RoadmapEdge;
 import com.roadmaker.roadmap.entity.roadmapedge.RoadmapEdgeRepository;
 import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNodeRepository;
 import com.roadmaker.roadmap.entity.roadmap.RoadmapRepository;
@@ -32,7 +30,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController @Slf4j
 @RequiredArgsConstructor
@@ -51,34 +48,27 @@ public class RoadmapController {
 
     // 로드맵 발행
     @PostMapping
-    public ResponseEntity<Long> createRoadmap(@RequestBody CreateRoadmapRequest createRoadmapRequest) {
+    public ResponseEntity<Long> createRoadmap(@RequestBody RoadmapRequest roadmapRequest) {
         Member member = memberService.getLoggedInMember();
 
-        Long roadmapId = roadmapService.createRoadmap(createRoadmapRequest, member);
+        Long roadmapId = roadmapService.createRoadmap(roadmapRequest, member);
 
         return new ResponseEntity<>(roadmapId, HttpStatus.CREATED);
     }
 
     //리턴 방법도 프론트와 협의
     @GetMapping(path = "/load-roadmap/{roadmapId}")
-    public Map<String, Object> loadRoadmap(@PathVariable Long roadmapId) {
+    public ResponseEntity<RoadmapResponse> loadRoadmap(@PathVariable Long roadmapId) {
 
         Optional<Roadmap> roadmap = roadmapRepository.findById(roadmapId);
-        List<RoadmapNode> roadmapNodes = roadmapNodeRepository.findByRoadmapId(roadmapId); //없다면 빈 리스트
-        List<RoadmapEdge> roadmapEdges = roadmapEdgeRepository.findByRoadmapId(roadmapId);
 
-        Map<String, Object> result = new HashMap<>();
-        result.put("roadmap", roadmap.orElse(null));
-        result.put("nodes", roadmapNodes);
-        result.put("edges", roadmapEdges);
-
-        for (Map.Entry<String, Object> eachResult: result.entrySet()) {
-            Object value = eachResult.getValue();
-            if (value == null) {
-                return null; //오류 처리 어떻게?  -> 프론트와 협의
-            }
+        if (roadmap.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        return result;
+
+        RoadmapResponse roadmapResponse = RoadmapResponse.of(roadmap.get());
+
+        return new ResponseEntity<RoadmapResponse>(roadmapResponse, HttpStatus.OK);
     }
 
     @PostMapping(path="/{roadmapId}/join")
@@ -90,7 +80,6 @@ public class RoadmapController {
         Optional<Roadmap> roadmapOptional = roadmapRepository.findById(roadmapId);
         List<RoadmapNode> roadmapNodes = roadmapNodeRepository.findByRoadmapId(roadmapId);
         Optional<Member> memberOptional = memberRepository.findByEmail(memberId);
-
 
         Roadmap roadmap = roadmapOptional.orElse(null);
         Member member = memberOptional.orElse(null);

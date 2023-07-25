@@ -1,13 +1,13 @@
 package com.roadmaker.roadmap.dto;
 
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
-@Setter
 @ToString
+@Builder
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class RoadmapDto {
     private String title;
     private String description;
@@ -24,4 +24,14 @@ public class RoadmapDto {
                 .recommendedExecutionTimeUnit(this.recommendedExecutionTimeUnit)
                 .build();
     };
+
+    public static RoadmapDto of(Roadmap roadmap) {
+        return RoadmapDto.builder()
+                .title(roadmap.getTitle())
+                .description(roadmap.getDescription())
+                .thumbnailUrl(roadmap.getThumbnailUrl())
+                .recommendedExecutionTimeValue(roadmap.getRecommendedExecutionTimeValue())
+                .recommendedExecutionTimeUnit(roadmap.getRecommendedExecutionTimeUnit())
+                .build();
+    }
 }

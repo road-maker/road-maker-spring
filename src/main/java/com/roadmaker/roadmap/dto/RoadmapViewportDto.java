@@ -1,15 +1,15 @@
 package com.roadmaker.roadmap.dto;
 
 import com.roadmaker.roadmap.entity.roadmapviewport.RoadmapViewport;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.math.BigDecimal;
 
 @Getter
-@Setter
+@Builder
 @ToString
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class RoadmapViewportDto {
     private BigDecimal x;
     private BigDecimal y;
@@ -20,6 +20,14 @@ public class RoadmapViewportDto {
                 .x(this.x)
                 .y(this.y)
                 .zoom(this.zoom)
+                .build();
+    }
+
+    public static RoadmapViewportDto of(RoadmapViewport roadmapViewport) {
+        return RoadmapViewportDto.builder()
+                .x(roadmapViewport.getX())
+                .y(roadmapViewport.getY())
+                .zoom(roadmapViewport.getZoom())
                 .build();
     }
 }

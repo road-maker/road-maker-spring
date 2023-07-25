@@ -2,13 +2,13 @@ package com.roadmaker.roadmap.dto;
 
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import com.roadmaker.roadmap.entity.roadmapedge.RoadmapEdge;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
-@Setter
+@Builder
 @ToString
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class RoadmapEdgeDto {
     private String id;
     private String source;
@@ -24,6 +24,16 @@ public class RoadmapEdgeDto {
                 .target(this.target)
                 .type(this.type)
                 .animated(this.animated)
+                .build();
+    }
+
+    public static RoadmapEdgeDto of(RoadmapEdge roadmapEdge) {
+        return RoadmapEdgeDto.builder()
+                .id(roadmapEdge.getClientEdgeId())
+                .source(roadmapEdge.getSource())
+                .target(roadmapEdge.getTarget())
+                .type(roadmapEdge.getType())
+                .animated(roadmapEdge.getAnimated())
                 .build();
     }
 }
