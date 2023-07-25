@@ -1,5 +1,7 @@
 package com.roadmaker.roadmap.controller;
 
+import com.roadmaker.commons.annotation.LoginMember;
+import com.roadmaker.commons.annotation.LoginRequired;
 import com.roadmaker.member.service.MemberService;
 import com.roadmaker.roadmap.dto.RoadmapDto;
 import com.roadmaker.roadmap.dto.RoadmapRequest;
@@ -47,10 +49,9 @@ public class RoadmapController {
     private final RoadmapViewportRepository roadmapViewportRepository;
 
     // 로드맵 발행
+    @LoginRequired
     @PostMapping
-    public ResponseEntity<Long> createRoadmap(@RequestBody RoadmapRequest roadmapRequest) {
-        Member member = memberService.getLoggedInMember();
-
+    public ResponseEntity<Long> createRoadmap(@RequestBody RoadmapRequest roadmapRequest, @LoginMember Member member) {
         Long roadmapId = roadmapService.createRoadmap(roadmapRequest, member);
 
         return new ResponseEntity<>(roadmapId, HttpStatus.CREATED);
@@ -71,18 +72,16 @@ public class RoadmapController {
         return new ResponseEntity<RoadmapResponse>(roadmapResponse, HttpStatus.OK);
     }
 
+    @LoginRequired
     @PostMapping(path="/{roadmapId}/join")
-    public void joinRoadmap(HttpServletResponse response, @PathVariable Long roadmapId) {
+    public void joinRoadmap(HttpServletResponse response, @PathVariable Long roadmapId, @LoginMember Member member) {
         //초기화가 필요한 것들-> id(자동 생성), roadmap: 로드맵 id주소로 전달, member: jwt추출
 
-        String memberId = "awhidte@gmail.com"; //
 
         Optional<Roadmap> roadmapOptional = roadmapRepository.findById(roadmapId);
         List<RoadmapNode> roadmapNodes = roadmapNodeRepository.findByRoadmapId(roadmapId);
-        Optional<Member> memberOptional = memberRepository.findByEmail(memberId);
 
         Roadmap roadmap = roadmapOptional.orElse(null);
-        Member member = memberOptional.orElse(null);
         if (roadmap == null || member == null) {
             log.info("Roadmap or Member not found");
             return;
@@ -109,6 +108,7 @@ public class RoadmapController {
         response.setStatus(HttpServletResponse.SC_CREATED);
     }
 
+    @LoginRequired
     @PatchMapping("/inProgressNodes/{inProgressNodeId}/done")
     public void nodeDone (@PathVariable Long inProgressNodeId, HttpServletResponse response) {
         // inProgressNode테이블에서 정보를 가져와 업데이트
