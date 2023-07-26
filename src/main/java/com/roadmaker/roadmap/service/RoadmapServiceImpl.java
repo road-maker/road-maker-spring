@@ -1,5 +1,6 @@
 package com.roadmaker.roadmap.service;
 
+import com.roadmaker.commons.exception.NotFoundException;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.service.MemberService;
 import com.roadmaker.roadmap.dto.*;
@@ -78,13 +79,8 @@ public class RoadmapServiceImpl implements RoadmapService{
     }
 
     @Override
-    public RoadmapDto findRoadmapById(Long roadmapId) {
-        Optional<Roadmap> roadmapOptional = roadmapRepository.findById(roadmapId);
-        Roadmap roadmap = roadmapOptional.orElse(null);
-        if (roadmap != null) {
-            return RoadmapDto.of(roadmap);
-        }
-        return null;
+    public Roadmap findRoadmapById(Long roadmapId) {
+        return roadmapRepository.findById(roadmapId).orElseThrow(NotFoundException::new);
     }
 
     @Override

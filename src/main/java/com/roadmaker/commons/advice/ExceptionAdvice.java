@@ -1,5 +1,6 @@
 package com.roadmaker.commons.advice;
 
+import com.roadmaker.commons.exception.NotFoundException;
 import com.roadmaker.member.exception.UnAuthenticatedException;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +17,11 @@ public class ExceptionAdvice {
     @ExceptionHandler(UnAuthenticatedException.class)
     public ResponseEntity<HttpStatus> authenticatedException() {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<HttpStatus> notFoundException() {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
