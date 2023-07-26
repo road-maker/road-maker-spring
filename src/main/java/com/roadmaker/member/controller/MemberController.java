@@ -3,10 +3,8 @@ package com.roadmaker.member.controller;
 import com.roadmaker.commons.annotation.LoginMember;
 import com.roadmaker.commons.annotation.LoginRequired;
 import com.roadmaker.member.authentication.SecurityUtil;
+import com.roadmaker.member.dto.*;
 import com.roadmaker.member.entity.Member;
-import com.roadmaker.member.dto.LoginRequest;
-import com.roadmaker.member.dto.SignupRequest;
-import com.roadmaker.member.dto.TokenInfo;
 import com.roadmaker.member.service.MemberService;
 import com.roadmaker.member.service.MemberServiceImpl;
 import jakarta.validation.Valid;
@@ -15,10 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,5 +55,33 @@ public class MemberController {
     @PostMapping("/test")
     public String test(@LoginMember Member member) {
         return member.toString();
+    }
+
+    @LoginRequired
+    @GetMapping("/{memberId}")
+    public MypageResponse gotoMypage(@PathVariable Long memberId) { //email
+        //1. 요청 데이터 검증
+        //2. 비즈니스 로직 처리
+        MypageResponse mypageResponse = memberService.callMyPage(memberId);
+        if ( mypageResponse == null)
+        {
+            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        ResponseEntity.status(HttpStatus.ACCEPTED).build();
+        return mypageResponse;
+    }
+
+    @PostMapping("/save-profile")
+    public ResponseEntity<HttpStatus> changeProfile(@RequestBody MypageRequest request) {
+        //1. 요청 데이터 검증
+        if (request.getNickname() == null) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
+        }
+        //2. 비즈니스 로직 처리
+        if(memberService.saveProfile(request).equals(true)) {
+            //3. 응답 메세지 처리
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        }
+        return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
 }
