@@ -7,10 +7,7 @@ import com.roadmaker.roadmap.entity.inprogressnode.InProgressNodeRepository;
 import com.roadmaker.member.service.MemberService;
 import com.roadmaker.roadmap.entity.roadmapeditor.RoadmapEditor;
 import com.roadmaker.roadmap.entity.roadmapeditor.RoadmapEditorRepository;
-import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNode;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNode;
-import com.roadmaker.roadmap.entity.inprogressroadmap.InProgressRoadmap;
-import com.roadmaker.roadmap.entity.roadmapviewport.RoadmapViewport;
 import com.roadmaker.roadmap.entity.roadmapviewport.RoadmapViewportRepository;
 import com.roadmaker.roadmap.service.RoadmapService;
 import jakarta.validation.Valid;
@@ -55,7 +52,7 @@ public class RoadmapController {
     }
 
 //    /api/roadmaps?
-    @GetMapping(path="/roadmaps")
+    @GetMapping
     public ResponseEntity<List<RoadmapDto>> getRoadmaps() {
         List<Roadmap> roadmaps = roadmapRepository.findAll();
         List<RoadmapDto> roadmapDtos = new ArrayList<>();
@@ -90,19 +87,15 @@ public class RoadmapController {
 
     @LoginRequired
     @PostMapping(path="/{roadmapId}/join")
-    public void joinRoadmap(HttpServletResponse response, @PathVariable Long roadmapId, @LoginMember Member member) {
+    public ResponseEntity<HttpStatus> joinRoadmap(@PathVariable Long roadmapId, @LoginMember Member member) {
         // 1. 필요한 로드맵을 소환: 로드맵 아이디로
-        RoadmapDto roadmapDto = roadmapService.findRoadmapById(roadmapId);
-        if (roadmapDto == null) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
+        Roadmap roadmap = roadmapService.findRoadmapById(roadmapId);
+
         //2. 로드맵 조인, 실패 시 false 반환: 비즈니스 로직
-        if (!roadmapService.doJoinRoadmap(roadmapId, member)) {
-            response.setStatus(HttpServletResponse.SC_CONFLICT);
-        }
+        roadmapService.joinRoadmap(roadmap, member);
+
         // 3. 성공 신호 전달
-        response.setStatus(HttpServletResponse.SC_CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @LoginRequired

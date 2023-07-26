@@ -22,8 +22,8 @@ public class RoadmapResponse {
         return RoadmapResponse.builder()
                 .roadmap(RoadmapDto.of(roadmap))
                 .viewport(RoadmapViewportDto.of(roadmap.getRoadmapViewport()))
-                .roadmapNodes(roadmap.getRoadmapNodes().stream().map(roadmapNode -> RoadmapNodeDto.of(roadmapNode)).collect(Collectors.toList()))
-                .roadmapEdges(roadmap.getRoadmapEdges().stream().map(roadmapEdge -> RoadmapEdgeDto.of(roadmapEdge)).collect(Collectors.toList()))
+                .nodes(roadmap.getRoadmapNodes().stream().map(RoadmapNodeDto::of).toList())
+                .edges(roadmap.getRoadmapEdges().stream().map(RoadmapEdgeDto::of).toList())
                 .build();
     }
 
