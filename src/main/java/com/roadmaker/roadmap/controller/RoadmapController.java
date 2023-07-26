@@ -65,7 +65,7 @@ public class RoadmapController {
     }
 
 //    /api/roadmaps?
-    @GetMapping(path="/roadmaps")
+    @GetMapping
     public ResponseEntity<List<RoadmapDto>> getRoadmaps() {
         List<Roadmap> roadmaps = roadmapRepository.findAll();
         List<RoadmapDto> roadmapDtos = new ArrayList<>();
