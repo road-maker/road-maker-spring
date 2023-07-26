@@ -1,6 +1,5 @@
 package com.roadmaker.member.service;
 
-import com.roadmaker.commons.annotation.LoginMember;
 import com.roadmaker.member.authentication.JwtProvider;
 import com.roadmaker.member.dto.MemberResponse;
 import com.roadmaker.member.dto.MypageRequest;

@@ -35,7 +35,7 @@ public class LoginRequiredInterceptor implements HandlerInterceptor {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
 
-            // 실제 존재하는 Member인지 검
+            // 실제 존재하는 Member인지 검사
 
             Member member = memberService.getLoggedInMember();
 

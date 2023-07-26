@@ -9,6 +9,7 @@ import com.roadmaker.member.service.MemberService;
 import com.roadmaker.roadmap.dto.RoadmapDto;
 import com.roadmaker.roadmap.dto.RoadmapRequest;
 import com.roadmaker.roadmap.dto.RoadmapResponse;
+import com.roadmaker.roadmap.entity.roadmapeditor.RoadmapEditor;
 import com.roadmaker.roadmap.entity.roadmapeditor.RoadmapEditorRepository;
 import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNode;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNode;
@@ -64,11 +65,19 @@ public class RoadmapController {
     }
 
 //    /api/roadmaps?
-    @GetMapping
+    @GetMapping(path="/roadmaps")
     public ResponseEntity<List<RoadmapDto>> getRoadmaps() {
         List<Roadmap> roadmaps = roadmapRepository.findAll();
-        List<RoadmapDto> roadmapDtos = roadmaps.stream().map(RoadmapDto::of).toList();
-
+        List<RoadmapDto> roadmapDtos = new ArrayList<>();
+        roadmaps.stream().forEach(roadmap -> {
+            RoadmapEditor roadmapEditor = roadmapEditorRepository.findByRoadmapIdAndIsOwner(roadmap.getId(), true);
+            if(roadmapEditor == null) { //테이블의 구체성이 부족할 때 만들어진 데이터 때문에 nullpointer exception이 발생할 수 있어서 넣어둔 코드, 실제에선 발생이 없어야 함
+                roadmapDtos.add(RoadmapDto.of(roadmap));
+            } else {
+                String ownerNickname = roadmapEditor.getMember().getNickname();
+                roadmapDtos.add(RoadmapDto.of(roadmap, ownerNickname));
+            }
+        });
         return new ResponseEntity<>(roadmapDtos, HttpStatus.OK);
     }
 
