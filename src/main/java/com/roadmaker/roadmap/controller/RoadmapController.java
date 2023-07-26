@@ -72,11 +72,11 @@ public class RoadmapController {
     @GetMapping(path = "/load-roadmap/{roadmapId}")
     public ResponseEntity<RoadmapResponse> loadRoadmap(@PathVariable Long roadmapId) {
 
-        RoadmapDto roadmapDto = roadmapService.findRoadmapById(roadmapId);
-        if (roadmapDto == null) {
+        Roadmap roadmap = roadmapService.findRoadmapById(roadmapId);
+        if (roadmap == null) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
-
+        RoadmapDto roadmapDto = RoadmapDto.of(roadmap);
         RoadmapResponse roadmapResponse = roadmapService.makeRoadmapResponse(roadmapDto);
         List<CommentDto> commentDtos = roadmapService.callRoadmapComment(roadmapId);
 
