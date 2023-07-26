@@ -1,5 +1,6 @@
 package com.roadmaker.member.service;
 
+import com.roadmaker.commons.annotation.LoginMember;
 import com.roadmaker.member.authentication.JwtProvider;
 import com.roadmaker.member.dto.MemberResponse;
 import com.roadmaker.member.dto.MypageRequest;
@@ -125,12 +126,8 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public Boolean saveProfile(MypageRequest request) {
+    public Boolean saveProfile(MypageRequest request, Member member) {
         //1. 비즈니스 로직 처리
-        Member member = getLoggedInMember();
-        if (!member.getId().equals(request.getMemberId())) {
-            return false;
-        }
         member.setBio(request.getBio());
         member.setNickname(request.getNickname());
         member.setBaekjoonId(request.getBaekjoonId());

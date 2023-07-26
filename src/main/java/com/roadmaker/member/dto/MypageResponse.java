@@ -1,6 +1,8 @@
 package com.roadmaker.member.dto;
 
 import com.roadmaker.roadmap.dto.InProgressRoadmapDto;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
