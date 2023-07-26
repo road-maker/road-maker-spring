@@ -23,7 +23,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -83,47 +82,6 @@ public class RoadmapServiceImpl implements RoadmapService{
     @Override
     public Roadmap findRoadmapById(Long roadmapId) {
         return roadmapRepository.findById(roadmapId).orElseThrow(NotFoundException::new);
-    }
-
-    @Override
-    @Transactional
-    public boolean doJoinRoadmap(Long roadmapId, Member member) {
-        //해당 유저가 이미 join 하고 있다면 거짓 반환
-        if (inProgressRoadmapRepository.findByRoadmapIdAndMemberId(roadmapId, member.getId()).isPresent()) {
-            return false;
-        }
-
-        Optional<Roadmap> roadmapOptional = roadmapRepository.findById(roadmapId);
-        Roadmap roadmap = roadmapOptional.orElse(null); //nul 처리는 필요는 없음
-
-        //inProgressRoadmap 에 들어갈 inProgressNode 들의 리스트 생성
-        // 리스트 검색-해당 로드맵에 해당하는 모든 노드들(모조리)
-        List<RoadmapNode> roadmapNodes = roadmapNodeRepository.findByRoadmapId(roadmapId);
-
-        // 로드맵 join 시 생성되는 InProgressNode 리스트 생성
-        List<InProgressNode> inProgressNodes = new ArrayList<>();
-
-        roadmapNodes
-                .forEach(node -> {InProgressNode inProgressNode = InProgressNode.builder()
-                        .roadmap(roadmap)
-                        .roadmapNode(node)
-                        .member(member)
-                        .done(false)
-                        .build();
-                    inProgressNodeRepository.save(inProgressNode);
-                    inProgressNodes.add(inProgressNode);
-                });
-
-        InProgressRoadmap inProgressRoadmap= InProgressRoadmap.builder()
-                .roadmap(roadmap)
-                .member(member)
-                .inProgressNodes(inProgressNodes)
-                .done(false)
-                .build();
-
-        inProgressRoadmapRepository.save(inProgressRoadmap);
-
-        return true;
     }
 
     @Override
