@@ -67,7 +67,7 @@ public class MemberController {
 
     @LoginRequired
     @GetMapping("/{nickname}")
-    public MypageResponse gotoMypage(@PathVariable String nickname) { //email
+    public MypageResponse gotoMypage(@PathVariable String nickname) {
         //1. 요청 데이터 검증
         //2. 비즈니스 로직 처리
         MypageResponse mypageResponse = memberService.callMyPage(nickname);

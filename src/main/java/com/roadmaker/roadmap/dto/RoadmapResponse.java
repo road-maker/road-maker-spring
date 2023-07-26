@@ -6,7 +6,7 @@ import lombok.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Getter
+@Getter @Setter
 @ToString
 @Builder
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -14,8 +14,9 @@ import java.util.stream.Collectors;
 public class RoadmapResponse {
     private RoadmapDto roadmap;
     private RoadmapViewportDto viewport;
-    private List<RoadmapEdgeDto> edges;
-    private List<RoadmapNodeDto> nodes;
+    private List<RoadmapEdgeDto> roadmapEdges;
+    private List<RoadmapNodeDto> roadmapNodes;
+    private List<CommentDto> commentDtos;
 
     public static RoadmapResponse of(Roadmap roadmap) {
         return RoadmapResponse.builder()
@@ -25,4 +26,5 @@ public class RoadmapResponse {
                 .edges(roadmap.getRoadmapEdges().stream().map(RoadmapEdgeDto::of).toList())
                 .build();
     }
+
 }

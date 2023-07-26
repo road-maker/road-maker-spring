@@ -7,7 +7,10 @@ import com.roadmaker.member.dto.MypageResponse;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.entity.MemberRepository;
 import com.roadmaker.member.dto.TokenInfo;
+import com.roadmaker.roadmap.dto.CommentDto;
 import com.roadmaker.roadmap.dto.InProgressRoadmapDto;
+import com.roadmaker.roadmap.entity.comment.Comment;
+import com.roadmaker.roadmap.entity.comment.CommentRepository;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNode;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNodeRepository;
 import com.roadmaker.roadmap.entity.inprogressroadmap.InProgressRoadmap;
@@ -35,6 +38,7 @@ public class MemberServiceImpl implements MemberService {
     private final JwtProvider jwtProvider;
     private final InProgressNodeRepository inProgressNodeRepository;
     private final InProgressRoadmapRepository inProgressRoadmapRepository;
+    private final CommentRepository commentRepository;
 
     @Override
     @Transactional
@@ -84,10 +88,10 @@ public class MemberServiceImpl implements MemberService {
             return null;
         }
         Long memberId = member.getId();
+        System.out.println(memberId);
 
         Optional<InProgressRoadmap> inProgressRoadmaps = (inProgressRoadmapRepository.findByMemberId(memberId));
         List<InProgressRoadmapDto> inProgressRoadmapDtos = new ArrayList<>();
-
         if(inProgressRoadmaps.isPresent()) {
             InProgressRoadmap inProgressRoadmap = inProgressRoadmaps.get();
 
@@ -105,6 +109,20 @@ public class MemberServiceImpl implements MemberService {
                     .build();
             inProgressRoadmapDtos.add(inProgressRoadmapDto);
         }
+        System.out.println(inProgressRoadmapDtos);
+
+        List<Comment> comments = commentRepository.findByMemberId(memberId);
+        List<CommentDto> commentDtos = new ArrayList<>();
+        comments.forEach(
+                comment -> { CommentDto commentDto = CommentDto.builder()
+                            .memberNickname(comment.getMember().getNickname())
+                            .roadmapId(comment.getRoadmap().getId())
+                            .content(comment.getContent())
+                            .build();
+                    commentDtos.add(commentDto);
+                });
+        System.out.println(commentDtos);
+
 
         return MypageResponse.builder()
                 .memberId(memberId)
@@ -118,6 +136,7 @@ public class MemberServiceImpl implements MemberService {
                 .level(member.getLevel())
                 .exp(member.getExp())
                 .inProcessRoadmapDto(inProgressRoadmapDtos)
+                .commentDtos(commentDtos)
                 .build();
     }
 

@@ -42,9 +42,6 @@ public class Member extends BaseTimeEntity implements UserDetails {
     private int level;
     @Column(nullable = false)
     private int exp;
-//    @ElementCollection(fetch = FetchType.EAGER)
-//    @Builder.Default
-//    private List<String> roles = new ArrayList<>();
 
     @Override
     public String getPassword() {
@@ -78,11 +75,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-//        return this.roles.stream()
-//                .map(SimpleGrantedAuthority::new)
-//                .collect(Collectors.toList());
         List<GrantedAuthority> authorities = new ArrayList<>();
-        // 예: authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
         return authorities;
     }
