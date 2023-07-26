@@ -476,3 +476,68 @@ java.lang.NullPointerException: Cannot invoke "com.roadmaker.roadmap.entity.road
 2023-07-26T22:11:27.754+09:00  INFO 20280 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
 2023-07-26T22:11:27.755+09:00  INFO 20280 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
 2023-07-26T22:11:27.756+09:00  INFO 20280 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2023-07-26T22:26:14.088+09:00  INFO 14144 --- [restartedMain] com.roadmaker.RoadmakerApplication       : Starting RoadmakerApplication using Java 17.0.7 with PID 14144 (C:\Users\optim\Documents\GitHub\roadmaker\build\classes\java\main started by optim in C:\Users\optim\Documents\GitHub\roadmaker)
+2023-07-26T22:26:14.094+09:00  INFO 14144 --- [restartedMain] com.roadmaker.RoadmakerApplication       : No active profile set, falling back to 1 default profile: "default"
+2023-07-26T22:26:14.204+09:00  INFO 14144 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-07-26T22:26:14.204+09:00  INFO 14144 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2023-07-26T22:26:15.249+09:00  INFO 14144 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-07-26T22:26:15.350+09:00  INFO 14144 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 90 ms. Found 8 JPA repository interfaces.
+2023-07-26T22:26:16.255+09:00  INFO 14144 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2023-07-26T22:26:16.279+09:00  INFO 14144 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2023-07-26T22:26:16.279+09:00  INFO 14144 --- [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.10]
+2023-07-26T22:26:16.389+09:00  INFO 14144 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2023-07-26T22:26:16.391+09:00  INFO 14144 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2186 ms
+2023-07-26T22:26:16.444+09:00  INFO 14144 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-07-26T22:26:16.994+09:00  INFO 14144 --- [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@65f1ed4c
+2023-07-26T22:26:16.996+09:00  INFO 14144 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-07-26T22:26:17.005+09:00  INFO 14144 --- [restartedMain] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:mysql://roadmaker-dev-rds.cicx0gemvzpw.ap-northeast-2.rds.amazonaws.com:3306/roadmakerdb?serverTimezone=Asia/Seoul&characterEncoding=UTF-8'
+2023-07-26T22:26:17.191+09:00  INFO 14144 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-07-26T22:26:17.343+09:00  INFO 14144 --- [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.2.5.Final
+2023-07-26T22:26:17.346+09:00  INFO 14144 --- [restartedMain] org.hibernate.cfg.Environment            : HHH000406: Using bytecode reflection optimizer
+2023-07-26T22:26:17.516+09:00  INFO 14144 --- [restartedMain] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-07-26T22:26:17.673+09:00  INFO 14144 --- [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2023-07-26T22:26:18.044+09:00  INFO 14144 --- [restartedMain] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-07-26T22:26:18.786+09:00  INFO 14144 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-07-26T22:26:22.343+09:00  INFO 14144 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-07-26T22:26:23.209+09:00  WARN 14144 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-07-26T22:26:23.506+09:00  INFO 14144 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@2d567312, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@1ea466f2, org.springframework.security.web.context.SecurityContextHolderFilter@3b5805c6, org.springframework.security.web.header.HeaderWriterFilter@47d1d8e0, org.springframework.security.web.authentication.logout.LogoutFilter@713948b6, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@51f06a1c, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@cd7dfed, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@4d11d1cf, org.springframework.security.web.access.ExceptionTranslationFilter@1c4d9a0d]
+2023-07-26T22:26:24.334+09:00  INFO 14144 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2023-07-26T22:26:24.374+09:00  INFO 14144 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2023-07-26T22:26:24.376+09:00  INFO 14144 --- [restartedMain] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2023-07-26T22:26:24.378+09:00  INFO 14144 --- [restartedMain] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@38c2ec81]]
+2023-07-26T22:26:24.378+09:00  INFO 14144 --- [restartedMain] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+2023-07-26T22:26:24.390+09:00  INFO 14144 --- [restartedMain] com.roadmaker.RoadmakerApplication       : Started RoadmakerApplication in 10.845 seconds (process running for 11.369)
+2023-07-26T22:30:24.658+09:00  INFO 10112 --- [restartedMain] com.roadmaker.RoadmakerApplication       : Starting RoadmakerApplication using Java 17.0.7 with PID 10112 (C:\Users\optim\Documents\GitHub\roadmaker\build\classes\java\main started by optim in C:\Users\optim\Documents\GitHub\roadmaker)
+2023-07-26T22:30:24.665+09:00  INFO 10112 --- [restartedMain] com.roadmaker.RoadmakerApplication       : No active profile set, falling back to 1 default profile: "default"
+2023-07-26T22:30:24.756+09:00  INFO 10112 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-07-26T22:30:24.756+09:00  INFO 10112 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2023-07-26T22:30:25.650+09:00  INFO 10112 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-07-26T22:30:25.770+09:00  INFO 10112 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 109 ms. Found 8 JPA repository interfaces.
+2023-07-26T22:30:26.816+09:00  INFO 10112 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2023-07-26T22:30:26.836+09:00  INFO 10112 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2023-07-26T22:30:26.837+09:00  INFO 10112 --- [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.10]
+2023-07-26T22:30:26.930+09:00  INFO 10112 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2023-07-26T22:30:26.931+09:00  INFO 10112 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2174 ms
+2023-07-26T22:30:26.979+09:00  INFO 10112 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-07-26T22:30:27.642+09:00  INFO 10112 --- [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@72595451
+2023-07-26T22:30:27.645+09:00  INFO 10112 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-07-26T22:30:27.656+09:00  INFO 10112 --- [restartedMain] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:mysql://roadmaker-dev-rds.cicx0gemvzpw.ap-northeast-2.rds.amazonaws.com:3306/roadmakerdb?serverTimezone=Asia/Seoul&characterEncoding=UTF-8'
+2023-07-26T22:30:27.842+09:00  INFO 10112 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-07-26T22:30:27.946+09:00  INFO 10112 --- [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.2.5.Final
+2023-07-26T22:30:27.950+09:00  INFO 10112 --- [restartedMain] org.hibernate.cfg.Environment            : HHH000406: Using bytecode reflection optimizer
+2023-07-26T22:30:28.106+09:00  INFO 10112 --- [restartedMain] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-07-26T22:30:28.282+09:00  INFO 10112 --- [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2023-07-26T22:30:28.707+09:00  INFO 10112 --- [restartedMain] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-07-26T22:30:29.452+09:00  INFO 10112 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-07-26T22:30:31.473+09:00  INFO 10112 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-07-26T22:30:32.292+09:00  WARN 10112 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-07-26T22:30:32.498+09:00  INFO 10112 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@47d1d8e0, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@9754435, org.springframework.security.web.context.SecurityContextHolderFilter@2e246606, org.springframework.security.web.header.HeaderWriterFilter@6d76cf0, org.springframework.security.web.authentication.logout.LogoutFilter@1185b7ee, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@70daccd7, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@1813518b, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@79183ae4, org.springframework.security.web.access.ExceptionTranslationFilter@660db909]
+2023-07-26T22:30:33.373+09:00  INFO 10112 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2023-07-26T22:30:33.432+09:00  INFO 10112 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2023-07-26T22:30:33.435+09:00  INFO 10112 --- [restartedMain] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2023-07-26T22:30:33.439+09:00  INFO 10112 --- [restartedMain] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@63aaf452]]
+2023-07-26T22:30:33.439+09:00  INFO 10112 --- [restartedMain] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+2023-07-26T22:30:33.452+09:00  INFO 10112 --- [restartedMain] com.roadmaker.RoadmakerApplication       : Started RoadmakerApplication in 9.295 seconds (process running for 9.961)
+2023-07-26T22:30:36.524+09:00  INFO 10112 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-07-26T22:30:36.524+09:00  INFO 10112 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2023-07-26T22:30:36.526+09:00  INFO 10112 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms

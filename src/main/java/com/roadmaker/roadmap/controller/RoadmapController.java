@@ -75,7 +75,8 @@ public class RoadmapController {
                 roadmapDtos.add(RoadmapDto.of(roadmap));
             } else {
                 String ownerNickname = roadmapEditor.getMember().getNickname();
-                roadmapDtos.add(RoadmapDto.of(roadmap, ownerNickname));
+                String ownerProfileUrl = roadmapEditor.getMember().getAvatarUrl();
+                roadmapDtos.add(RoadmapDto.of(roadmap, ownerNickname, ownerProfileUrl));
             }
         });
         return new ResponseEntity<>(roadmapDtos, HttpStatus.OK);
