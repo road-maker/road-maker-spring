@@ -14,15 +14,15 @@ import java.util.stream.Collectors;
 public class RoadmapResponse {
     private RoadmapDto roadmap;
     private RoadmapViewportDto viewport;
-    private List<RoadmapEdgeDto> roadmapEdges;
-    private List<RoadmapNodeDto> roadmapNodes;
+    private List<RoadmapEdgeDto> edges;
+    private List<RoadmapNodeDto> nodes;
 
     public static RoadmapResponse of(Roadmap roadmap) {
         return RoadmapResponse.builder()
                 .roadmap(RoadmapDto.of(roadmap))
                 .viewport(RoadmapViewportDto.of(roadmap.getRoadmapViewport()))
-                .roadmapNodes(roadmap.getRoadmapNodes().stream().map(roadmapNode -> RoadmapNodeDto.of(roadmapNode)).collect(Collectors.toList()))
-                .roadmapEdges(roadmap.getRoadmapEdges().stream().map(roadmapEdge -> RoadmapEdgeDto.of(roadmapEdge)).collect(Collectors.toList()))
+                .nodes(roadmap.getRoadmapNodes().stream().map(RoadmapNodeDto::of).toList())
+                .edges(roadmap.getRoadmapEdges().stream().map(RoadmapEdgeDto::of).toList())
                 .build();
     }
 }
