@@ -1,5 +1,7 @@
 package com.roadmaker.roadmap.service;
 
+import com.roadmaker.commons.exception.ConflictException;
+import com.roadmaker.commons.exception.NotFoundException;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.service.MemberService;
 import com.roadmaker.roadmap.dto.*;
@@ -19,8 +21,8 @@ import com.roadmaker.roadmap.entity.roadmapviewport.RoadmapViewport;
 import com.roadmaker.roadmap.entity.roadmapviewport.RoadmapViewportRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -78,53 +80,41 @@ public class RoadmapServiceImpl implements RoadmapService{
     }
 
     @Override
-    public RoadmapDto findRoadmapById(Long roadmapId) {
-        Optional<Roadmap> roadmapOptional = roadmapRepository.findById(roadmapId);
-        Roadmap roadmap = roadmapOptional.orElse(null);
-        if (roadmap != null) {
-            return RoadmapDto.of(roadmap);
-        }
-        return null;
+    public Roadmap findRoadmapById(Long roadmapId) {
+        return roadmapRepository.findById(roadmapId).orElseThrow(NotFoundException::new);
     }
 
     @Override
-    public boolean doJoinRoadmap(Long roadmapId, Member member) {
-        //해당 유저가 이미 join 하고 있다면 거짓 반환
-        if (inProgressRoadmapRepository.findByRoadmapIdAndMemberId(roadmapId, member.getId()).isPresent()) {
-            return false;
+    @Transactional
+    public void joinRoadmap(Roadmap roadmap, Member member) {
+        // 이미 참여중인지 확인
+        Optional<InProgressRoadmap> inProgressRoadmapOptional = inProgressRoadmapRepository.findByRoadmapIdAndMemberId(roadmap.getId(), member.getId());
+        if (inProgressRoadmapOptional.isPresent()) {
+            throw new ConflictException();
         }
+        
+        // InProgresRoadmap 생성
+        InProgressRoadmap inProgressRoadmap = InProgressRoadmap.builder()
+                .roadmap(roadmap)
+                .member(member)
+                .done(false)
+                .build();
 
-        Optional<Roadmap> roadmapOptional = roadmapRepository.findById(roadmapId);
-        Roadmap roadmap = roadmapOptional.orElse(null); //nul 처리는 필요는 없음
+        inProgressRoadmapRepository.save(inProgressRoadmap);
 
-        //inProgressRoadmap 에 들어갈 inProgressNode 들의 리스트 생성
-        // 리스트 검색-해당 로드맵에 해당하는 모든 노드들(모조리)
-        List<RoadmapNode> roadmapNodes = roadmapNodeRepository.findByRoadmapId(roadmapId);
-
-        // 로드맵 join 시 생성되는 InProgressNode 리스트 생성
-        List<InProgressNode> inProgressNodes = new ArrayList<>();
+        // InProgressNode 생성
+        List<RoadmapNode> roadmapNodes = roadmapNodeRepository.findByRoadmapId(roadmap.getId());
 
         roadmapNodes
                 .forEach(node -> {InProgressNode inProgressNode = InProgressNode.builder()
                         .roadmap(roadmap)
                         .roadmapNode(node)
                         .member(member)
+                        .inProgressRoadmap(inProgressRoadmap)
                         .done(false)
                         .build();
                     inProgressNodeRepository.save(inProgressNode);
-                    inProgressNodes.add(inProgressNode);
                 });
-
-        InProgressRoadmap inProgressRoadmap= InProgressRoadmap.builder()
-                .roadmap(roadmap)
-                .member(member)
-                .inProgressNodes(inProgressNodes)
-                .done(false)
-                .build();
-
-        inProgressRoadmapRepository.save(inProgressRoadmap);
-
-        return true;
     }
 
     @Override

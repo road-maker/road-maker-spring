@@ -7,7 +7,6 @@ import com.roadmaker.roadmap.entity.inprogressroadmap.InProgressRoadmap;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNode;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -44,10 +43,11 @@ public class InProgressNode extends BaseTimeEntity {
     private Boolean done;
 
     @Builder
-    public InProgressNode(Roadmap roadmap, RoadmapNode roadmapNode, Member member, Boolean done) {
+    public InProgressNode(Roadmap roadmap, RoadmapNode roadmapNode, Member member, Boolean done, InProgressRoadmap inProgressRoadmap) {
         this.roadmap = roadmap;
         this.roadmapNode = roadmapNode;
         this.member = member;
         this.done = done;
+        this.inProgressRoadmap = inProgressRoadmap;
     }
 }

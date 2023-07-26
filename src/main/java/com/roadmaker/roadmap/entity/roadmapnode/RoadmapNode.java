@@ -8,13 +8,11 @@ import com.roadmaker.roadmap.entity.roadmapnodeposition.RoadmapNodePosition;
 import com.roadmaker.roadmap.entity.roadmapnodepositionabsolute.RoadmapNodePositionAbsolute;
 import com.roadmaker.roadmap.entity.roadmapnodestyle.RoadmapNodeStyle;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
+@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "ROADMAP_NODE")
 public class RoadmapNode extends BaseTimeEntity {
