@@ -3,19 +3,19 @@ package com.roadmaker.gpt.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotBlank;
 
-public class Sentence {
+public class GptRoadmapResponse {
     @NotBlank
     String id;
     @NotBlank
     @JsonInclude() // content should always exist in the call, even if it is null
     String content;
 
-    public Sentence() {
+    public GptRoadmapResponse() {
 
     }
 
 
-    public Sentence(@NotBlank String id, @NotBlank String content) {
+    public GptRoadmapResponse(@NotBlank String id, @NotBlank String content) {
         this.id = id;
         this.content = content;
     }
