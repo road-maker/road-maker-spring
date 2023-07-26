@@ -44,11 +44,19 @@ public class MemberController {
     }
 
     @PostMapping("/signin")
-    public TokenInfo login(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
         String email = loginRequest.getEmail();
         String password = loginRequest.getPassword();
 
-        return memberService.login(email, password);
+        TokenInfo tokenInfo = memberService.login(email, password);
+        MemberResponse member = memberService.findMemberByEmail(email);
+
+        LoginResponse loginResponse = LoginResponse.builder()
+                .member(member)
+                .tokenInfo(tokenInfo)
+                .build();
+
+        return new ResponseEntity<>(loginResponse, HttpStatus.OK);
     }
 
     @LoginRequired

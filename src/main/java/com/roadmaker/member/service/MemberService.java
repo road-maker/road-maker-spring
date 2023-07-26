@@ -1,5 +1,6 @@
 package com.roadmaker.member.service;
 
+import com.roadmaker.member.dto.MemberResponse;
 import com.roadmaker.member.dto.MypageRequest;
 import com.roadmaker.member.dto.MypageResponse;
 import com.roadmaker.member.entity.Member;
@@ -22,6 +23,7 @@ public interface MemberService {
     public Member getLoggedInMember();
 
     public MypageResponse callMyPage(Long memberId);
+    public Boolean saveProfile(MypageRequest request);
 
-    public Boolean saveProfile(MypageRequest request, Member member);
+    public MemberResponse findMemberByEmail(String email);
 }
