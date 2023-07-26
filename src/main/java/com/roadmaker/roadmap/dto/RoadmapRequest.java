@@ -12,7 +12,7 @@ import java.util.List;
 public class RoadmapRequest {
     private RoadmapDto roadmap;
     private RoadmapViewportDto viewport;
-    private List<RoadmapEdgeDto> roadmapEdges;
-    private List<RoadmapNodeDto> roadmapNodes;
+       private List<RoadmapEdgeDto> edges;
+    private List<RoadmapNodeDto> nodes;
 }
 
