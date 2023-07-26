@@ -9,6 +9,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 public class RoadmapDto {
+    private Long id;
     private String title;
     private String description;
     private String thumbnailUrl;
@@ -23,10 +24,11 @@ public class RoadmapDto {
                 .recommendedExecutionTimeValue(this.recommendedExecutionTimeValue)
                 .recommendedExecutionTimeUnit(this.recommendedExecutionTimeUnit)
                 .build();
-    };
+    }
 
     public static RoadmapDto of(Roadmap roadmap) {
         return RoadmapDto.builder()
+                .id(roadmap.getId())
                 .title(roadmap.getTitle())
                 .description(roadmap.getDescription())
                 .thumbnailUrl(roadmap.getThumbnailUrl())

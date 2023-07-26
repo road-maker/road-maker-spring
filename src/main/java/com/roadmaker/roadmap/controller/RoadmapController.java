@@ -35,6 +35,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Security;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController @Slf4j
 @RequiredArgsConstructor
@@ -59,8 +61,16 @@ public class RoadmapController {
         return new ResponseEntity<>(roadmapId, HttpStatus.CREATED);
     }
 
-    @GetMapping(path = "/load-roadmap/{roadmapId}")
+//    /api/roadmaps?
+    @GetMapping
+    public ResponseEntity<List<RoadmapDto>> getRoadmaps() {
+        List<Roadmap> roadmaps = roadmapRepository.findAll();
+        List<RoadmapDto> roadmapDtos = roadmaps.stream().map(RoadmapDto::of).toList();
 
+        return new ResponseEntity<>(roadmapDtos, HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/load-roadmap/{roadmapId}")
     public ResponseEntity<RoadmapResponse> loadRoadmap(@PathVariable Long roadmapId) {
 
         Optional<Roadmap> roadmap = roadmapRepository.findById(roadmapId);
