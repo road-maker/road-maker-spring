@@ -1,6 +1,7 @@
 package com.roadmaker.member.service;
 
 import com.roadmaker.member.authentication.JwtProvider;
+import com.roadmaker.member.dto.MemberResponse;
 import com.roadmaker.member.dto.MypageRequest;
 import com.roadmaker.member.dto.MypageResponse;
 import com.roadmaker.member.entity.Member;
@@ -137,5 +138,17 @@ public class MemberServiceImpl implements MemberService {
         member.setGithubUrl(request.getGithubUrl());
         memberRepository.save(member);
         return true;
+    }
+
+    @Override
+    public MemberResponse findMemberByEmail(String email) {
+        Optional<Member> member = memberRepository.findByEmail(email);
+
+        if (member.isEmpty()) {
+            return null;
+        }
+
+        return MemberResponse.of(member.get());
+
     }
 }
