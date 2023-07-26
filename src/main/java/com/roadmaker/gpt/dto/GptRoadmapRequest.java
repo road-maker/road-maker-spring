@@ -4,7 +4,7 @@ import com.theokanning.openai.completion.chat.ChatMessage;
 
 import java.util.List;
 
-public class ChatMessagePrompt {
+public class GptRoadmapRequest {
 
     private List<ChatMessage> chatMessage;
 
