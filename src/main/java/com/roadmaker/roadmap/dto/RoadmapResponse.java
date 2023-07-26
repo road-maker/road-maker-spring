@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 public class RoadmapResponse {
     private RoadmapDto roadmap;
     private RoadmapViewportDto viewport;
-    private List<RoadmapEdgeDto> roadmapEdges;
-    private List<RoadmapNodeDto> roadmapNodes;
+    private List<RoadmapEdgeDto> edges;
+    private List<RoadmapNodeDto> nodes;
     private List<CommentDto> commentDtos;
 
     public static RoadmapResponse of(Roadmap roadmap) {
