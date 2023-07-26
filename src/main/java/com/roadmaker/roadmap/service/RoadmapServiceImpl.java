@@ -17,14 +17,12 @@ import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNode;
 import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNodeRepository;
 import com.roadmaker.roadmap.entity.roadmapviewport.RoadmapViewport;
 import com.roadmaker.roadmap.entity.roadmapviewport.RoadmapViewportRepository;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -51,21 +49,18 @@ public class RoadmapServiceImpl implements RoadmapService{
         roadmapRepository.save(roadmap);
 
         // edge 저장하기
-        List<RoadmapEdgeDto> roadmapEdgeDtos = roadmapRequest.getRoadmapEdges();
+        List<RoadmapEdgeDto> roadmapEdgeDtos = roadmapRequest.getEdges();
         List<RoadmapEdge> roadmapEdges = roadmapEdgeDtos.stream()
-                .map(edgeDto -> edgeDto.toEntity(roadmap))
-                .collect(Collectors.toList());
+                .map(edgeDto -> edgeDto.toEntity(roadmap)).toList();
         roadmapEdgeRepository.saveAll(roadmapEdges);
 //
 //
 //        // 노드 저장하기
-        List<RoadmapNodeDto> roadmapNodeDtos = roadmapRequest.getRoadmapNodes();
-        List<RoadmapNode> roadmapNodes = roadmapNodeDtos.stream()
-                .map(nodeDto -> {
-                    System.out.println("nodeDto = " + nodeDto.toString());
-                    return nodeDto.toEntity(roadmap);
-                })
-                .collect(Collectors.toList());
+        List<RoadmapNodeDto> roadmapNodeDtos = roadmapRequest.getNodes();
+        List<RoadmapNode> roadmapNodes = roadmapNodeDtos
+                .stream()
+                .map(nodeDto -> nodeDto.toEntity(roadmap))
+                .toList();
 
         roadmapNodeRepository.saveAll(roadmapNodes);
 
