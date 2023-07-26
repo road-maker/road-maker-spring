@@ -1,5 +1,6 @@
 package com.roadmaker.roadmap.service;
 
+import com.roadmaker.commons.exception.ConflictException;
 import com.roadmaker.commons.exception.NotFoundException;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.service.MemberService;
@@ -20,6 +21,7 @@ import com.roadmaker.roadmap.entity.roadmapviewport.RoadmapViewport;
 import com.roadmaker.roadmap.entity.roadmapviewport.RoadmapViewportRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,6 +86,7 @@ public class RoadmapServiceImpl implements RoadmapService{
     }
 
     @Override
+    @Transactional
     public boolean doJoinRoadmap(Long roadmapId, Member member) {
         //해당 유저가 이미 join 하고 있다면 거짓 반환
         if (inProgressRoadmapRepository.findByRoadmapIdAndMemberId(roadmapId, member.getId()).isPresent()) {
@@ -121,6 +124,39 @@ public class RoadmapServiceImpl implements RoadmapService{
         inProgressRoadmapRepository.save(inProgressRoadmap);
 
         return true;
+    }
+
+    @Override
+    @Transactional
+    public void joinRoadmap(Roadmap roadmap, Member member) {
+        // 이미 참여중인지 확인
+        Optional<InProgressRoadmap> inProgressRoadmapOptional = inProgressRoadmapRepository.findByRoadmapIdAndMemberId(roadmap.getId(), member.getId());
+        if (inProgressRoadmapOptional.isPresent()) {
+            throw new ConflictException();
+        }
+        
+        // InProgresRoadmap 생성
+        InProgressRoadmap inProgressRoadmap = InProgressRoadmap.builder()
+                .roadmap(roadmap)
+                .member(member)
+                .done(false)
+                .build();
+
+        inProgressRoadmapRepository.save(inProgressRoadmap);
+
+        // InProgressNode 생성
+        List<RoadmapNode> roadmapNodes = roadmapNodeRepository.findByRoadmapId(roadmap.getId());
+
+        roadmapNodes
+                .forEach(node -> {InProgressNode inProgressNode = InProgressNode.builder()
+                        .roadmap(roadmap)
+                        .roadmapNode(node)
+                        .member(member)
+                        .inProgressRoadmap(inProgressRoadmap)
+                        .done(false)
+                        .build();
+                    inProgressNodeRepository.save(inProgressNode);
+                });
     }
 
     @Override

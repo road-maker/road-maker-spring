@@ -2,7 +2,6 @@ package com.roadmaker.roadmap.controller;
 
 import com.roadmaker.commons.annotation.LoginMember;
 import com.roadmaker.commons.annotation.LoginRequired;
-import com.roadmaker.member.authentication.SecurityUtil;
 import com.roadmaker.roadmap.dto.NodeStatusChangeDto;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNodeRepository;
 import com.roadmaker.member.service.MemberService;
@@ -11,10 +10,7 @@ import com.roadmaker.roadmap.dto.RoadmapRequest;
 import com.roadmaker.roadmap.dto.RoadmapResponse;
 import com.roadmaker.roadmap.entity.roadmapeditor.RoadmapEditor;
 import com.roadmaker.roadmap.entity.roadmapeditor.RoadmapEditorRepository;
-import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNode;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNode;
-import com.roadmaker.roadmap.entity.inprogressroadmap.InProgressRoadmap;
-import com.roadmaker.roadmap.entity.roadmapviewport.RoadmapViewport;
 import com.roadmaker.roadmap.entity.roadmapviewport.RoadmapViewportRepository;
 import com.roadmaker.roadmap.service.RoadmapService;
 import jakarta.validation.Valid;
@@ -22,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,15 +26,11 @@ import com.roadmaker.roadmap.entity.roadmapedge.RoadmapEdgeRepository;
 import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNodeRepository;
 import com.roadmaker.roadmap.entity.roadmap.RoadmapRepository;
 import com.roadmaker.member.entity.Member;
-import com.roadmaker.member.entity.MemberRepository;
 import com.roadmaker.roadmap.entity.inprogressroadmap.InProgressRoadmapRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Security;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @RestController @Slf4j
 @RequiredArgsConstructor
@@ -103,9 +94,8 @@ public class RoadmapController {
         Roadmap roadmap = roadmapService.findRoadmapById(roadmapId);
 
         //2. 로드맵 조인, 실패 시 false 반환: 비즈니스 로직
-        if (!roadmapService.doJoinRoadmap(roadmapId, member)) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
+        roadmapService.joinRoadmap(roadmap, member);
+
         // 3. 성공 신호 전달
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

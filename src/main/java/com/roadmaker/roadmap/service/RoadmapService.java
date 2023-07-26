@@ -19,6 +19,8 @@ public interface RoadmapService {
     // 참여
     public boolean doJoinRoadmap(Long roadmapId, Member member);
 
+    public void joinRoadmap(Roadmap roadmap, Member member);
+
     // 진행상황 변경
     public boolean changeRoadmapStatus(NodeStatusChangeDto nodeStatusChangeDto);
 

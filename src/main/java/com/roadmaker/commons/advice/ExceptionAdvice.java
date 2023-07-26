@@ -1,5 +1,6 @@
 package com.roadmaker.commons.advice;
 
+import com.roadmaker.commons.exception.ConflictException;
 import com.roadmaker.commons.exception.NotFoundException;
 import com.roadmaker.member.exception.UnAuthenticatedException;
 import lombok.Getter;
@@ -22,6 +23,11 @@ public class ExceptionAdvice {
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<HttpStatus> notFoundException() {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<HttpStatus> conflictException() {
+        return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
