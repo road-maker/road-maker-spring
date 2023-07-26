@@ -66,11 +66,11 @@ public class MemberController {
     }
 
     @LoginRequired
-    @GetMapping("/{memberId}")
-    public MypageResponse gotoMypage(@PathVariable Long memberId) { //email
+    @GetMapping("/{nickname}")
+    public MypageResponse gotoMypage(@PathVariable String nickname) { //email
         //1. 요청 데이터 검증
         //2. 비즈니스 로직 처리
-        MypageResponse mypageResponse = memberService.callMyPage(memberId);
+        MypageResponse mypageResponse = memberService.callMyPage(nickname);
         if ( mypageResponse == null)
         {
             ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

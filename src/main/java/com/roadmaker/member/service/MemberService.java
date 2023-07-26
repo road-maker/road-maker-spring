@@ -22,7 +22,7 @@ public interface MemberService {
 
     public Member getLoggedInMember();
 
-    public MypageResponse callMyPage(Long memberId);
+    public MypageResponse callMyPage(String nickname);
     public Boolean saveProfile(MypageRequest request, Member member);
 
     public MemberResponse findMemberByEmail(String email);

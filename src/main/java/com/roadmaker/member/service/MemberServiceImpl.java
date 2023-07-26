@@ -67,8 +67,6 @@ public class MemberServiceImpl implements MemberService {
     public Member getLoggedInMember() {
         String email = SecurityUtil.getLoggedInMemberEmail();
         Optional<Member> memberOptional = memberRepository.findByEmail(email);
-        System.out.println(email);
-        System.out.println(memberOptional);
         Member member = memberOptional.orElse(null);
         if (member != null) {
             return member;
@@ -80,12 +78,13 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public MypageResponse callMyPage(Long memberId) {
-        Optional<Member> memberOptional = memberRepository.findById(memberId);
+    public MypageResponse callMyPage(String nickname) {
+        Optional<Member> memberOptional = memberRepository.findByNickname(nickname);
         Member member = memberOptional.orElse(null);
         if (member == null) {
             return null;
         }
+        Long memberId = member.getId();
 
         Optional<InProgressRoadmap> inProgressRoadmaps = (inProgressRoadmapRepository.findByMemberId(memberId));
         List<InProgressRoadmapDto> inProgressRoadmapDtos = new ArrayList<>();
