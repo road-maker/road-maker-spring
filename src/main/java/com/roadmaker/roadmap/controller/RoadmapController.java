@@ -2,13 +2,9 @@ package com.roadmaker.roadmap.controller;
 
 import com.roadmaker.commons.annotation.LoginMember;
 import com.roadmaker.commons.annotation.LoginRequired;
-import com.roadmaker.member.authentication.SecurityUtil;
-import com.roadmaker.roadmap.dto.NodeStatusChangeDto;
+import com.roadmaker.roadmap.dto.*;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNodeRepository;
 import com.roadmaker.member.service.MemberService;
-import com.roadmaker.roadmap.dto.RoadmapDto;
-import com.roadmaker.roadmap.dto.RoadmapRequest;
-import com.roadmaker.roadmap.dto.RoadmapResponse;
 import com.roadmaker.roadmap.entity.roadmapeditor.RoadmapEditor;
 import com.roadmaker.roadmap.entity.roadmapeditor.RoadmapEditorRepository;
 import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNode;
@@ -18,11 +14,13 @@ import com.roadmaker.roadmap.entity.roadmapviewport.RoadmapViewport;
 import com.roadmaker.roadmap.entity.roadmapviewport.RoadmapViewportRepository;
 import com.roadmaker.roadmap.service.RoadmapService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,29 +29,21 @@ import com.roadmaker.roadmap.entity.roadmapedge.RoadmapEdgeRepository;
 import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNodeRepository;
 import com.roadmaker.roadmap.entity.roadmap.RoadmapRepository;
 import com.roadmaker.member.entity.Member;
-import com.roadmaker.member.entity.MemberRepository;
 import com.roadmaker.roadmap.entity.inprogressroadmap.InProgressRoadmapRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Security;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-@RestController @Slf4j
+@RestController @Slf4j @Validated
 @RequiredArgsConstructor
 @RequestMapping("/api/roadmaps")
 public class RoadmapController {
     private final MemberService memberService;
     private final RoadmapService roadmapService;
     private final RoadmapRepository roadmapRepository;
-    private final RoadmapEdgeRepository roadmapEdgeRepository;
-    private final RoadmapNodeRepository roadmapNodeRepository;
-    private final InProgressRoadmapRepository inProgressRoadmapRepository;
     private final InProgressNodeRepository inProgressNodeRepository;
     private final RoadmapEditorRepository roadmapEditorRepository;
-    private final RoadmapViewportRepository roadmapViewportRepository;
 
     // 로드맵 발행
     @LoginRequired
@@ -85,13 +75,15 @@ public class RoadmapController {
     @GetMapping(path = "/load-roadmap/{roadmapId}")
     public ResponseEntity<RoadmapResponse> loadRoadmap(@PathVariable Long roadmapId) {
 
-        Optional<Roadmap> roadmap = roadmapRepository.findById(roadmapId);
-
-        if (roadmap.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        RoadmapDto roadmapDto = roadmapService.findRoadmapById(roadmapId);
+        if (roadmapDto == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
 
-        RoadmapResponse roadmapResponse = RoadmapResponse.of(roadmap.get());
+        RoadmapResponse roadmapResponse = roadmapService.makeRoadmapResponse(roadmapDto);
+        List<CommentDto> commentDtos = roadmapService.callRoadmapComment(roadmapId);
+
+        roadmapResponse.setCommentDtos(commentDtos);
 
         return new ResponseEntity<>(roadmapResponse, HttpStatus.OK);
     }
@@ -124,7 +116,6 @@ public class RoadmapController {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
 
-
         Member memberOwnsNode = Objects.requireNonNull(inProgressNode).getMember();
 
         //상태 변경 요청을 위한 노드의 주인이 현재 접속한 멤버인지 확인
@@ -138,7 +129,25 @@ public class RoadmapController {
                         .done(inProgressNode.getDone())
                         .build();
 
-        roadmapService.changeRoadmapStatus(nodeStatusChangeDto);
-
+        if(roadmapService.changeRoadmapStatus(nodeStatusChangeDto)) {
+            response.setStatus(HttpServletResponse.SC_OK);
+            return;
+        }
+        response.setStatus(HttpServletResponse.SC_CONFLICT);
     }
+
+    @LoginRequired
+    @PostMapping("/{roadmapId}/add-comment")
+    public void addComment (@LoginMember Member member, @PathVariable Long roadmapId, @Size(min = 5, max = 255) String content, HttpServletResponse response) {
+        CommentDto commentDto = CommentDto.builder()
+                .content(content)
+                .roadmapId(roadmapId)
+                .memberNickname(member.getNickname())
+                .build();
+        if(!roadmapService.saveComment(commentDto, roadmapId)) {
+            response.setStatus(HttpServletResponse.SC_CONFLICT);
+        }
+        response.setStatus(HttpServletResponse.SC_CREATED);
+    }
+
 }

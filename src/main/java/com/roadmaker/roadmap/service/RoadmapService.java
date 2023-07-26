@@ -1,11 +1,11 @@
 package com.roadmaker.roadmap.service;
 
 import com.roadmaker.member.entity.Member;
-import com.roadmaker.roadmap.dto.NodeStatusChangeDto;
-import com.roadmaker.roadmap.dto.RoadmapRequest;
+import com.roadmaker.roadmap.dto.*;
 import org.springframework.stereotype.Service;
-import com.roadmaker.roadmap.dto.RoadmapDto;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -22,4 +22,9 @@ public interface RoadmapService {
     // 진행상황 변경
     public boolean changeRoadmapStatus(NodeStatusChangeDto nodeStatusChangeDto);
 
+    public RoadmapResponse makeRoadmapResponse(RoadmapDto roadmapDto);
+
+    public List<CommentDto> callRoadmapComment (Long roadmapId);
+
+    public boolean saveComment (CommentDto commentDto, Long roadmapId);
 }

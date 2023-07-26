@@ -7,6 +7,7 @@ import com.roadmaker.roadmap.entity.roadmapeditor.RoadmapEditor;
 import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNode;
 import com.roadmaker.roadmap.entity.roadmapviewport.RoadmapViewport;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.List;
@@ -20,15 +21,16 @@ public class Roadmap extends BaseTimeEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String title;
-
+    @Column(nullable = false)
     private String description;
 
     private String thumbnailUrl;
 
-    private Integer recommendedExecutionTimeValue;
+    private Integer recommendedExecutionTimeValue;  // 기능 추가 후 nullable=false 추가해야
 
-    private String recommendedExecutionTimeUnit;
+    private String recommendedExecutionTimeUnit;   // 기능 추가 후 nullable=false 추가해야
 
     @OneToMany(mappedBy = "roadmap")
     @JsonManagedReference
