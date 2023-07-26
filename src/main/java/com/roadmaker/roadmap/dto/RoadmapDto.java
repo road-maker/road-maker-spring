@@ -23,7 +23,7 @@ public class RoadmapDto {
                 .recommendedExecutionTimeValue(this.recommendedExecutionTimeValue)
                 .recommendedExecutionTimeUnit(this.recommendedExecutionTimeUnit)
                 .build();
-    };
+    }
 
     public static RoadmapDto of(Roadmap roadmap) {
         return RoadmapDto.builder()

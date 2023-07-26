@@ -7,5 +7,4 @@ import java.util.List;
 
 public interface InProgressNodeRepository extends JpaRepository<InProgressNode, Long> {
     public List<InProgressNode> findByRoadmapAndDone(Roadmap roadmapId, Boolean done);
-
 }

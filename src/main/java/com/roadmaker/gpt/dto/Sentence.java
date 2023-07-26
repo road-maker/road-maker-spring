@@ -1,9 +1,12 @@
 package com.roadmaker.gpt.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.validation.constraints.NotBlank;
 
 public class Sentence {
+    @NotBlank
     String id;
+    @NotBlank
     @JsonInclude() // content should always exist in the call, even if it is null
     String content;
 
@@ -11,7 +14,8 @@ public class Sentence {
 
     }
 
-    public Sentence(String id, String content) {
+
+    public Sentence(@NotBlank String id, @NotBlank String content) {
         this.id = id;
         this.content = content;
     }
@@ -28,7 +32,7 @@ public class Sentence {
         return content;
     }
 
-    public void setContent(String content) {
+    public void setContent(@NotBlank String content) {
         this.content = content;
     }
 }

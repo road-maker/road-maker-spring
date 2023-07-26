@@ -23,5 +23,5 @@ public interface MemberService {
 
     public MypageResponse callMyPage(Long memberId);
 
-    public Boolean saveProfile(MypageRequest request);
+    public Boolean saveProfile(MypageRequest request, Member member);
 }

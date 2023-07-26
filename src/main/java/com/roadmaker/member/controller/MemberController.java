@@ -44,7 +44,7 @@ public class MemberController {
     }
 
     @PostMapping("/signin")
-    public TokenInfo login(@RequestBody LoginRequest loginRequest) {
+    public TokenInfo login(@Valid @RequestBody LoginRequest loginRequest) {
         String email = loginRequest.getEmail();
         String password = loginRequest.getPassword();
 
@@ -71,14 +71,15 @@ public class MemberController {
         return mypageResponse;
     }
 
+    @LoginRequired
     @PostMapping("/save-profile")
-    public ResponseEntity<HttpStatus> changeProfile(@RequestBody MypageRequest request) {
+    public ResponseEntity<HttpStatus> changeProfile(@Valid @RequestBody MypageRequest request, @LoginMember Member member) {
         //1. 요청 데이터 검증
         if (request.getNickname() == null) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
         }
         //2. 비즈니스 로직 처리
-        if(memberService.saveProfile(request).equals(true)) {
+        if(memberService.saveProfile(request, member).equals(true)) {
             //3. 응답 메세지 처리
             return ResponseEntity.status(HttpStatus.CREATED).build();
         }

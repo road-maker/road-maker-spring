@@ -1,6 +1,7 @@
 package com.roadmaker.roadmap.service;
 
 import com.roadmaker.member.entity.Member;
+import com.roadmaker.roadmap.dto.NodeStatusChangeDto;
 import com.roadmaker.roadmap.dto.RoadmapRequest;
 import org.springframework.stereotype.Service;
 import com.roadmaker.roadmap.dto.RoadmapDto;
@@ -16,9 +17,9 @@ public interface RoadmapService {
     public RoadmapDto findRoadmapById(Long roadmapId);
 
     // 참여
-    public boolean joinRoadmap(Long roadmapId);
+    public boolean doJoinRoadmap(Long roadmapId, Member member);
 
     // 진행상황 변경
-    public boolean changeRoadmapStatus(Long inProgressNodeId, Boolean done);
+    public boolean changeRoadmapStatus(NodeStatusChangeDto nodeStatusChangeDto);
 
 }
