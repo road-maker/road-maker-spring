@@ -3,8 +3,11 @@ package com.roadmaker.roadmap.service;
 import com.roadmaker.commons.exception.ConflictException;
 import com.roadmaker.commons.exception.NotFoundException;
 import com.roadmaker.member.entity.Member;
+import com.roadmaker.member.entity.MemberRepository;
 import com.roadmaker.member.service.MemberService;
 import com.roadmaker.roadmap.dto.*;
+import com.roadmaker.roadmap.entity.comment.Comment;
+import com.roadmaker.roadmap.entity.comment.CommentRepository;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNode;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNodeRepository;
 import com.roadmaker.roadmap.entity.inprogressroadmap.InProgressRoadmap;
@@ -23,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,7 +34,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RoadmapServiceImpl implements RoadmapService{
 
-    private final MemberService memberService;
     private final RoadmapRepository roadmapRepository;
     private final RoadmapNodeRepository roadmapNodeRepository;
     private final RoadmapEdgeRepository roadmapEdgeRepository;
@@ -38,6 +41,8 @@ public class RoadmapServiceImpl implements RoadmapService{
     private final RoadmapViewportRepository roadmapViewportRepository;
     private final InProgressRoadmapRepository inProgressRoadmapRepository;
     private final InProgressNodeRepository inProgressNodeRepository;
+    private final CommentRepository commentRepository;
+    private final MemberRepository memberRepository;
 
     @Override
     public Long createRoadmap(RoadmapRequest roadmapRequest, Member member) {
@@ -133,4 +138,43 @@ public class RoadmapServiceImpl implements RoadmapService{
         return true;
     }
 
+    public RoadmapResponse makeRoadmapResponse(RoadmapDto roadmapDto) {
+        Long roadmapId = roadmapDto.getId();
+        Optional<Roadmap> roadmapOptional = roadmapRepository.findById(roadmapId);
+        Roadmap roadmap = roadmapOptional.orElse(null);
+        if(roadmap == null) {
+            return null;
+        }
+        return RoadmapResponse.of(roadmap);
+    }
+
+    public List<CommentDto> callRoadmapComment (Long roadmapId) {
+        List<Comment> comments = commentRepository.findByRoadmapId(roadmapId);
+        List<CommentDto> commentDtos = new ArrayList<>();
+        comments.forEach(
+                comment -> { CommentDto commentDto = CommentDto.builder()
+                                .roadmapId(comment.getRoadmap().getId())
+                        .memberNickname(comment.getMember().getNickname())
+                        .content(comment.getContent())
+                        .build();
+                    commentDtos.add(commentDto);
+                }
+        );
+        return commentDtos;
+    }
+
+    public boolean saveComment (CommentDto commentDto, Long roadmapId) {
+        Comment comment = Comment.builder()
+                .roadmap(roadmapRepository.findById(roadmapId).orElse(null))
+                .content(commentDto.getContent())
+                .member(memberRepository.findByNickname(commentDto.getMemberNickname()).orElse(null))
+                .build();
+
+        if(comment.getRoadmap() == null || comment.getMember() == null) {
+            return false;
+        }
+
+        commentRepository.save(comment);
+        return true;
+    }
 }

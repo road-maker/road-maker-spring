@@ -1,5 +1,6 @@
 package com.roadmaker.member.dto;
 
+import com.roadmaker.roadmap.dto.CommentDto;
 import com.roadmaker.roadmap.dto.InProgressRoadmapDto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -24,4 +25,5 @@ public class MypageResponse {
     private int level;
     private int exp;
     private List<InProgressRoadmapDto> inProcessRoadmapDto;
+    private List<CommentDto> commentDtos;
 }

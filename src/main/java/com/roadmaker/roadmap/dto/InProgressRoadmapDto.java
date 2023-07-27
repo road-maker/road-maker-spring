@@ -3,8 +3,9 @@ package com.roadmaker.roadmap.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 
-@Builder
+@Builder @Getter
 @AllArgsConstructor
 public class InProgressRoadmapDto {
     private Long id;
