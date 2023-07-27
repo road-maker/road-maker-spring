@@ -24,7 +24,6 @@ public class GptController {
         this.OPENAI_TOKEN = apiKey;
     }
 
-    @LoginRequired
     @PostMapping("api/chat")
     public List<GptRoadmapResponse> getChatMessages(@RequestParam String prompt) {
 

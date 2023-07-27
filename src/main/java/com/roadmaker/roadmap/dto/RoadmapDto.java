@@ -15,6 +15,8 @@ public class RoadmapDto {
     private String thumbnailUrl;
     private Integer recommendedExecutionTimeValue;
     private String recommendedExecutionTimeUnit;
+    private String ownerNickname;
+    private String ownerAvatarUrl;
 
     public Roadmap toEntity() {
         return Roadmap.builder()
@@ -34,6 +36,19 @@ public class RoadmapDto {
                 .thumbnailUrl(roadmap.getThumbnailUrl())
                 .recommendedExecutionTimeValue(roadmap.getRecommendedExecutionTimeValue())
                 .recommendedExecutionTimeUnit(roadmap.getRecommendedExecutionTimeUnit())
+                .build();
+    }
+
+    public static RoadmapDto of(Roadmap roadmap, String ownerNickname, String ownerAvatarUrl) {
+        return RoadmapDto.builder()
+                .id(roadmap.getId())
+                .title(roadmap.getTitle())
+                .description(roadmap.getDescription())
+                .thumbnailUrl(roadmap.getThumbnailUrl())
+                .recommendedExecutionTimeValue(roadmap.getRecommendedExecutionTimeValue())
+                .recommendedExecutionTimeUnit(roadmap.getRecommendedExecutionTimeUnit())
+                .ownerNickname(ownerNickname)
+                .ownerAvatarUrl(ownerAvatarUrl)
                 .build();
     }
 }
