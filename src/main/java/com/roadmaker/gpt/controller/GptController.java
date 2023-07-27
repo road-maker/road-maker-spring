@@ -32,7 +32,7 @@ public class GptController {
 //    }
 
 
-    @LoginRequired
+//    @LoginRequired
     @PostMapping("api/chat")
     public List<GptRoadmapResponse> getChatMessages(@RequestParam String prompt) {
 
