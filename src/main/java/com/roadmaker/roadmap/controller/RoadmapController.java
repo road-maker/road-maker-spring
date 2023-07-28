@@ -1,5 +1,7 @@
 package com.roadmaker.roadmap.controller;
 
+import com.roadmaker.comment.dto.CommentDto;
+import com.roadmaker.comment.service.CommentService;
 import com.roadmaker.commons.annotation.LoginMember;
 import com.roadmaker.commons.annotation.LoginRequired;
 import com.roadmaker.roadmap.dto.*;
@@ -10,7 +12,6 @@ import com.roadmaker.roadmap.entity.roadmapeditor.RoadmapEditorRepository;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNode;
 import com.roadmaker.roadmap.service.RoadmapService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -22,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import com.roadmaker.roadmap.entity.roadmap.RoadmapRepository;
 import com.roadmaker.member.entity.Member;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -36,6 +36,7 @@ public class RoadmapController {
     private final RoadmapRepository roadmapRepository;
     private final InProgressNodeRepository inProgressNodeRepository;
     private final RoadmapEditorRepository roadmapEditorRepository;
+    private final CommentService commentService;
 
     // 로드맵 발행
     @LoginRequired
@@ -71,11 +72,9 @@ public class RoadmapController {
         if (roadmap == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        RoadmapDto roadmapDto = RoadmapDto.of(roadmap);
-        RoadmapResponse roadmapResponse = roadmapService.makeRoadmapResponse(roadmapDto);
-        List<CommentDto> commentDtos = roadmapService.callRoadmapComment(roadmapId);
+        List<CommentDto> commentDtos = commentService.callRoadmapComment(roadmapId);
 
-        roadmapResponse.setCommentDtos(commentDtos);
+        RoadmapResponse roadmapResponse = RoadmapResponse.of(roadmap, commentDtos);
 
         return new ResponseEntity<>(roadmapResponse, HttpStatus.OK);
     }
@@ -122,18 +121,6 @@ public class RoadmapController {
         return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
 
-    @LoginRequired
-    @PostMapping("/{roadmapId}/add-comment")
-    public void addComment (@LoginMember Member member, @PathVariable Long roadmapId, @Size(min = 5, max = 255) String content, HttpServletResponse response) {
-        CommentDto commentDto = CommentDto.builder()
-                .content(content)
-                .roadmapId(roadmapId)
-                .memberNickname(member.getNickname())
-                .build();
-        if(!roadmapService.saveComment(commentDto, roadmapId)) {
-            response.setStatus(HttpServletResponse.SC_CONFLICT);
-        }
-        response.setStatus(HttpServletResponse.SC_CREATED);
-    }
+
 
 }

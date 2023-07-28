@@ -1,15 +1,16 @@
 package com.roadmaker.member.service;
 
+import com.roadmaker.comment.service.CommentService;
 import com.roadmaker.commons.exception.NotFoundException;
 import com.roadmaker.member.authentication.JwtProvider;
 import com.roadmaker.member.dto.*;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.entity.MemberRepository;
-import com.roadmaker.roadmap.dto.CommentDto;
+import com.roadmaker.member.dto.TokenInfo;
+import com.roadmaker.comment.dto.CommentDto;
 import com.roadmaker.roadmap.dto.InProgressRoadmapDto;
-import com.roadmaker.roadmap.entity.comment.Comment;
-import com.roadmaker.roadmap.entity.comment.CommentRepository;
-import com.roadmaker.roadmap.entity.inprogressnode.InProgressNode;
+import com.roadmaker.comment.entity.Comment;
+import com.roadmaker.comment.entity.CommentRepository;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNodeRepository;
 import com.roadmaker.roadmap.entity.inprogressroadmap.InProgressRoadmap;
 import com.roadmaker.roadmap.entity.inprogressroadmap.InProgressRoadmapRepository;
@@ -38,6 +39,7 @@ public class MemberServiceImpl implements MemberService {
     private final InProgressNodeRepository inProgressNodeRepository;
     private final InProgressRoadmapRepository inProgressRoadmapRepository;
     private final CommentRepository commentRepository;
+    private final CommentService commentService;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -86,7 +88,7 @@ public class MemberServiceImpl implements MemberService {
 
         Member member = memberRepository.findById(memberId).orElse(null);
 
-        List<InProgressRoadmap> inProgressRoadmaps = (inProgressRoadmapRepository.findAllByMemberId(memberId));
+        List<InProgressRoadmap> inProgressRoadmaps = inProgressRoadmapRepository.findAllByMemberId(memberId);
         List<InProgressRoadmapDto> inProgressRoadmapDtos = new ArrayList<>();
         inProgressRoadmaps.forEach(
 
@@ -108,16 +110,7 @@ public class MemberServiceImpl implements MemberService {
                 }
         );
 
-        List<Comment> comments = commentRepository.findByMemberId(memberId);
-        List<CommentDto> commentDtos = new ArrayList<>();
-        comments.forEach(
-                comment -> { CommentDto commentDto = CommentDto.builder()
-                            .memberNickname(comment.getMember().getNickname())
-                            .roadmapId(comment.getRoadmap().getId())
-                            .content(comment.getContent())
-                            .build();
-                    commentDtos.add(commentDto);
-                });
+        List<CommentDto> commentDtos = commentService.callMemberComment(memberId);
 
         return MypageResponse.builder()
                 .memberId(memberId)

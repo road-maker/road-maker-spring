@@ -1,4 +1,4 @@
-package com.roadmaker.roadmap.entity.comment;
+package com.roadmaker.comment.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.roadmaker.commons.BaseTimeEntity;

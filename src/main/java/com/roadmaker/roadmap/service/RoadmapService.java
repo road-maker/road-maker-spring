@@ -1,8 +1,8 @@
 package com.roadmaker.roadmap.service;
 
+import com.roadmaker.comment.dto.CommentDto;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.roadmap.dto.*;
-import com.roadmaker.roadmap.entity.inprogressroadmap.InProgressRoadmap;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,8 +27,4 @@ public interface RoadmapService {
     public boolean changeNodeStatus(NodeStatusChangeDto nodeStatusChangeDto);
 
     public RoadmapResponse makeRoadmapResponse(RoadmapDto roadmapDto);
-
-    public List<CommentDto> callRoadmapComment (Long roadmapId);
-
-    public boolean saveComment (CommentDto commentDto, Long roadmapId);
 }
