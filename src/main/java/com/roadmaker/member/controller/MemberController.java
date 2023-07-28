@@ -27,19 +27,15 @@ public class MemberController {
     public final PasswordEncoder passwordEncoder;
 
     @PostMapping("/signup")
-    public ResponseEntity<HttpStatus> signup(@Valid @RequestBody SignupRequest request) {
+    public ResponseEntity<HttpStatus> signup(@Valid @RequestBody SignupRequest signupRequest) {
         // 이메일 중복 검사
-        if (memberService.isUserRegistered(request.getEmail())) {
+        if (memberService.isUserRegistered(signupRequest.getEmail())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
-        // 비밀번호 암호화
-        Member member = new Member(
-                request.getEmail(),
-                passwordEncoder.encode(request.getPassword()),
-                request.getNickname());
 
-        // 저장 후 201 status 응답
-        memberService.signUp(member);
+        // 비밀번호 암호화 후 저장
+        memberService.signUp(signupRequest);
+
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

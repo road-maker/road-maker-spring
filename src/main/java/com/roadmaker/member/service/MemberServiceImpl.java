@@ -1,12 +1,9 @@
 package com.roadmaker.member.service;
 
 import com.roadmaker.member.authentication.JwtProvider;
-import com.roadmaker.member.dto.MemberResponse;
-import com.roadmaker.member.dto.MypageRequest;
-import com.roadmaker.member.dto.MypageResponse;
+import com.roadmaker.member.dto.*;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.entity.MemberRepository;
-import com.roadmaker.member.dto.TokenInfo;
 import com.roadmaker.roadmap.dto.CommentDto;
 import com.roadmaker.roadmap.dto.InProgressRoadmapDto;
 import com.roadmaker.roadmap.entity.comment.Comment;
@@ -20,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.roadmaker.member.authentication.SecurityUtil;
@@ -39,10 +37,12 @@ public class MemberServiceImpl implements MemberService {
     private final InProgressNodeRepository inProgressNodeRepository;
     private final InProgressRoadmapRepository inProgressRoadmapRepository;
     private final CommentRepository commentRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
-    public void signUp(Member member) {
+    public void signUp(SignupRequest signupRequest) {
+        Member member = signupRequest.toEntity(passwordEncoder);
         memberRepository.save(member);
     }
 
