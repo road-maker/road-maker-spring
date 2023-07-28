@@ -29,6 +29,9 @@ public class RoadmapDto {
     }
 
     public static RoadmapDto of(Roadmap roadmap) {
+        if (roadmap == null) { // null이 입력되는 경우 처리
+            return null;
+        }
         return RoadmapDto.builder()
                 .id(roadmap.getId())
                 .title(roadmap.getTitle())
@@ -40,6 +43,9 @@ public class RoadmapDto {
     }
 
     public static RoadmapDto of(Roadmap roadmap, String ownerNickname, String ownerAvatarUrl) {
+        if (roadmap == null) {
+            return null;
+        }
         return RoadmapDto.builder()
                 .id(roadmap.getId())
                 .title(roadmap.getTitle())

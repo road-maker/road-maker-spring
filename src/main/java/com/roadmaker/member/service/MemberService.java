@@ -2,6 +2,8 @@ package com.roadmaker.member.service;
 
 import com.roadmaker.member.dto.*;
 import com.roadmaker.member.entity.Member;
+import com.roadmaker.member.dto.TokenInfo;
+import com.roadmaker.roadmap.dto.RoadmapResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,8 +21,10 @@ public interface MemberService {
 
     public Member getLoggedInMember();
 
-    public MypageResponse callMyPage(String nickname);
+    public MypageResponse callMyPage(Long memberId);
     public Boolean saveProfile(MypageRequest request, Member member);
 
     public MemberResponse findMemberByEmail(String email);
+    public MemberResponse findMemberByNickname(String nickname);
+
 }

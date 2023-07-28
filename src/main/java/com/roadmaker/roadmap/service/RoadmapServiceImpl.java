@@ -87,6 +87,45 @@ public class RoadmapServiceImpl implements RoadmapService{
         return roadmapRepository.findById(roadmapId).orElseThrow(NotFoundException::new);
     }
 
+    public List<RoadmapDto> findRoadmapJoinedByMemberId(Long memberId){
+
+         List<InProgressRoadmap> inProgressRoadmaps = inProgressRoadmapRepository.findAllByMemberId(memberId);
+         if (inProgressRoadmaps.isEmpty()) {
+             throw new NotFoundException();
+         }
+
+         List<RoadmapDto> roadmapDtos= new ArrayList<>();
+         inProgressRoadmaps.forEach( inProgressRoadmap -> {
+             RoadmapDto roadmapdto = RoadmapDto.of(roadmapRepository.findById(inProgressRoadmap.getRoadmap().getId()).orElse(null));
+             if (roadmapdto == null) {
+             } else {
+                 roadmapDtos.add(roadmapdto);
+             }
+         });
+
+        return roadmapDtos;
+    }
+    public List<RoadmapDto> findRoadmapCreatedByMemberId(Long memberId){
+
+        List<RoadmapEditor> roadmapsCreated = roadmapEditorRepository.findAllByMemberIdAndIsOwner(memberId, true);
+
+        if(roadmapsCreated.isEmpty()) {
+            throw new NotFoundException();
+        }
+
+        List<RoadmapDto> roadmapDtos= new ArrayList<>();
+        roadmapsCreated.forEach( roadmapCreated -> {
+            RoadmapDto roadmapdto = RoadmapDto.of(roadmapRepository.findById(roadmapCreated.getRoadmap().getId()).orElse(null));
+            if (roadmapdto == null) {
+            } else {
+                roadmapDtos.add(roadmapdto);
+            }
+        });
+
+        return roadmapDtos;
+    }
+
+
     @Override
     @Transactional
     public void joinRoadmap(Roadmap roadmap, Member member) {
@@ -121,7 +160,7 @@ public class RoadmapServiceImpl implements RoadmapService{
     }
 
     @Override
-    public boolean changeRoadmapStatus(NodeStatusChangeDto nodeStatusChangeDto) {
+    public boolean changeNodeStatus(NodeStatusChangeDto nodeStatusChangeDto) {
 
         Long nodeId = nodeStatusChangeDto.getInProgressNodeId();
         Optional<InProgressNode> inProgressNodeOptional = inProgressNodeRepository.findById(nodeId);

@@ -81,35 +81,31 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public MypageResponse callMyPage(String nickname) {
-        Optional<Member> memberOptional = memberRepository.findByNickname(nickname);
-        Member member = memberOptional.orElse(null);
-        if (member == null) {
-            return null;
-        }
-        Long memberId = member.getId();
-        System.out.println(memberId);
+    public MypageResponse callMyPage(Long memberId) {
 
-        Optional<InProgressRoadmap> inProgressRoadmaps = (inProgressRoadmapRepository.findByMemberId(memberId));
+        Member member = memberRepository.findById(memberId).orElse(null);
+
+        List<InProgressRoadmap> inProgressRoadmaps = (inProgressRoadmapRepository.findAllByMemberId(memberId));
         List<InProgressRoadmapDto> inProgressRoadmapDtos = new ArrayList<>();
-        if(inProgressRoadmaps.isPresent()) {
-            InProgressRoadmap inProgressRoadmap = inProgressRoadmaps.get();
+        inProgressRoadmaps.forEach(
 
-            int totalNodeCount = (inProgressRoadmap.getInProgressNodes()).size();
-            List<InProgressNode> inProgressNodes = inProgressNodeRepository.findByRoadmapAndDone(inProgressRoadmap.getRoadmap(), true);
-            int doneNodeCount = inProgressNodes.size();
+                inProgressRoadmap -> {
+                    int totalNodeCount = (inProgressRoadmap.getInProgressNodes()).size();
+                    int doneNodeCount = inProgressNodeRepository
+                            .findByRoadmapAndDone(inProgressRoadmap.getRoadmap(), true).size();
 
-            double progress = Math.round(((double)doneNodeCount/totalNodeCount)*10000) / 100.0; //
+                    double progress = Math.round(((double)doneNodeCount/totalNodeCount)*10000) / 100.0; //
 
-            InProgressRoadmapDto inProgressRoadmapDto = InProgressRoadmapDto.builder()
-                    .id(inProgressRoadmap.getId())
-                    .title(inProgressRoadmap.getRoadmap().getTitle())
-                    .thumbnail(inProgressRoadmap.getRoadmap().getThumbnailUrl())
-                    .process(progress)
-                    .build();
-            inProgressRoadmapDtos.add(inProgressRoadmapDto);
-        }
-        System.out.println(inProgressRoadmapDtos);
+                    InProgressRoadmapDto inProgressRoadmapDto = InProgressRoadmapDto.builder()
+                            .id(inProgressRoadmap.getId())
+                            .title(inProgressRoadmap.getRoadmap().getTitle())
+                            .thumbnail(inProgressRoadmap.getRoadmap().getThumbnailUrl())
+                            .process(progress)
+                            .build();
+
+                    inProgressRoadmapDtos.add(inProgressRoadmapDto);
+                }
+        );
 
         List<Comment> comments = commentRepository.findByMemberId(memberId);
         List<CommentDto> commentDtos = new ArrayList<>();
@@ -121,12 +117,10 @@ public class MemberServiceImpl implements MemberService {
                             .build();
                     commentDtos.add(commentDto);
                 });
-        System.out.println(commentDtos);
-
 
         return MypageResponse.builder()
                 .memberId(memberId)
-                .email(member.getEmail())
+                .email(member.getEmail()) //memberId를 불러오는 과정에서 이미 null exception 예외 처리함
                 .nickname(member.getNickname())
                 .bio(member.getBio())
                 .avatarUrl(member.getAvatarUrl())
@@ -135,11 +129,10 @@ public class MemberServiceImpl implements MemberService {
                 .backjoonId(member.getBaekjoonId())
                 .level(member.getLevel())
                 .exp(member.getExp())
-                .inProcessRoadmapDto(inProgressRoadmapDtos)
-                .commentDtos(commentDtos)
+                .inProcessRoadmaps(inProgressRoadmapDtos)
+                .comments(commentDtos)
                 .build();
     }
-
 
     @Override
     @Transactional
@@ -163,6 +156,15 @@ public class MemberServiceImpl implements MemberService {
         }
 
         return MemberResponse.of(member.get());
+    }
 
+    public MemberResponse findMemberByNickname(String nickname) {
+        Optional<Member> member = memberRepository.findByNickname(nickname);
+
+        if (member.isEmpty()) {
+            return null;
+        }
+
+        return MemberResponse.of(member.get());
     }
 }
