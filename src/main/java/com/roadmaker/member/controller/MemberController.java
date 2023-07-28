@@ -2,26 +2,19 @@ package com.roadmaker.member.controller;
 
 import com.roadmaker.commons.annotation.LoginMember;
 import com.roadmaker.commons.annotation.LoginRequired;
-import com.roadmaker.gpt.dto.GptRoadmapResponse;
-import com.roadmaker.member.authentication.SecurityUtil;
 import com.roadmaker.member.dto.*;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.service.MemberService;
-import com.roadmaker.member.service.MemberServiceImpl;
 import com.roadmaker.roadmap.dto.RoadmapDto;
-import com.roadmaker.roadmap.dto.RoadmapResponse;
-import com.roadmaker.roadmap.entity.inprogressroadmap.InProgressRoadmap;
 import com.roadmaker.roadmap.service.RoadmapService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -60,12 +53,6 @@ public class MemberController {
                 .build();
 
         return new ResponseEntity<>(loginResponse, HttpStatus.OK);
-    }
-
-    @LoginRequired
-    @PostMapping(path="/test")
-    public String test(@LoginMember Member member) {
-        return member.toString();
     }
 
     @LoginRequired
