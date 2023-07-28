@@ -55,7 +55,6 @@ public class MemberController {
         return new ResponseEntity<>(loginResponse, HttpStatus.OK);
     }
 
-    @LoginRequired
     @GetMapping(path="/{nickname}")
     public ResponseEntity<MypageResponse> gotoMypage(@PathVariable String nickname) {
         //1. 요청 데이터 검증
