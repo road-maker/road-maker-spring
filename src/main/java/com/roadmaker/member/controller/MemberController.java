@@ -29,7 +29,12 @@ public class MemberController {
     @PostMapping("/signup")
     public ResponseEntity<HttpStatus> signup(@Valid @RequestBody SignupRequest signupRequest) {
         // 이메일 중복 검사
-        if (memberService.isUserRegistered(signupRequest.getEmail())) {
+        if (memberService.isDuplicatedEmail(signupRequest.getEmail())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+
+        // 닉네임 중복 검사
+        if(memberService.isDuplicatedNickname(signupRequest.getNickname())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
 
