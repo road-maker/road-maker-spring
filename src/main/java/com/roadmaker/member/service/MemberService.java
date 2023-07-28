@@ -1,8 +1,6 @@
 package com.roadmaker.member.service;
 
-import com.roadmaker.member.dto.MemberResponse;
-import com.roadmaker.member.dto.MypageRequest;
-import com.roadmaker.member.dto.MypageResponse;
+import com.roadmaker.member.dto.*;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.dto.TokenInfo;
 import com.roadmaker.roadmap.dto.RoadmapResponse;
@@ -13,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface MemberService {
     // 회원가입
-    public void signUp(Member member);
+    public void signUp(SignupRequest signupRequest);
 
     // 로그인
     public TokenInfo login(String email, String password);
