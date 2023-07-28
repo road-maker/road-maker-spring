@@ -1,5 +1,6 @@
 package com.roadmaker.member.service;
 
+import com.roadmaker.commons.exception.NotFoundException;
 import com.roadmaker.member.authentication.JwtProvider;
 import com.roadmaker.member.dto.*;
 import com.roadmaker.member.entity.Member;
@@ -161,8 +162,8 @@ public class MemberServiceImpl implements MemberService {
     public MemberResponse findMemberByNickname(String nickname) {
         Optional<Member> member = memberRepository.findByNickname(nickname);
 
-        if (member.isEmpty()) {
-            return null;
+        if(member.isEmpty()) {
+            throw new NotFoundException();
         }
 
         return MemberResponse.of(member.get());

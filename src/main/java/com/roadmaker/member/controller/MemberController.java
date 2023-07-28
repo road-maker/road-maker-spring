@@ -56,16 +56,9 @@ public class MemberController {
     }
 
     @GetMapping(path="/{nickname}")
-    public ResponseEntity<MypageResponse> gotoMypage(@PathVariable String nickname) {
-        //1. 요청 데이터 검증
-        Long memberId = memberService.findMemberByNickname(nickname).getId();
-        //2. 비즈니스 로직 처리
-        MypageResponse mypageResponse = memberService.callMyPage(memberId);
-        if ( mypageResponse == null)
-        {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-        return new ResponseEntity<>(mypageResponse, HttpStatus.OK);
+    public ResponseEntity<MemberResponse> findMember(@PathVariable String nickname) {
+        MemberResponse memberResponse = memberService.findMemberByNickname(nickname);
+        return new ResponseEntity<>(memberResponse, HttpStatus.OK);
     }
 
     @LoginRequired
