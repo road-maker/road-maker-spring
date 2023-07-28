@@ -24,6 +24,6 @@ public class MypageResponse {
     private String backjoonId;
     private int level;
     private int exp;
-    private List<InProgressRoadmapDto> inProcessRoadmapDto;
-    private List<CommentDto> commentDtos;
+    private List<InProgressRoadmapDto> inProcessRoadmaps;
+    private List<CommentDto> comments;
 }
