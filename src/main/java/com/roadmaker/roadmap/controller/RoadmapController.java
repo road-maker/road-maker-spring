@@ -8,7 +8,6 @@ import com.roadmaker.member.service.MemberService;
 import com.roadmaker.roadmap.entity.roadmapeditor.RoadmapEditor;
 import com.roadmaker.roadmap.entity.roadmapeditor.RoadmapEditorRepository;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNode;
-import com.roadmaker.roadmap.entity.roadmapviewport.RoadmapViewportRepository;
 import com.roadmaker.roadmap.service.RoadmapService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
@@ -16,17 +15,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
-import com.roadmaker.roadmap.entity.roadmapedge.RoadmapEdgeRepository;
-import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNodeRepository;
 import com.roadmaker.roadmap.entity.roadmap.RoadmapRepository;
 import com.roadmaker.member.entity.Member;
-import com.roadmaker.roadmap.entity.inprogressroadmap.InProgressRoadmapRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,8 +40,8 @@ public class RoadmapController {
     // 로드맵 발행
     @LoginRequired
     @PostMapping
-    public ResponseEntity<Long> createRoadmap(@Valid @RequestBody RoadmapRequest roadmapRequest, @LoginMember Member member) {
-        Long roadmapId = roadmapService.createRoadmap(roadmapRequest, member);
+    public ResponseEntity<Long> createRoadmap(@Valid @RequestBody CreateRoadmapRequest createRoadmapRequest, @LoginMember Member member) {
+        Long roadmapId = roadmapService.createRoadmap(createRoadmapRequest, member);
 
         return new ResponseEntity<>(roadmapId, HttpStatus.CREATED);
     }
@@ -74,7 +69,7 @@ public class RoadmapController {
 
         Roadmap roadmap = roadmapService.findRoadmapById(roadmapId);
         if (roadmap == null) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         RoadmapDto roadmapDto = RoadmapDto.of(roadmap);
         RoadmapResponse roadmapResponse = roadmapService.makeRoadmapResponse(roadmapDto);

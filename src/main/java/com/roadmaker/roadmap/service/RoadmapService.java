@@ -12,7 +12,7 @@ import java.util.List;
 @Transactional
 public interface RoadmapService {
     // 로드맵 생성
-    public Long createRoadmap(RoadmapRequest roadmapRequest, Member member);
+    public Long createRoadmap(CreateRoadmapRequest createRoadmapRequest, Member member);
 
     // 로드맵 불러오기
     public Roadmap findRoadmapById(Long roadmapId);

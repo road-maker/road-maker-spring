@@ -4,7 +4,6 @@ import com.roadmaker.commons.exception.ConflictException;
 import com.roadmaker.commons.exception.NotFoundException;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.entity.MemberRepository;
-import com.roadmaker.member.service.MemberService;
 import com.roadmaker.roadmap.dto.*;
 import com.roadmaker.roadmap.entity.comment.Comment;
 import com.roadmaker.roadmap.entity.comment.CommentRepository;
@@ -45,25 +44,24 @@ public class RoadmapServiceImpl implements RoadmapService{
     private final MemberRepository memberRepository;
 
     @Override
-    public Long createRoadmap(RoadmapRequest roadmapRequest, Member member) {
+    public Long createRoadmap(CreateRoadmapRequest createRoadmapRequest, Member member) {
         // viewport 저장하기
-        RoadmapViewport viewport = roadmapRequest.getViewport().toEntity();
+        RoadmapViewport viewport = createRoadmapRequest.getViewport().toEntity();
         roadmapViewportRepository.save(viewport);
 
         // roadmap 저장하기
-        Roadmap roadmap = roadmapRequest.getRoadmap().toEntity();
+        Roadmap roadmap = createRoadmapRequest.getRoadmap().toEntity();
         roadmap.setRoadmapViewport(viewport);
         roadmapRepository.save(roadmap);
 
         // edge 저장하기
-        List<RoadmapEdgeDto> roadmapEdgeDtos = roadmapRequest.getEdges();
+        List<CreateRoadmapRequest.RoadmapEdgeDto> roadmapEdgeDtos = createRoadmapRequest.getEdges();
         List<RoadmapEdge> roadmapEdges = roadmapEdgeDtos.stream()
                 .map(edgeDto -> edgeDto.toEntity(roadmap)).toList();
         roadmapEdgeRepository.saveAll(roadmapEdges);
-//
-//
+
 //        // 노드 저장하기
-        List<RoadmapNodeDto> roadmapNodeDtos = roadmapRequest.getNodes();
+        List<CreateRoadmapRequest.RoadmapNodeDto> roadmapNodeDtos = createRoadmapRequest.getNodes();
         List<RoadmapNode> roadmapNodes = roadmapNodeDtos
                 .stream()
                 .map(nodeDto -> nodeDto.toEntity(roadmap))
