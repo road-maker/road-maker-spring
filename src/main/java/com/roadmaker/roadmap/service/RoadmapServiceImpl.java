@@ -1,12 +1,13 @@
 package com.roadmaker.roadmap.service;
 
+import com.roadmaker.comment.dto.CommentDto;
 import com.roadmaker.commons.exception.ConflictException;
 import com.roadmaker.commons.exception.NotFoundException;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.entity.MemberRepository;
 import com.roadmaker.roadmap.dto.*;
-import com.roadmaker.roadmap.entity.comment.Comment;
-import com.roadmaker.roadmap.entity.comment.CommentRepository;
+import com.roadmaker.comment.entity.Comment;
+import com.roadmaker.comment.entity.CommentRepository;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNode;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNodeRepository;
 import com.roadmaker.roadmap.entity.inprogressroadmap.InProgressRoadmap;
@@ -185,33 +186,5 @@ public class RoadmapServiceImpl implements RoadmapService{
         return RoadmapResponse.of(roadmap);
     }
 
-    public List<CommentDto> callRoadmapComment (Long roadmapId) {
-        List<Comment> comments = commentRepository.findByRoadmapId(roadmapId);
-        List<CommentDto> commentDtos = new ArrayList<>();
-        comments.forEach(
-                comment -> { CommentDto commentDto = CommentDto.builder()
-                                .roadmapId(comment.getRoadmap().getId())
-                        .memberNickname(comment.getMember().getNickname())
-                        .content(comment.getContent())
-                        .build();
-                    commentDtos.add(commentDto);
-                }
-        );
-        return commentDtos;
-    }
 
-    public boolean saveComment (CommentDto commentDto, Long roadmapId) {
-        Comment comment = Comment.builder()
-                .roadmap(roadmapRepository.findById(roadmapId).orElse(null))
-                .content(commentDto.getContent())
-                .member(memberRepository.findByNickname(commentDto.getMemberNickname()).orElse(null))
-                .build();
-
-        if(comment.getRoadmap() == null || comment.getMember() == null) {
-            return false;
-        }
-
-        commentRepository.save(comment);
-        return true;
-    }
 }

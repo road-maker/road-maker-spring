@@ -1,4 +1,4 @@
-package com.roadmaker.roadmap.dto;
+package com.roadmaker.comment.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
