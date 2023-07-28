@@ -56,7 +56,7 @@ public class RoadmapController {
     public ResponseEntity<List<RoadmapDto>> getRoadmaps() {
         List<Roadmap> roadmaps = roadmapRepository.findAll();
         List<RoadmapDto> roadmapDtos = new ArrayList<>();
-        roadmaps.stream().forEach(roadmap -> {
+        roadmaps.stream().forEach(roadmap -> { //로드맵 정보에 로드맵 작성자와 프로필을 추가하는 루틴
             RoadmapEditor roadmapEditor = roadmapEditorRepository.findByRoadmapIdAndIsOwner(roadmap.getId(), true);
             if(roadmapEditor == null) { //테이블의 구체성이 부족할 때 만들어진 데이터 때문에 nullpointer exception이 발생할 수 있어서 넣어둔 코드, 실제에선 발생이 없어야 함
                 roadmapDtos.add(RoadmapDto.of(roadmap));
@@ -100,21 +100,20 @@ public class RoadmapController {
 
     @LoginRequired
     @PatchMapping("/in-progress-nodes/{inProgressNodeId}/done")
-    public void nodeDone (@PathVariable Long inProgressNodeId, HttpServletResponse response, @LoginMember Member member) {
+    public ResponseEntity<HttpStatus> nodeDone (@PathVariable Long inProgressNodeId, @LoginMember Member member) {
         Optional<InProgressNode> inProgressNodeOptional = inProgressNodeRepository.findById(inProgressNodeId);
         InProgressNode inProgressNode = inProgressNodeOptional.orElse(null);
 
         // 해당 노드를 찾을 수 없음
         if(inProgressNode == null) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        Member memberOwnsNode = Objects.requireNonNull(inProgressNode).getMember();
+        Long joiningMemberId = Objects.requireNonNull(inProgressNode).getMember().getId();
 
         //상태 변경 요청을 위한 노드의 주인이 현재 접속한 멤버인지 확인
-        if(memberOwnsNode.getEmail().equals(member.getEmail())) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            return;
+        if(!joiningMemberId.equals(member.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
         NodeStatusChangeDto nodeStatusChangeDto = NodeStatusChangeDto.builder()
@@ -122,11 +121,10 @@ public class RoadmapController {
                         .done(inProgressNode.getDone())
                         .build();
 
-        if(roadmapService.changeRoadmapStatus(nodeStatusChangeDto)) {
-            response.setStatus(HttpServletResponse.SC_OK);
-            return;
+        if(roadmapService.changeNodeStatus(nodeStatusChangeDto)) {
+            return ResponseEntity.status(HttpStatus.OK).build();
         }
-        response.setStatus(HttpServletResponse.SC_CONFLICT);
+        return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
 
     @LoginRequired

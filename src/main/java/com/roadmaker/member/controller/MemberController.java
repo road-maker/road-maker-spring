@@ -2,13 +2,19 @@ package com.roadmaker.member.controller;
 
 import com.roadmaker.commons.annotation.LoginMember;
 import com.roadmaker.commons.annotation.LoginRequired;
+import com.roadmaker.gpt.dto.GptRoadmapResponse;
 import com.roadmaker.member.authentication.SecurityUtil;
 import com.roadmaker.member.dto.*;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.service.MemberService;
 import com.roadmaker.member.service.MemberServiceImpl;
+import com.roadmaker.roadmap.dto.RoadmapDto;
+import com.roadmaker.roadmap.dto.RoadmapResponse;
+import com.roadmaker.roadmap.entity.inprogressroadmap.InProgressRoadmap;
+import com.roadmaker.roadmap.service.RoadmapService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +31,7 @@ import java.util.List;
 public class MemberController {
     private final MemberService memberService;
     public final PasswordEncoder passwordEncoder;
+    private final RoadmapService roadmapService;
 
     @PostMapping("/signup")
     public ResponseEntity<HttpStatus> signup(@Valid @RequestBody SignupRequest request) {
@@ -43,7 +50,7 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PostMapping("/signin")
+    @PostMapping(path="/signin")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
         String email = loginRequest.getEmail();
         String password = loginRequest.getPassword();
@@ -60,27 +67,27 @@ public class MemberController {
     }
 
     @LoginRequired
-    @PostMapping("/test")
+    @PostMapping(path="/test")
     public String test(@LoginMember Member member) {
         return member.toString();
     }
 
     @LoginRequired
-    @GetMapping("/{nickname}")
-    public MypageResponse gotoMypage(@PathVariable String nickname) {
+    @GetMapping(path="/{nickname}")
+    public ResponseEntity<MypageResponse> gotoMypage(@PathVariable String nickname) {
         //1. 요청 데이터 검증
+        Long memberId = memberService.findMemberByNickname(nickname).getId();
         //2. 비즈니스 로직 처리
-        MypageResponse mypageResponse = memberService.callMyPage(nickname);
+        MypageResponse mypageResponse = memberService.callMyPage(memberId);
         if ( mypageResponse == null)
         {
-            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        ResponseEntity.status(HttpStatus.ACCEPTED).build();
-        return mypageResponse;
+        return new ResponseEntity<>(mypageResponse, HttpStatus.OK);
     }
 
     @LoginRequired
-    @PostMapping("/save-profile")
+    @PostMapping(path="/save-profile")
     public ResponseEntity<HttpStatus> changeProfile(@Valid @RequestBody MypageRequest request, @LoginMember Member member) {
         //1. 요청 데이터 검증
         if (request.getNickname() == null) {
@@ -93,4 +100,25 @@ public class MemberController {
         }
         return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
+
+    @LoginRequired
+    @GetMapping(path="/{nickname}/in-progress-roadmaps")
+    public ResponseEntity<List<RoadmapDto>> callRoadmapJoined(@PathVariable String nickname) {
+        Long memberId = memberService.findMemberByNickname(nickname).getId();
+
+        //이 멤버가 조인하고 잇는 모든 로드맵을 dto형태로의 리스트로 전달
+        List<RoadmapDto> joiningRoadmaps = roadmapService.findRoadmapJoinedByMemberId(memberId);
+        return new ResponseEntity<>(joiningRoadmaps, HttpStatus.OK);
+    }
+
+    @LoginRequired
+    @GetMapping(path="/{nickname}/roadmaps")
+    public ResponseEntity<List<RoadmapDto>> callRoadmapCreated(@PathVariable String nickname) {
+        Long memberId = memberService.findMemberByNickname(nickname).getId();
+
+        //이 멤버가 만든 모든 로드맵을 dto형태로의 리스트로 전달
+        List<RoadmapDto> createdRoadmaps = roadmapService.findRoadmapCreatedByMemberId(memberId);
+        return new ResponseEntity<>(createdRoadmaps, HttpStatus.OK);
+    }
+
 }
