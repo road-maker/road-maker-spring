@@ -47,22 +47,13 @@ public class CreateRoadmapRequest {
         @NotBlank
         private String description;
 
-        @NotBlank
         private String thumbnailUrl;
-
-        @NotNull
-        private Integer recommendedExecutionTimeValue;
-
-        @NotBlank
-        private String recommendedExecutionTimeUnit;
 
         public Roadmap toEntity() {
             return Roadmap.builder()
                     .title(this.title)
                     .description(this.description)
                     .thumbnailUrl(this.thumbnailUrl)
-                    .recommendedExecutionTimeValue(this.recommendedExecutionTimeValue)
-                    .recommendedExecutionTimeUnit(this.recommendedExecutionTimeUnit)
                     .build();
         }
     }
