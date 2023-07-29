@@ -1,11 +1,8 @@
 package com.roadmaker.roadmap.dto;
 
+import com.roadmaker.roadmap.entity.inprogressnode.InProgressNode;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNode;
-import com.roadmaker.roadmap.entity.roadmapnodedata.RoadmapNodeData;
-import com.roadmaker.roadmap.entity.roadmapnodeposition.RoadmapNodePosition;
-import com.roadmaker.roadmap.entity.roadmapnodepositionabsolute.RoadmapNodePositionAbsolute;
-import com.roadmaker.roadmap.entity.roadmapnodestyle.RoadmapNodeStyle;
 import lombok.*;
 
 @Getter
@@ -22,6 +19,8 @@ public class RoadmapNodeDto {
 
     private String sourcePosition;
     private String targetPosition;
+
+    private Boolean done; // response에만 사용한다.
 
     private String detailedContent;
     private RoadmapNodeStyleDto style;
@@ -56,10 +55,28 @@ public class RoadmapNodeDto {
                 .sourcePosition(roadmapNode.getSourcePosition())
                 .targetPosition(roadmapNode.getTargetPosition())
                 .detailedContent(roadmapNode.getDetailedContent())
+                .done(false)
                 .style(RoadmapNodeStyleDto.of(roadmapNode.getStyle()))
                 .data(RoadmapNodeDataDto.of(roadmapNode.getData()))
                 .position(RoadmapNodePositionDto.of(roadmapNode.getPosition()))
                 .positionAbsolute(RoadmapNodePositionAbsoluteDto.of(roadmapNode.getPositionAbsolute()))
+                .build();
+    }
+
+    public static RoadmapNodeDto of(InProgressNode inProgressNode) {
+        return RoadmapNodeDto.builder()
+                .id(inProgressNode.getRoadmapNode().getClientNodeId())
+                .type(inProgressNode.getRoadmapNode().getType())
+                .width(inProgressNode.getRoadmapNode().getWidth())
+                .height(inProgressNode.getRoadmapNode().getHeight())
+                .sourcePosition(inProgressNode.getRoadmapNode().getSourcePosition())
+                .targetPosition(inProgressNode.getRoadmapNode().getTargetPosition())
+                .detailedContent(inProgressNode.getRoadmapNode().getDetailedContent())
+                .done(inProgressNode.getDone())
+                .style(RoadmapNodeStyleDto.of(inProgressNode.getRoadmapNode().getStyle()))
+                .data(RoadmapNodeDataDto.of(inProgressNode.getRoadmapNode().getData()))
+                .position(RoadmapNodePositionDto.of(inProgressNode.getRoadmapNode().getPosition()))
+                .positionAbsolute(RoadmapNodePositionAbsoluteDto.of(inProgressNode.getRoadmapNode().getPositionAbsolute()))
                 .build();
     }
 }
