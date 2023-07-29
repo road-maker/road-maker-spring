@@ -3,7 +3,7 @@ package com.roadmaker.roadmap.entity.inprogressnode;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.roadmaker.commons.BaseTimeEntity;
 import com.roadmaker.member.entity.Member;
-import com.roadmaker.roadmap.entity.inprogressroadmap.InProgressRoadmap;
+import com.roadmaker.inprogressroadmap.entity.InProgressRoadmap;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNode;
 import jakarta.persistence.*;

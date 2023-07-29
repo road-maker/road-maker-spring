@@ -1,4 +1,4 @@
-package com.roadmaker.roadmap.entity.inprogressroadmap;
+package com.roadmaker.inprogressroadmap.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;

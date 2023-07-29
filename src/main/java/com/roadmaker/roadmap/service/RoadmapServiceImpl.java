@@ -1,17 +1,15 @@
 package com.roadmaker.roadmap.service;
 
-import com.roadmaker.comment.dto.CommentDto;
 import com.roadmaker.commons.exception.ConflictException;
 import com.roadmaker.commons.exception.NotFoundException;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.entity.MemberRepository;
 import com.roadmaker.roadmap.dto.*;
-import com.roadmaker.comment.entity.Comment;
 import com.roadmaker.comment.entity.CommentRepository;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNode;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNodeRepository;
-import com.roadmaker.roadmap.entity.inprogressroadmap.InProgressRoadmap;
-import com.roadmaker.roadmap.entity.inprogressroadmap.InProgressRoadmapRepository;
+import com.roadmaker.inprogressroadmap.entity.InProgressRoadmap;
+import com.roadmaker.inprogressroadmap.entity.InProgressRoadmapRepository;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import com.roadmaker.roadmap.entity.roadmap.RoadmapRepository;
 import com.roadmaker.roadmap.entity.roadmapedge.RoadmapEdge;
