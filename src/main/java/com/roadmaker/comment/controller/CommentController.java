@@ -5,8 +5,6 @@ import com.roadmaker.comment.service.CommentService;
 import com.roadmaker.commons.annotation.LoginMember;
 import com.roadmaker.commons.annotation.LoginRequired;
 import com.roadmaker.member.entity.Member;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +19,8 @@ public class CommentController {
     private final CommentService commentService;
 
     @LoginRequired
-    @PostMapping("/add-comment")
-    public ResponseEntity<HttpStatus> addComment (@LoginMember Member member, @RequestBody CommentDto commentReqeust) {
+    @PostMapping("/save-comment")
+    public ResponseEntity<HttpStatus> saveComment (@LoginMember Member member, @RequestBody CommentDto commentReqeust) {
         // Request바디로 들어온 요청자와 실제 로그인한 멤버가 다르다면 Forbidden 반환
         if(!member.getNickname().equals(commentReqeust.getMemberNickname())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();

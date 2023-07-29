@@ -14,6 +14,7 @@ import com.roadmaker.comment.entity.CommentRepository;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNodeRepository;
 import com.roadmaker.roadmap.entity.inprogressroadmap.InProgressRoadmap;
 import com.roadmaker.roadmap.entity.inprogressroadmap.InProgressRoadmapRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -116,8 +117,6 @@ public class MemberServiceImpl implements MemberService {
                 }
         );
 
-        List<CommentDto> commentDtos = commentService.callMemberComment(memberId);
-
         return MypageResponse.builder()
                 .memberId(memberId)
                 .email(member.getEmail()) //memberId를 불러오는 과정에서 이미 null exception 예외 처리함
@@ -130,20 +129,28 @@ public class MemberServiceImpl implements MemberService {
                 .level(member.getLevel())
                 .exp(member.getExp())
                 .inProcessRoadmaps(inProgressRoadmapDtos)
-                .comments(commentDtos)
                 .build();
     }
 
     @Override
     @Transactional
-    public Boolean saveProfile(MypageRequest request, Member member) {
-        //1. 비즈니스 로직 처리
+    public Boolean saveProfile( MypageRequest request, Member member) {
+        //1. 내가 입력한 닉네임이 이미 내 닉네임과 동일한 경우 충돌 피하기 위함
+        if(request.getNickname().equals(member.getNickname())) {
+        } else {
+            //2. 다른 동일한 닉네임이 존재할 경우 409리턴하도록
+            if(memberRepository.findByNickname(request.getNickname()).orElse(null) != null) {
+                return false;
+            } else {
+                member.setNickname(request.getNickname());
+            }
+        }
         member.setBio(request.getBio());
-        member.setNickname(request.getNickname());
         member.setBaekjoonId(request.getBaekjoonId());
         member.setBlogUrl(request.getBlogUrl());
         member.setGithubUrl(request.getGithubUrl());
         memberRepository.save(member);
+
         return true;
     }
 

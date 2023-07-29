@@ -1,5 +1,7 @@
 package com.roadmaker.member.controller;
 
+import com.roadmaker.comment.dto.CommentDto;
+import com.roadmaker.comment.service.CommentService;
 import com.roadmaker.commons.annotation.LoginMember;
 import com.roadmaker.commons.annotation.LoginRequired;
 import com.roadmaker.member.dto.*;
@@ -10,6 +12,9 @@ import com.roadmaker.roadmap.service.RoadmapService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,6 +30,7 @@ public class MemberController {
     private final MemberService memberService;
     public final PasswordEncoder passwordEncoder;
     private final RoadmapService roadmapService;
+    private final CommentService commentService;
 
     @PostMapping("/signup")
     public ResponseEntity<HttpStatus> signup(@Valid @RequestBody SignupRequest signupRequest) {
@@ -66,19 +72,38 @@ public class MemberController {
         return new ResponseEntity<>(memberResponse, HttpStatus.OK);
     }
 
+    @GetMapping(path="/{nickname}/comments")
+    public ResponseEntity<List<CommentDto>> findMemberComments(@PathVariable String nickname, Integer size, Integer page) {
+
+        Long memberId = memberService.findMemberByNickname(nickname).getId();
+
+        if(memberId == null) { return new ResponseEntity<>(null, HttpStatus.NOT_FOUND); }
+
+        List<CommentDto> commentsInPage = commentService.findByMemberIdAndPageRequest(memberId,page, size);
+        return new ResponseEntity<>(commentsInPage, HttpStatus.OK);
+    }
+
     @LoginRequired
     @PostMapping(path="/save-profile")
     public ResponseEntity<HttpStatus> changeProfile(@Valid @RequestBody MypageRequest request, @LoginMember Member member) {
-        //1. 요청 데이터 검증
-        if (request.getNickname() == null) {
+//        //2. 비즈니스 로직 처리
+//        if(memberService.saveProfile(request, member).equals(true)) {
+//            return ResponseEntity.status(HttpStatus.CREATED).build();
+//        }
+//        return ResponseEntity.status(HttpStatus.CONFLICT).build();
+
+        //1. 내 닉네임 안 바꾸는 경우 예외 처리 -> saveprofile에서.
+        //2. 내가 넣으려는 닉네임이 중복되는 경우 예외 409처리
+        if (request.getNickname().equals(member.getNickname())) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
         }
         //2. 비즈니스 로직 처리
-        if(memberService.saveProfile(request, member).equals(true)) {
+        if(Boolean.TRUE.equals(memberService.saveProfile(request, member))) {
             //3. 응답 메세지 처리
             return ResponseEntity.status(HttpStatus.CREATED).build();
+        } else {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
-        return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
 
     @LoginRequired

@@ -23,5 +23,4 @@ public class MypageResponse {
     private int level;
     private int exp;
     private List<InProgressRoadmapDto> inProcessRoadmaps;
-    private List<CommentDto> comments;
 }
