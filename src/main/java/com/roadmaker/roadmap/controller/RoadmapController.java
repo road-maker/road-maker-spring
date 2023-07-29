@@ -1,6 +1,5 @@
 package com.roadmaker.roadmap.controller;
 
-import com.roadmaker.comment.dto.CommentDto;
 import com.roadmaker.comment.service.CommentService;
 import com.roadmaker.commons.annotation.LoginMember;
 import com.roadmaker.commons.annotation.LoginRequired;
@@ -69,12 +68,12 @@ public class RoadmapController {
     public ResponseEntity<RoadmapResponse> loadRoadmap(@PathVariable Long roadmapId) {
 
         Roadmap roadmap = roadmapService.findRoadmapById(roadmapId);
+
         if (roadmap == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        List<CommentDto> commentDtos = commentService.callRoadmapComment(roadmapId);
 
-        RoadmapResponse roadmapResponse = RoadmapResponse.of(roadmap, commentDtos);
+        RoadmapResponse roadmapResponse = RoadmapResponse.of(roadmap);
 
         return new ResponseEntity<>(roadmapResponse, HttpStatus.OK);
     }
