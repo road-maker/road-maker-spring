@@ -8,6 +8,9 @@ import com.roadmaker.roadmap.dto.RoadmapResponse;
 import com.roadmaker.roadmap.entity.roadmap.RoadmapRepository;
 import com.roadmaker.roadmap.service.RoadmapService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,34 +24,18 @@ public class CommentServiceImpl implements CommentService{
     private final RoadmapRepository roadmapRepository;
     private final MemberRepository memberRepository;
 
-    public List<CommentDto> callRoadmapComment (Long roadmapId) {
-        List<Comment> comments = commentRepository.findAllByRoadmapId(roadmapId);
-        List<CommentDto> commentDtos = new ArrayList<>();
-        comments.forEach(
-                comment -> { CommentDto commentDto = CommentDto.builder()
-                        .roadmapId(comment.getRoadmap().getId())
-                        .memberNickname(comment.getMember().getNickname())
-                        .content(comment.getContent())
-                        .build();
-                    commentDtos.add(commentDto);
-                }
-        );
-        return commentDtos;
+    // 10개, 15개 단위로 쪼개서 불러오는 기능 추가
+    public List<CommentDto> findCommentByRoadmapIdAndPageRequest (Long roadmapId, Integer page, Integer size) {
+        // pageable을 통해 comment를 찾아 commentDTO로 변환
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return commentRepository.findCommentByRoadmapId(roadmapId, pageRequest).map(CommentDto::of).getContent();
     }
 
-    public List<CommentDto> callMemberComment (Long memberId) {
-        List<Comment> comments = commentRepository.findAllByMemberId(memberId);
-        List<CommentDto> commentDtos = new ArrayList<>();
-        comments.forEach(
-                comment -> { CommentDto commentDto = CommentDto.builder()
-                        .roadmapId(comment.getRoadmap().getId())
-                        .memberNickname(comment.getMember().getNickname())
-                        .content(comment.getContent())
-                        .build();
-                    commentDtos.add(commentDto);
-                }
-        );
-        return commentDtos;
+    @Override
+    public List<CommentDto> findByMemberIdAndPageRequest(Long memberId, Integer page, Integer size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return commentRepository.findCommentByMemberId(memberId, pageRequest).map(CommentDto::of).getContent();
+//
     }
 
     public boolean saveComment (CommentDto commentDto) {

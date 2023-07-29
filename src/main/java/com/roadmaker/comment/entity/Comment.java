@@ -5,13 +5,12 @@ import com.roadmaker.commons.BaseTimeEntity;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
-@Setter @Builder
+@Setter
+@NoArgsConstructor
 @Table(name = "COMMENT")
 public class Comment extends BaseTimeEntity {
     @Id
@@ -29,4 +28,11 @@ public class Comment extends BaseTimeEntity {
 
     @Column(length = 500, nullable = false)
     private String content;
+
+    @Builder
+    Comment(Roadmap roadmap, Member member, String content) {
+        this.roadmap = roadmap;
+        this.member = member;
+        this.content = content;
+    }
 }
