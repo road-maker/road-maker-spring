@@ -142,7 +142,6 @@ public class CreateRoadmapRequest {
         @NotBlank
         private String targetPosition;
 
-        @NotBlank
         private String detailedContent;
 
         @Valid
