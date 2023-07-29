@@ -27,15 +27,4 @@ public class RoadmapResponse {
                 .build();
     }
 
-    //코멘트를 같이 불러오는 경우
-    public static RoadmapResponse of(Roadmap roadmap, List<CommentDto> commentDtos) {
-        return RoadmapResponse.builder()
-                .roadmap(RoadmapDto.of(roadmap))
-                .viewport(RoadmapViewportDto.of(roadmap.getRoadmapViewport()))
-                .nodes(roadmap.getRoadmapNodes().stream().map(RoadmapNodeDto::of).toList())
-                .edges(roadmap.getRoadmapEdges().stream().map(RoadmapEdgeDto::of).toList())
-                .comments(commentDtos)
-                .build();
-    }
-
 }

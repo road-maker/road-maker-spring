@@ -1,6 +1,7 @@
 package com.roadmaker.roadmap.controller;
 
 import com.roadmaker.comment.dto.CommentDto;
+import com.roadmaker.comment.entity.Comment;
 import com.roadmaker.comment.service.CommentService;
 import com.roadmaker.commons.annotation.LoginMember;
 import com.roadmaker.commons.annotation.LoginRequired;
@@ -14,6 +15,10 @@ import com.roadmaker.roadmap.service.RoadmapService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -47,7 +52,7 @@ public class RoadmapController {
         return new ResponseEntity<>(roadmapId, HttpStatus.CREATED);
     }
 
-//    /api/roadmaps?
+//    /api/roadmaps? 10개, 15개로 나누어 불러오는 기능 추가 필요
     @GetMapping
     public ResponseEntity<List<RoadmapDto>> getRoadmaps() {
         List<Roadmap> roadmaps = roadmapRepository.findAll();
@@ -72,17 +77,22 @@ public class RoadmapController {
         if (roadmap == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        List<CommentDto> commentDtos = commentService.callRoadmapComment(roadmapId);
 
-        RoadmapResponse roadmapResponse = RoadmapResponse.of(roadmap, commentDtos);
+        RoadmapResponse roadmapResponse = RoadmapResponse.of(roadmap);
 
         return new ResponseEntity<>(roadmapResponse, HttpStatus.OK);
+    }
+
+    @GetMapping(path="/load-roadmap/{roadmapId}/comments")
+    public ResponseEntity<List<CommentDto>> loadRoadmapComments(@PathVariable Long roadmapId, Integer page, Integer size) {
+        return new ResponseEntity<> (commentService.findCommentByRoadmapIdAndPageRequest(roadmapId, page, size), HttpStatus.OK);
     }
 
     @LoginRequired
     @PostMapping(path="/{roadmapId}/join")
     public ResponseEntity<HttpStatus> joinRoadmap(@PathVariable Long roadmapId, @LoginMember Member member) {
         // 1. 필요한 로드맵을 소환: 로드맵 아이디로
+
         Roadmap roadmap = roadmapService.findRoadmapById(roadmapId);
 
         //2. 로드맵 조인, 실패 시 false 반환: 비즈니스 로직
