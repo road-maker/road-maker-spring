@@ -65,8 +65,14 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public boolean isUserRegistered(String email) {
+    public boolean isDuplicatedEmail(String email) {
         Optional<Member> member = memberRepository.findByEmail(email);
+        return member.isPresent();
+    }
+
+    @Override
+    public boolean isDuplicatedNickname(String nickname) {
+        Optional<Member> member = memberRepository.findByNickname(nickname);
         return member.isPresent();
     }
 
