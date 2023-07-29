@@ -86,12 +86,6 @@ public class MemberController {
     @LoginRequired
     @PostMapping(path="/save-profile")
     public ResponseEntity<HttpStatus> changeProfile(@Valid @RequestBody MypageRequest request, @LoginMember Member member) {
-//        //2. 비즈니스 로직 처리
-//        if(memberService.saveProfile(request, member).equals(true)) {
-//            return ResponseEntity.status(HttpStatus.CREATED).build();
-//        }
-//        return ResponseEntity.status(HttpStatus.CONFLICT).build();
-
         //1. 내 닉네임 안 바꾸는 경우 예외 처리 -> saveprofile에서.
         //2. 내가 넣으려는 닉네임이 중복되는 경우 예외 409처리
         if (request.getNickname().equals(member.getNickname())) {

@@ -166,12 +166,11 @@ public class MemberServiceImpl implements MemberService {
     }
 
     public MemberResponse findMemberByNickname(String nickname) {
-        Optional<Member> member = memberRepository.findByNickname(nickname);
-
-        if(member.isEmpty()) {
+        Member member = memberRepository.findByNickname(nickname).orElse(null);
+        if(member==null) {
             throw new NotFoundException();
         }
 
-        return MemberResponse.of(member.get());
+        return MemberResponse.of(member);
     }
 }

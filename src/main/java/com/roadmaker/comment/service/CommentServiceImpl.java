@@ -33,25 +33,9 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     public List<CommentDto> findByMemberIdAndPageRequest(Long memberId, Integer page, Integer size) {
-        return null;
-    }
-
-    public Page<CommentDto> callMemberCommentsInPage (Long memberId, Pageable pageable) {
-        return commentRepository.findCommentByMemberId(memberId, pageable).map(CommentDto::of);
-//        List<Comment> comments = commentRepository.findAllByMemberId(memberId);
-//        List<CommentDto> commentDtos = new ArrayList<>();
-//        comments.forEach(
-//                comment -> { CommentDto commentDto = CommentDto.builder()
-//                        .roadmapId(comment.getRoadmap().getId())
-//                        .memberNickname(comment.getMember().getNickname())
-//                        .content(comment.getContent())
-//                        .updatedTime(comment.getUpdatedAt())
-//                        .createdTime(comment.getCreatedAt())
-//                        .build();
-//                    commentDtos.add(commentDto);
-//                }
-//        );
-//        return commentDtos;
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return commentRepository.findCommentByMemberId(memberId, pageRequest).map(CommentDto::of).getContent();
+//
     }
 
     public boolean saveComment (CommentDto commentDto) {
