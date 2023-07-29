@@ -1,6 +1,6 @@
 package com.roadmaker.roadmap.dto;
 
-import com.roadmaker.comment.dto.CommentDto;
+import com.roadmaker.roadmap.entity.inprogressnode.InProgressNode;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import lombok.*;
 
@@ -16,8 +16,8 @@ public class RoadmapResponse {
     private RoadmapViewportDto viewport;
     private List<RoadmapEdgeDto> edges;
     private List<RoadmapNodeDto> nodes;
-    private List<CommentDto> comments;
 
+    /** 로그인 하지 않거나, 로드맵에 참가하지 않은 사람의 DTO */
     public static RoadmapResponse of(Roadmap roadmap) {
         return RoadmapResponse.builder()
                 .roadmap(RoadmapDto.of(roadmap))
@@ -27,4 +27,13 @@ public class RoadmapResponse {
                 .build();
     }
 
+    /** 로드맵에 참가한 사람의 DTO */
+    public static RoadmapResponse of(Roadmap roadmap, List<InProgressNode> inProgressNodes) {
+        return RoadmapResponse.builder()
+                .roadmap(RoadmapDto.of(roadmap))
+                .viewport(RoadmapViewportDto.of(roadmap.getRoadmapViewport()))
+                .nodes(inProgressNodes.stream().map(RoadmapNodeDto::of).toList())
+                .edges(roadmap.getRoadmapEdges().stream().map(RoadmapEdgeDto::of).toList())
+                .build();
+    }
 }

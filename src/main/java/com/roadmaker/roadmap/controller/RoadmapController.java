@@ -5,6 +5,8 @@ import com.roadmaker.comment.entity.Comment;
 import com.roadmaker.comment.service.CommentService;
 import com.roadmaker.commons.annotation.LoginMember;
 import com.roadmaker.commons.annotation.LoginRequired;
+import com.roadmaker.inprogressroadmap.entity.InProgressRoadmap;
+import com.roadmaker.inprogressroadmap.entity.InProgressRoadmapRepository;
 import com.roadmaker.roadmap.dto.*;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNodeRepository;
 import com.roadmaker.member.service.MemberService;
@@ -40,6 +42,7 @@ public class RoadmapController {
     private final RoadmapService roadmapService;
     private final RoadmapRepository roadmapRepository;
     private final InProgressNodeRepository inProgressNodeRepository;
+    private final InProgressRoadmapRepository inProgressRoadmapRepository;
     private final RoadmapEditorRepository roadmapEditorRepository;
     private final CommentService commentService;
 
@@ -72,13 +75,27 @@ public class RoadmapController {
 
     @GetMapping(path = "/load-roadmap/{roadmapId}")
     public ResponseEntity<RoadmapResponse> loadRoadmap(@PathVariable Long roadmapId) {
-
         Roadmap roadmap = roadmapService.findRoadmapById(roadmapId);
-        if (roadmap == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
 
         RoadmapResponse roadmapResponse = RoadmapResponse.of(roadmap);
+
+        return new ResponseEntity<>(roadmapResponse, HttpStatus.OK);
+    }
+
+    @LoginRequired
+    @GetMapping("/{roadmapId}/auth")
+    public ResponseEntity<RoadmapResponse> loadRoadmapWithAuth(@PathVariable Long roadmapId, @LoginMember Member member) {
+        Roadmap roadmap = roadmapService.findRoadmapById(roadmapId);
+        RoadmapResponse roadmapResponse;
+
+        Optional<InProgressRoadmap> inProgressRoadmap = inProgressRoadmapRepository.findByRoadmapIdAndMemberId(roadmapId, member.getId());
+
+        if (inProgressRoadmap.isEmpty()) {
+            roadmapResponse = RoadmapResponse.of(roadmap);
+        } else {
+            List<InProgressNode> inProgressNodes = inProgressNodeRepository.findByRoadmapIdAndMemberId(roadmapId, member.getId());
+            roadmapResponse = RoadmapResponse.of(roadmap, inProgressNodes);
+        }
 
         return new ResponseEntity<>(roadmapResponse, HttpStatus.OK);
     }
