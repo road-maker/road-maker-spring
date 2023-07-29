@@ -13,8 +13,6 @@ public class RoadmapDto {
     private String title;
     private String description;
     private String thumbnailUrl;
-    private Integer recommendedExecutionTimeValue;
-    private String recommendedExecutionTimeUnit;
     private String ownerNickname;
     private String ownerAvatarUrl;
 
@@ -23,8 +21,6 @@ public class RoadmapDto {
                 .title(this.title)
                 .description(this.description)
                 .thumbnailUrl(this.thumbnailUrl)
-                .recommendedExecutionTimeValue(this.recommendedExecutionTimeValue)
-                .recommendedExecutionTimeUnit(this.recommendedExecutionTimeUnit)
                 .build();
     }
 
@@ -37,8 +33,6 @@ public class RoadmapDto {
                 .title(roadmap.getTitle())
                 .description(roadmap.getDescription())
                 .thumbnailUrl(roadmap.getThumbnailUrl())
-                .recommendedExecutionTimeValue(roadmap.getRecommendedExecutionTimeValue())
-                .recommendedExecutionTimeUnit(roadmap.getRecommendedExecutionTimeUnit())
                 .build();
     }
 
@@ -51,8 +45,6 @@ public class RoadmapDto {
                 .title(roadmap.getTitle())
                 .description(roadmap.getDescription())
                 .thumbnailUrl(roadmap.getThumbnailUrl())
-                .recommendedExecutionTimeValue(roadmap.getRecommendedExecutionTimeValue())
-                .recommendedExecutionTimeUnit(roadmap.getRecommendedExecutionTimeUnit())
                 .ownerNickname(ownerNickname)
                 .ownerAvatarUrl(ownerAvatarUrl)
                 .build();
