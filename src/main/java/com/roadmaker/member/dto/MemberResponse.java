@@ -13,12 +13,12 @@ public class MemberResponse {
     private String email;
     private String nickname;
     private String bio;
-    private String avatarUrl;
-    private String githubUrl;
-    private String blogUrl;
+//    private String avatarUrl;
+//    private String githubUrl;
+//    private String blogUrl;
     private String baekjoonId;
-    private Integer level;
-    private Integer exp;
+//    private Integer level;
+//    private Integer exp;
 
     public static MemberResponse of(Member member) {
         return MemberResponse.builder()
@@ -26,11 +26,11 @@ public class MemberResponse {
                 .email(member.getEmail())
                 .nickname(member.getNickname())
                 .bio(member.getBio())
-                .avatarUrl(member.getAvatarUrl())
-                .githubUrl(member.getGithubUrl())
+//                .avatarUrl(member.getAvatarUrl())
+//                .githubUrl(member.getGithubUrl())
                 .baekjoonId(member.getBaekjoonId())
-                .level(member.getLevel())
-                .exp(member.getExp())
+//                .level(member.getLevel())
+//                .exp(member.getExp())
                 .build();
     }
 }

@@ -120,36 +120,36 @@ public class MemberServiceImpl implements MemberService {
                 .email(member.getEmail()) //memberId를 불러오는 과정에서 이미 null exception 예외 처리함
                 .nickname(member.getNickname())
                 .bio(member.getBio())
-                .avatarUrl(member.getAvatarUrl())
-                .githubUrl(member.getGithubUrl())
-                .blogUrl(member.getBlogUrl())
+//                .avatarUrl(member.getAvatarUrl())
+//                .githubUrl(member.getGithubUrl())
+//                .blogUrl(member.getBlogUrl())
                 .backjoonId(member.getBaekjoonId())
-                .level(member.getLevel())
-                .exp(member.getExp())
+//                .level(member.getLevel())
+//                .exp(member.getExp())
                 .inProcessRoadmaps(inProgressRoadmapDtos)
                 .build();
     }
 
     @Override
     @Transactional
-    public Boolean saveProfile( MypageRequest request, Member member) {
+    public MemberResponse saveProfile( MypageRequest request, Member member) {
         //1. 내가 입력한 닉네임이 이미 내 닉네임과 동일한 경우 충돌 피하기 위함
         if(request.getNickname().equals(member.getNickname())) {
         } else {
             //2. 다른 동일한 닉네임이 존재할 경우 409리턴하도록
             if(memberRepository.findByNickname(request.getNickname()).orElse(null) != null) {
-                return false;
+                return null;
             } else {
                 member.setNickname(request.getNickname());
             }
         }
         member.setBio(request.getBio());
         member.setBaekjoonId(request.getBaekjoonId());
-        member.setBlogUrl(request.getBlogUrl());
-        member.setGithubUrl(request.getGithubUrl());
+//        member.setBlogUrl(request.getBlogUrl());
+//        member.setGithubUrl(request.getGithubUrl());
         memberRepository.save(member);
 
-        return true;
+        return MemberResponse.of(member);
     }
 
     @Override

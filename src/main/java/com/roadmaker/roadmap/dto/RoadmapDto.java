@@ -36,7 +36,7 @@ public class RoadmapDto {
                 .build();
     }
 
-    public static RoadmapDto of(Roadmap roadmap, String ownerNickname, String ownerAvatarUrl) {
+    public static RoadmapDto of(Roadmap roadmap, String ownerNickname) {
         if (roadmap == null) {
             return null;
         }
@@ -46,7 +46,7 @@ public class RoadmapDto {
                 .description(roadmap.getDescription())
                 .thumbnailUrl(roadmap.getThumbnailUrl())
                 .ownerNickname(ownerNickname)
-                .ownerAvatarUrl(ownerAvatarUrl)
+//                .ownerAvatarUrl(ownerAvatarUrl)
                 .build();
     }
 }
