@@ -52,12 +52,12 @@ public class CreateRoadmapRequest {
 
         private Member member;
 
-        public Roadmap toEntity() {
+        public Roadmap toEntity(Member member) {
             return Roadmap.builder()
                     .title(this.title)
                     .description(this.description)
                     .thumbnailUrl(this.thumbnailUrl)
-                    .member(this.member)
+                    .member(member)
                     .build();
         }
     }
