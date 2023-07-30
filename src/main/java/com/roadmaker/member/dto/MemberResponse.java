@@ -15,7 +15,7 @@ public class MemberResponse {
     private String bio;
 //    private String avatarUrl;
 //    private String githubUrl;
-//    private String blogUrl;
+    private String blogUrl;
     private String baekjoonId;
 //    private Integer level;
 //    private Integer exp;
@@ -28,6 +28,7 @@ public class MemberResponse {
                 .bio(member.getBio())
 //                .avatarUrl(member.getAvatarUrl())
 //                .githubUrl(member.getGithubUrl())
+                .blogUrl(member.getBlogUrl())
                 .baekjoonId(member.getBaekjoonId())
 //                .level(member.getLevel())
 //                .exp(member.getExp())
