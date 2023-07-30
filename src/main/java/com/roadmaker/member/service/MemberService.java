@@ -25,5 +25,6 @@ public interface MemberService {
 
     public MemberResponse findMemberByEmail(String email);
     public MemberResponse findMemberByNickname(String nickname);
+    public MemberResponse findMemberByMemberId(Long memberId);
 
 }
