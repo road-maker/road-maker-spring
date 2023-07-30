@@ -1,7 +1,6 @@
 package com.roadmaker.roadmap.controller;
 
 import com.roadmaker.comment.dto.CommentDto;
-import com.roadmaker.comment.entity.Comment;
 import com.roadmaker.comment.service.CommentService;
 import com.roadmaker.commons.annotation.LoginMember;
 import com.roadmaker.commons.annotation.LoginRequired;
@@ -10,17 +9,13 @@ import com.roadmaker.inprogressroadmap.entity.InProgressRoadmapRepository;
 import com.roadmaker.roadmap.dto.*;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNodeRepository;
 import com.roadmaker.member.service.MemberService;
+import com.roadmaker.roadmap.entity.inprogressnode.InProgressNode;
 import com.roadmaker.roadmap.entity.roadmapeditor.RoadmapEditor;
 import com.roadmaker.roadmap.entity.roadmapeditor.RoadmapEditorRepository;
-import com.roadmaker.roadmap.entity.inprogressnode.InProgressNode;
 import com.roadmaker.roadmap.service.RoadmapService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -43,8 +38,22 @@ public class RoadmapController {
     private final RoadmapRepository roadmapRepository;
     private final InProgressNodeRepository inProgressNodeRepository;
     private final InProgressRoadmapRepository inProgressRoadmapRepository;
-    private final RoadmapEditorRepository roadmapEditorRepository;
     private final CommentService commentService;
+    private final RoadmapEditorRepository roadmapEditorRepository;
+
+    @PostMapping("/migration")
+    public List<Roadmap> updateRoadmapMemberField() {
+        List<Roadmap> roadmaps = roadmapRepository.findAll();
+
+        for (Roadmap roadmap : roadmaps) {
+            RoadmapEditor roadmapEditor = roadmapEditorRepository.findByRoadmapIdAndIsOwner(roadmap.getId(), true);
+            roadmap.setMember(roadmapEditor.getMember());
+        }
+
+        roadmapRepository.saveAll(roadmaps);
+
+        return roadmaps;
+    }
 
     // 로드맵 발행
     @LoginRequired
@@ -55,21 +64,11 @@ public class RoadmapController {
         return new ResponseEntity<>(roadmapId, HttpStatus.CREATED);
     }
 
-//    /api/roadmaps? 10개, 15개로 나누어 불러오는 기능 추가 필요
     @GetMapping
     public ResponseEntity<List<RoadmapDto>> getRoadmaps() {
         List<Roadmap> roadmaps = roadmapRepository.findAll();
-        List<RoadmapDto> roadmapDtos = new ArrayList<>();
-        roadmaps.stream().forEach(roadmap -> { //로드맵 정보에 로드맵 작성자와 프로필을 추가하는 루틴
-            RoadmapEditor roadmapEditor = roadmapEditorRepository.findByRoadmapIdAndIsOwner(roadmap.getId(), true);
-            if(roadmapEditor == null) { //테이블의 구체성이 부족할 때 만들어진 데이터 때문에 nullpointer exception이 발생할 수 있어서 넣어둔 코드, 실제에선 발생이 없어야 함
-                roadmapDtos.add(RoadmapDto.of(roadmap));
-            } else {
-                String ownerNickname = roadmapEditor.getMember().getNickname();
-//                String ownerProfileUrl = roadmapEditor.getMember().getAvatarUrl();
-                roadmapDtos.add(RoadmapDto.of(roadmap, ownerNickname));
-            }
-        });
+        List<RoadmapDto> roadmapDtos = roadmaps.stream().map(roadmap -> RoadmapDto.of(roadmap, roadmap.getMember())).toList();
+
         return new ResponseEntity<>(roadmapDtos, HttpStatus.OK);
     }
 
