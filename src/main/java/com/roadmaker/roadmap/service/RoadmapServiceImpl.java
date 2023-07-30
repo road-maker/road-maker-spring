@@ -174,15 +174,4 @@ public class RoadmapServiceImpl implements RoadmapService{
         return true;
     }
 
-    public RoadmapResponse makeRoadmapResponse(RoadmapDto roadmapDto) {
-        Long roadmapId = roadmapDto.getId();
-        Optional<Roadmap> roadmapOptional = roadmapRepository.findById(roadmapId);
-        Roadmap roadmap = roadmapOptional.orElse(null);
-        if(roadmap == null) {
-            return null;
-        }
-        return RoadmapResponse.of(roadmap);
-    }
-
-
 }

@@ -18,7 +18,7 @@ public class MypageResponse {
     private String bio;
 //    private String avatarUrl;
 //    private String githubUrl;
-//    private String blogUrl;
+    private String blogUrl;
     private String backjoonId;
 //    private int level;
 //    private int exp;

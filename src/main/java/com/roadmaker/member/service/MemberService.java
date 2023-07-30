@@ -21,7 +21,6 @@ public interface MemberService {
 
     public Member getLoggedInMember();
 
-    public MypageResponse callMyPage(Long memberId);
     public MemberResponse saveProfile(MypageRequest request, Member member);
 
     public MemberResponse findMemberByEmail(String email);

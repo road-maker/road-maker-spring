@@ -82,52 +82,8 @@ public class MemberServiceImpl implements MemberService {
         if (member != null) {
             return member;
         } else {
-            log.info("Can not find member from database");
-            return null;
+            throw new NotFoundException();
         }
-    }
-
-    @Override
-    @Transactional
-    public MypageResponse callMyPage(Long memberId) {
-
-        Member member = memberRepository.findById(memberId).orElse(null);
-
-        List<InProgressRoadmap> inProgressRoadmaps = inProgressRoadmapRepository.findAllByMemberId(memberId);
-        List<InProgressRoadmapDto> inProgressRoadmapDtos = new ArrayList<>();
-        inProgressRoadmaps.forEach(
-
-                inProgressRoadmap -> {
-                    int totalNodeCount = (inProgressRoadmap.getInProgressNodes()).size();
-                    int doneNodeCount = inProgressNodeRepository
-                            .findByRoadmapAndDone(inProgressRoadmap.getRoadmap(), true).size();
-
-                    double progress = Math.round(((double)doneNodeCount/totalNodeCount)*10000) / 100.0; //
-
-                    InProgressRoadmapDto inProgressRoadmapDto = InProgressRoadmapDto.builder()
-                            .id(inProgressRoadmap.getId())
-                            .title(inProgressRoadmap.getRoadmap().getTitle())
-                            .thumbnail(inProgressRoadmap.getRoadmap().getThumbnailUrl())
-                            .process(progress)
-                            .build();
-
-                    inProgressRoadmapDtos.add(inProgressRoadmapDto);
-                }
-        );
-
-        return MypageResponse.builder()
-                .memberId(memberId)
-                .email(member.getEmail()) //memberId를 불러오는 과정에서 이미 null exception 예외 처리함
-                .nickname(member.getNickname())
-                .bio(member.getBio())
-//                .avatarUrl(member.getAvatarUrl())
-//                .githubUrl(member.getGithubUrl())
-//                .blogUrl(member.getBlogUrl())
-                .backjoonId(member.getBaekjoonId())
-//                .level(member.getLevel())
-//                .exp(member.getExp())
-                .inProcessRoadmaps(inProgressRoadmapDtos)
-                .build();
     }
 
     @Override
@@ -145,7 +101,7 @@ public class MemberServiceImpl implements MemberService {
         }
         member.setBio(request.getBio());
         member.setBaekjoonId(request.getBaekjoonId());
-//        member.setBlogUrl(request.getBlogUrl());
+        member.setBlogUrl(request.getBlogUrl());
 //        member.setGithubUrl(request.getGithubUrl());
         memberRepository.save(member);
 
