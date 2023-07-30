@@ -11,11 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
-
-import java.lang.reflect.Method;
 
 @Component
 @RequiredArgsConstructor
@@ -28,7 +25,7 @@ public class LoginRequiredInterceptor implements HandlerInterceptor {
 
         if (handler instanceof HandlerMethod && ((HandlerMethod) handler).hasMethodAnnotation(LoginRequired.class)) {
             // Request Header에서 JWT 추출
-            String token = resolveToken((HttpServletRequest) request);
+            String token = jwtProvider.resolveToken((HttpServletRequest) request);
 
             if (token != null && jwtProvider.validationToken(token)) {
                 Authentication authentication = jwtProvider.getAuthentication(token);
@@ -46,11 +43,4 @@ public class LoginRequiredInterceptor implements HandlerInterceptor {
 
         return true;
     }
-
-    private String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")) {
-            return bearerToken.substring(7);
-        }
-        return null;
-    }}
+}
