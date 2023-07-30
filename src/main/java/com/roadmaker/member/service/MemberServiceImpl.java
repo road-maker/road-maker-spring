@@ -126,4 +126,12 @@ public class MemberServiceImpl implements MemberService {
         }
         return MemberResponse.of(member);
     }
+
+    public MemberResponse findMemberByMemberId(Long memberId) {
+        Optional<Member> member = memberRepository.findById(memberId);
+        if(member.isEmpty()) {
+            return null;
+        }
+        return MemberResponse.of(member.get());
+    }
 }

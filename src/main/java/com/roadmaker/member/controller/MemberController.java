@@ -68,8 +68,11 @@ public class MemberController {
     }
 
     @GetMapping(path="/{memberId}")
-    public ResponseEntity<MemberResponse> findMember(@PathVariable String memberId) {
-        MemberResponse memberResponse = memberService.findMemberByEmail(memberId);
+    public ResponseEntity<MemberResponse> findMember(@PathVariable Long memberId) {
+        MemberResponse memberResponse = memberService.findMemberByMemberId(memberId);
+        if (memberResponse == null) {
+            throw new NotFoundException("해당 멤버를 찾지 못함");
+        }
         return new ResponseEntity<>(memberResponse, HttpStatus.OK);
     }
 
