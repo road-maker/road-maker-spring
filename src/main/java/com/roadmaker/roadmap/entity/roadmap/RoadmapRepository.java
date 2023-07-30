@@ -2,8 +2,11 @@ package com.roadmaker.roadmap.entity.roadmap;
 
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.roadmaker.roadmap.entity.roadmap.Roadmap;
+
+import java.util.List;
 
 public interface RoadmapRepository extends JpaRepository<Roadmap, Long> {
     public Roadmap findRoadmapById(Long id);
+
+    public List<Roadmap> findByMemberId(Long memberId);
 }

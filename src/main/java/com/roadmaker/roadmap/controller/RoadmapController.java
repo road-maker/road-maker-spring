@@ -10,8 +10,6 @@ import com.roadmaker.roadmap.dto.*;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNodeRepository;
 import com.roadmaker.member.service.MemberService;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNode;
-import com.roadmaker.roadmap.entity.roadmapeditor.RoadmapEditor;
-import com.roadmaker.roadmap.entity.roadmapeditor.RoadmapEditorRepository;
 import com.roadmaker.roadmap.service.RoadmapService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -39,21 +37,6 @@ public class RoadmapController {
     private final InProgressNodeRepository inProgressNodeRepository;
     private final InProgressRoadmapRepository inProgressRoadmapRepository;
     private final CommentService commentService;
-    private final RoadmapEditorRepository roadmapEditorRepository;
-
-    @PostMapping("/migration")
-    public List<Roadmap> updateRoadmapMemberField() {
-        List<Roadmap> roadmaps = roadmapRepository.findAll();
-
-        for (Roadmap roadmap : roadmaps) {
-            RoadmapEditor roadmapEditor = roadmapEditorRepository.findByRoadmapIdAndIsOwner(roadmap.getId(), true);
-            roadmap.setMember(roadmapEditor.getMember());
-        }
-
-        roadmapRepository.saveAll(roadmaps);
-
-        return roadmaps;
-    }
 
     // 로드맵 발행
     @LoginRequired

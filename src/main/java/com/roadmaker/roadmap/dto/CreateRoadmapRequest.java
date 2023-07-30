@@ -1,5 +1,6 @@
 package com.roadmaker.roadmap.dto;
 
+import com.roadmaker.member.entity.Member;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import com.roadmaker.roadmap.entity.roadmapedge.RoadmapEdge;
 import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNode;
@@ -49,11 +50,14 @@ public class CreateRoadmapRequest {
 
         private String thumbnailUrl;
 
+        private Member member;
+
         public Roadmap toEntity() {
             return Roadmap.builder()
                     .title(this.title)
                     .description(this.description)
                     .thumbnailUrl(this.thumbnailUrl)
+                    .member(this.member)
                     .build();
         }
     }
