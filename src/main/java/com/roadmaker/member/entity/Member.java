@@ -30,18 +30,18 @@ public class Member extends BaseTimeEntity implements UserDetails {
 
     @Column
     private String bio;
-    @Column
-    private String avatarUrl;
-    @Column
-    private String githubUrl;
-    @Column
-    private String blogUrl;
+//    @Column
+//    private String avatarUrl;
+//    @Column
+//    private String githubUrl;
+//    @Column
+//    private String blogUrl;
     @Column
     private String baekjoonId;
-    @Column(nullable = false)
-    private int level;
-    @Column(nullable = false)
-    private int exp;
+//    @Column(nullable = false)
+//    private int level;
+//    @Column(nullable = false)
+//    private int exp;
 
     @Override
     public String getPassword() {
@@ -85,7 +85,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
-        this.level = 1;
-        this.exp = 0;
+//        this.level = 1;
+//        this.exp = 0;
     }
 }
