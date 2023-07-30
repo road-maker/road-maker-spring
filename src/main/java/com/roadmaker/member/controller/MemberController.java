@@ -4,6 +4,7 @@ import com.roadmaker.comment.dto.CommentDto;
 import com.roadmaker.comment.service.CommentService;
 import com.roadmaker.commons.annotation.LoginMember;
 import com.roadmaker.commons.annotation.LoginRequired;
+import com.roadmaker.commons.exception.NotFoundException;
 import com.roadmaker.member.dto.*;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.service.MemberService;
@@ -66,9 +67,9 @@ public class MemberController {
         return new ResponseEntity<>(loginResponse, HttpStatus.OK);
     }
 
-    @GetMapping(path="/{nickname}")
-    public ResponseEntity<MemberResponse> findMember(@PathVariable String nickname) {
-        MemberResponse memberResponse = memberService.findMemberByNickname(nickname);
+    @GetMapping(path="/{memberId}")
+    public ResponseEntity<MemberResponse> findMember(@PathVariable String memberId) {
+        MemberResponse memberResponse = memberService.findMemberByEmail(memberId);
         return new ResponseEntity<>(memberResponse, HttpStatus.OK);
     }
 
@@ -77,14 +78,14 @@ public class MemberController {
 
         Long memberId = memberService.findMemberByNickname(nickname).getId();
 
-        if(memberId == null) { return new ResponseEntity<>(null, HttpStatus.NOT_FOUND); }
+        if(memberId == null) { throw new NotFoundException("해당 멤버를 찾지 못함"); }
 
         List<CommentDto> commentsInPage = commentService.findByMemberIdAndPageRequest(memberId,page, size);
         return new ResponseEntity<>(commentsInPage, HttpStatus.OK);
     }
 
     @LoginRequired
-    @PostMapping(path="/save-profile")
+    @PatchMapping(path="/save-profile")
     public ResponseEntity<MemberResponse> changeProfile(@Valid @RequestBody MypageRequest request, @LoginMember Member member) {
         //1. 내 닉네임 안 바꾸는 경우 예외 처리 -> saveprofile에서.
         //2. 내가 넣으려는 닉네임이 중복되는 경우 예외 409처리
