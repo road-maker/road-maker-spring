@@ -14,8 +14,6 @@ import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import com.roadmaker.roadmap.entity.roadmap.RoadmapRepository;
 import com.roadmaker.roadmap.entity.roadmapedge.RoadmapEdge;
 import com.roadmaker.roadmap.entity.roadmapedge.RoadmapEdgeRepository;
-import com.roadmaker.roadmap.entity.roadmapeditor.RoadmapEditor;
-import com.roadmaker.roadmap.entity.roadmapeditor.RoadmapEditorRepository;
 import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNode;
 import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNodeRepository;
 import com.roadmaker.roadmap.entity.roadmapviewport.RoadmapViewport;
@@ -35,7 +33,6 @@ public class RoadmapServiceImpl implements RoadmapService{
     private final RoadmapRepository roadmapRepository;
     private final RoadmapNodeRepository roadmapNodeRepository;
     private final RoadmapEdgeRepository roadmapEdgeRepository;
-    private final RoadmapEditorRepository roadmapEditorRepository;
     private final RoadmapViewportRepository roadmapViewportRepository;
     private final InProgressRoadmapRepository inProgressRoadmapRepository;
     private final InProgressNodeRepository inProgressNodeRepository;
@@ -68,15 +65,6 @@ public class RoadmapServiceImpl implements RoadmapService{
 
         roadmapNodeRepository.saveAll(roadmapNodes);
 
-        // 로드맵 생성자 만들기
-        RoadmapEditor roadmapEditor = RoadmapEditor.builder()
-                .isOwner(true)
-                .member(member)
-                .roadmap(roadmap)
-                .build();
-
-        roadmapEditorRepository.save(roadmapEditor);
-
         // roadmapId 반환
         return roadmap.getId();
     }
@@ -95,7 +83,8 @@ public class RoadmapServiceImpl implements RoadmapService{
 
          List<RoadmapDto> roadmapDtos= new ArrayList<>();
          inProgressRoadmaps.forEach( inProgressRoadmap -> {
-             RoadmapDto roadmapdto = RoadmapDto.of(roadmapRepository.findById(inProgressRoadmap.getRoadmap().getId()).orElse(null));
+             Roadmap roadmap = roadmapRepository.findById(inProgressRoadmap.getRoadmap().getId()).orElse(null);
+             RoadmapDto roadmapdto = RoadmapDto.of(roadmap, roadmap.getMember());
              if (roadmapdto == null) {
              } else {
                  roadmapDtos.add(roadmapdto);
@@ -105,23 +94,9 @@ public class RoadmapServiceImpl implements RoadmapService{
         return roadmapDtos;
     }
     public List<RoadmapDto> findRoadmapCreatedByMemberId(Long memberId){
-
-        List<RoadmapEditor> roadmapsCreated = roadmapEditorRepository.findAllByMemberIdAndIsOwner(memberId, true);
-
-        if(roadmapsCreated.isEmpty()) {
-            throw new NotFoundException();
-        }
-
-        List<RoadmapDto> roadmapDtos= new ArrayList<>();
-        roadmapsCreated.forEach( roadmapCreated -> {
-            RoadmapDto roadmapdto = RoadmapDto.of(roadmapRepository.findById(roadmapCreated.getRoadmap().getId()).orElse(null));
-            if (roadmapdto == null) {
-            } else {
-                roadmapDtos.add(roadmapdto);
-            }
-        });
-
-        return roadmapDtos;
+        Optional<Member> member = memberRepository.findById(memberId);
+        List<Roadmap> roadmaps = roadmapRepository.findByMemberId(memberId);
+        return roadmaps.stream().map(roadmap -> RoadmapDto.of(roadmap, member.get())).toList();
     }
 
 

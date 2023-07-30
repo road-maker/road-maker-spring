@@ -20,7 +20,7 @@ public class RoadmapResponse {
     /** 로그인 하지 않거나, 로드맵에 참가하지 않은 사람의 DTO */
     public static RoadmapResponse of(Roadmap roadmap) {
         return RoadmapResponse.builder()
-                .roadmap(RoadmapDto.of(roadmap))
+                .roadmap(RoadmapDto.of(roadmap, roadmap.getMember()))
                 .viewport(RoadmapViewportDto.of(roadmap.getRoadmapViewport()))
                 .nodes(roadmap.getRoadmapNodes().stream().map(RoadmapNodeDto::of).toList())
                 .edges(roadmap.getRoadmapEdges().stream().map(RoadmapEdgeDto::of).toList())
@@ -30,7 +30,7 @@ public class RoadmapResponse {
     /** 로드맵에 참가한 사람의 DTO */
     public static RoadmapResponse of(Roadmap roadmap, List<InProgressNode> inProgressNodes) {
         return RoadmapResponse.builder()
-                .roadmap(RoadmapDto.of(roadmap))
+                .roadmap(RoadmapDto.of(roadmap, roadmap.getMember()))
                 .viewport(RoadmapViewportDto.of(roadmap.getRoadmapViewport()))
                 .nodes(inProgressNodes.stream().map(RoadmapNodeDto::of).toList())
                 .edges(roadmap.getRoadmapEdges().stream().map(RoadmapEdgeDto::of).toList())
