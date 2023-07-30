@@ -5,6 +5,8 @@ import com.roadmaker.member.entity.Member;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Getter
 @ToString
 @Builder
@@ -16,6 +18,8 @@ public class RoadmapDto {
     private String description;
     private String thumbnailUrl;
     private MemberResponse member;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     public Roadmap toEntity(Member member) {
         return Roadmap.builder()
@@ -32,6 +36,8 @@ public class RoadmapDto {
                 .title(roadmap.getTitle())
                 .description(roadmap.getDescription())
                 .thumbnailUrl(roadmap.getThumbnailUrl())
+                .createdAt(roadmap.getCreatedAt())
+                .updatedAt(roadmap.getUpdatedAt())
                 .member(MemberResponse.of(member))
                 .build();
     }

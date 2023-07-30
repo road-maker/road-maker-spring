@@ -46,7 +46,7 @@ public class RoadmapServiceImpl implements RoadmapService{
         roadmapViewportRepository.save(viewport);
 
         // roadmap 저장하기
-        Roadmap roadmap = createRoadmapRequest.getRoadmap().toEntity();
+        Roadmap roadmap = createRoadmapRequest.getRoadmap().toEntity(member);
         roadmap.setRoadmapViewport(viewport);
         roadmapRepository.save(roadmap);
 
