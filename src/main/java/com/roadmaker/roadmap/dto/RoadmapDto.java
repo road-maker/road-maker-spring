@@ -1,5 +1,7 @@
 package com.roadmaker.roadmap.dto;
 
+import com.roadmaker.member.dto.MemberResponse;
+import com.roadmaker.member.entity.Member;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import lombok.*;
 
@@ -13,40 +15,24 @@ public class RoadmapDto {
     private String title;
     private String description;
     private String thumbnailUrl;
-    private String ownerNickname;
-    private String ownerAvatarUrl;
+    private MemberResponse member;
 
-    public Roadmap toEntity() {
+    public Roadmap toEntity(Member member) {
         return Roadmap.builder()
                 .title(this.title)
                 .description(this.description)
                 .thumbnailUrl(this.thumbnailUrl)
+                .member(member)
                 .build();
     }
 
-    public static RoadmapDto of(Roadmap roadmap) {
-        if (roadmap == null) { // null이 입력되는 경우 처리
-            return null;
-        }
+    public static RoadmapDto of(Roadmap roadmap, Member member) {
         return RoadmapDto.builder()
                 .id(roadmap.getId())
                 .title(roadmap.getTitle())
                 .description(roadmap.getDescription())
                 .thumbnailUrl(roadmap.getThumbnailUrl())
-                .build();
-    }
-
-    public static RoadmapDto of(Roadmap roadmap, String ownerNickname) {
-        if (roadmap == null) {
-            return null;
-        }
-        return RoadmapDto.builder()
-                .id(roadmap.getId())
-                .title(roadmap.getTitle())
-                .description(roadmap.getDescription())
-                .thumbnailUrl(roadmap.getThumbnailUrl())
-                .ownerNickname(ownerNickname)
-//                .ownerAvatarUrl(ownerAvatarUrl)
+                .member(MemberResponse.of(member))
                 .build();
     }
 }

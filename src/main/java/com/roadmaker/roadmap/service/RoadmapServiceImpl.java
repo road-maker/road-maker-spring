@@ -95,7 +95,8 @@ public class RoadmapServiceImpl implements RoadmapService{
 
          List<RoadmapDto> roadmapDtos= new ArrayList<>();
          inProgressRoadmaps.forEach( inProgressRoadmap -> {
-             RoadmapDto roadmapdto = RoadmapDto.of(roadmapRepository.findById(inProgressRoadmap.getRoadmap().getId()).orElse(null));
+             Roadmap roadmap = roadmapRepository.findById(inProgressRoadmap.getRoadmap().getId()).orElse(null);
+             RoadmapDto roadmapdto = RoadmapDto.of(roadmap, roadmap.getMember());
              if (roadmapdto == null) {
              } else {
                  roadmapDtos.add(roadmapdto);
@@ -114,7 +115,8 @@ public class RoadmapServiceImpl implements RoadmapService{
 
         List<RoadmapDto> roadmapDtos= new ArrayList<>();
         roadmapsCreated.forEach( roadmapCreated -> {
-            RoadmapDto roadmapdto = RoadmapDto.of(roadmapRepository.findById(roadmapCreated.getRoadmap().getId()).orElse(null));
+            Roadmap roadmap = roadmapRepository.findById(roadmapCreated.getRoadmap().getId()).orElse(null);
+            RoadmapDto roadmapdto = RoadmapDto.of(roadmap, roadmap.getMember());
             if (roadmapdto == null) {
             } else {
                 roadmapDtos.add(roadmapdto);
