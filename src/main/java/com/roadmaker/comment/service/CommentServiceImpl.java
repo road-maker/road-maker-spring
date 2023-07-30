@@ -3,6 +3,7 @@ package com.roadmaker.comment.service;
 import com.roadmaker.comment.dto.CommentDto;
 import com.roadmaker.comment.entity.Comment;
 import com.roadmaker.comment.entity.CommentRepository;
+import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.entity.MemberRepository;
 import com.roadmaker.roadmap.dto.RoadmapResponse;
 import com.roadmaker.roadmap.entity.roadmap.RoadmapRepository;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -33,16 +35,19 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     public List<CommentDto> findByMemberIdAndPageRequest(Long memberId, Integer page, Integer size) {
+
         PageRequest pageRequest = PageRequest.of(page, size);
+
+        pageRequest.getPageSize(); //얘만 추가로 전달해주고 싶다.
         return commentRepository.findCommentByMemberId(memberId, pageRequest).map(CommentDto::of).getContent();
 //
     }
 
-    public boolean saveComment (CommentDto commentDto) {
+    public boolean saveComment (CommentDto commentDto, Member member) {
         Comment comment = Comment.builder()
                 .roadmap(roadmapRepository.findRoadmapById(commentDto.getRoadmapId()))
                 .content(commentDto.getContent())
-                .member(memberRepository.findByNickname(commentDto.getMemberNickname()).orElse(null))
+                .member(member)
                 .build();
 
         if(comment.getRoadmap() == null || comment.getMember() == null) {

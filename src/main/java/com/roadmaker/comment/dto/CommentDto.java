@@ -13,8 +13,6 @@ public class CommentDto {
     @NotBlank
     Long roadmapId;
     @NotBlank
-    String memberNickname;
-    @NotBlank
     String content;
 
     LocalDateTime createdTime;
@@ -25,7 +23,6 @@ public class CommentDto {
                 .createdTime(comment.getCreatedAt())
                 .updatedTime(comment.getUpdatedAt())
                 .content(comment.getContent())
-                .memberNickname(comment.getMember().getNickname())
                 .roadmapId(comment.getRoadmap().getId())
                 .build();
     }
