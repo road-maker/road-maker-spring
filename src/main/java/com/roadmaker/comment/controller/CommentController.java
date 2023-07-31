@@ -24,7 +24,7 @@ public class CommentController {
     public ResponseEntity<HttpStatus> saveComment (@LoginMember Member member, @RequestBody CommentDto commentReqeust) {
         // comment정보를 저장하고 저장하지 못했다면 Conflict 반환
         if(!commentService.saveComment(commentReqeust, member)) {
-            throw new ConflictException("댓글 저장 실패");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         // 무사히 완료하였다면 OK 반환
         return ResponseEntity.status(HttpStatus.OK).build();
