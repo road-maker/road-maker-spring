@@ -6,6 +6,7 @@ import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @ToString
@@ -18,8 +19,8 @@ public class RoadmapDto {
     private String description;
     private String thumbnailUrl;
     private MemberResponse member;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private String createdAt;
+    private String updatedAt;
 
     public Roadmap toEntity(Member member) {
         return Roadmap.builder()
@@ -31,13 +32,17 @@ public class RoadmapDto {
     }
 
     public static RoadmapDto of(Roadmap roadmap, Member member) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy. M. dd.");
+        String createdAt = roadmap.getCreatedAt().format(formatter);
+        String updatedAt = roadmap.getUpdatedAt().format(formatter);
+
         return RoadmapDto.builder()
                 .id(roadmap.getId())
                 .title(roadmap.getTitle())
                 .description(roadmap.getDescription())
                 .thumbnailUrl(roadmap.getThumbnailUrl())
-                .createdAt(roadmap.getCreatedAt())
-                .updatedAt(roadmap.getUpdatedAt())
+                .createdAt(createdAt)
+                .updatedAt(updatedAt)
                 .member(MemberResponse.of(member))
                 .build();
     }
