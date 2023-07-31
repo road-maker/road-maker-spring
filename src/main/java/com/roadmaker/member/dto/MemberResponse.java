@@ -13,8 +13,8 @@ public class MemberResponse {
     private String email;
     private String nickname;
     private String bio;
-//    private String avatarUrl;
-//    private String githubUrl;
+    private String avatarUrl;
+    private String githubUrl;
     private String blogUrl;
     private String baekjoonId;
 //    private Integer level;
@@ -26,8 +26,8 @@ public class MemberResponse {
                 .email(member.getEmail())
                 .nickname(member.getNickname())
                 .bio(member.getBio())
-//                .avatarUrl(member.getAvatarUrl())
-//                .githubUrl(member.getGithubUrl())
+                .avatarUrl(member.getAvatarUrl())
+                .githubUrl(member.getGithubUrl())
                 .blogUrl(member.getBlogUrl())
                 .baekjoonId(member.getBaekjoonId())
 //                .level(member.getLevel())
