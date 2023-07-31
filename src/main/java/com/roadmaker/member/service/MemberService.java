@@ -6,6 +6,8 @@ import com.roadmaker.member.dto.TokenInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @Transactional
 public interface MemberService {
@@ -19,7 +21,7 @@ public interface MemberService {
 
     public boolean isDuplicatedNickname(String nickname);
 
-    public Member getLoggedInMember();
+    public Optional<Member> getLoggedInMember();
 
     public MemberResponse saveProfile(MypageRequest request, Member member);
 
