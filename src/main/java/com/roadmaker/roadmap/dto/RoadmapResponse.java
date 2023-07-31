@@ -28,45 +28,34 @@ public class RoadmapResponse {
     private List<RoadmapEdgeDto> edges;
     private List<RoadmapNodeDto> nodes;
 
-    /** 로그인 하지 않거나, 로드맵에 참가하지 않은 사람의 DTO */
-    public static RoadmapResponse of(Roadmap roadmap) {
+    private static String formatDate(LocalDateTime dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy. M. dd.");
-        String createdAt = roadmap.getCreatedAt().format(formatter);
-        String updatedAt = roadmap.getUpdatedAt().format(formatter);
+        return dateTime.format(formatter);
+    }
 
+    private static RoadmapResponse buildFromRoadmap(Roadmap roadmap, List<RoadmapNodeDto> nodes, boolean isJoined) {
         return RoadmapResponse.builder()
                 .id(roadmap.getId())
                 .title(roadmap.getTitle())
                 .description(roadmap.getDescription())
                 .thumbnailUrl(roadmap.getThumbnailUrl())
-                .isJoined(false)
+                .isJoined(isJoined)
                 .member(MemberResponse.of(roadmap.getMember()))
-                .createdAt(createdAt)
-                .updatedAt(updatedAt)
+                .createdAt(formatDate(roadmap.getCreatedAt()))
+                .updatedAt(formatDate(roadmap.getUpdatedAt()))
                 .viewport(RoadmapViewportDto.of(roadmap.getRoadmapViewport()))
-                .nodes(roadmap.getRoadmapNodes().stream().map(RoadmapNodeDto::of).toList())
+                .nodes(nodes)
                 .edges(roadmap.getRoadmapEdges().stream().map(RoadmapEdgeDto::of).toList())
                 .build();
     }
 
+    /** 로그인 하지 않거나, 로드맵에 참가하지 않은 사람의 DTO */
+    public static RoadmapResponse of(Roadmap roadmap) {
+        return buildFromRoadmap(roadmap, roadmap.getRoadmapNodes().stream().map(RoadmapNodeDto::of).toList(), false);
+    }
+
     /** 로드맵에 참가한 사람의 DTO */
     public static RoadmapResponse of(Roadmap roadmap, List<InProgressNode> inProgressNodes) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy. M. dd.");
-        String createdAt = roadmap.getCreatedAt().format(formatter);
-        String updatedAt = roadmap.getUpdatedAt().format(formatter);
-
-        return RoadmapResponse.builder()
-                .id(roadmap.getId())
-                .title(roadmap.getTitle())
-                .description(roadmap.getDescription())
-                .thumbnailUrl(roadmap.getThumbnailUrl())
-                .isJoined(true)
-                .member(MemberResponse.of(roadmap.getMember()))
-                .createdAt(createdAt)
-                .updatedAt(updatedAt)
-                .viewport(RoadmapViewportDto.of(roadmap.getRoadmapViewport()))
-                .nodes(inProgressNodes.stream().map(RoadmapNodeDto::of).toList())
-                .edges(roadmap.getRoadmapEdges().stream().map(RoadmapEdgeDto::of).toList())
-                .build();
+        return buildFromRoadmap(roadmap, inProgressNodes.stream().map(RoadmapNodeDto::of).toList(), true);
     }
 }
