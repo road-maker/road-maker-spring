@@ -18,6 +18,7 @@ public class RoadmapResponse {
     private String title;
     private String description;
     private String thumbnailUrl;
+    private Boolean isJoined;
     private MemberResponse member;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -33,6 +34,7 @@ public class RoadmapResponse {
                 .title(roadmap.getTitle())
                 .description(roadmap.getDescription())
                 .thumbnailUrl(roadmap.getThumbnailUrl())
+                .isJoined(false)
                 .member(MemberResponse.of(roadmap.getMember()))
                 .createdAt(roadmap.getCreatedAt())
                 .updatedAt(roadmap.getUpdatedAt())
@@ -49,6 +51,7 @@ public class RoadmapResponse {
                 .title(roadmap.getTitle())
                 .description(roadmap.getDescription())
                 .thumbnailUrl(roadmap.getThumbnailUrl())
+                .isJoined(true)
                 .member(MemberResponse.of(roadmap.getMember()))
                 .createdAt(roadmap.getCreatedAt())
                 .updatedAt(roadmap.getUpdatedAt())                .viewport(RoadmapViewportDto.of(roadmap.getRoadmapViewport()))
