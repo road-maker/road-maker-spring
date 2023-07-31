@@ -11,6 +11,7 @@ import com.roadmaker.roadmap.entity.roadmapnodestyle.RoadmapNodeStyle;
 import com.roadmaker.roadmap.entity.roadmapviewport.RoadmapViewport;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -23,16 +24,16 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 public class CreateRoadmapRequest {
-    @Valid
+    @Valid @NotNull
     private RoadmapDto roadmap;
 
-    @Valid
+    @Valid @NotNull
     private ViewportDto viewport;
 
-    @Valid
+    @Valid @NotNull @NotEmpty
     private List<RoadmapEdgeDto> edges;
 
-    @Valid
+    @Valid @NotNull @NotEmpty
     private List<RoadmapNodeDto> nodes;
 
 
@@ -148,16 +149,16 @@ public class CreateRoadmapRequest {
 
         private String detailedContent;
 
-        @Valid
+        @Valid @NotNull
         private StyleDto style;
 
-        @Valid
+        @Valid @NotNull
         private DataDto data;
 
-        @Valid
+        @Valid @NotNull
         private PositionDto position;
 
-        @Valid
+        @Valid @NotNull
         private PositionAbsoluteDto positionAbsolute;
 
         public RoadmapNode toEntity(Roadmap roadmap) {
