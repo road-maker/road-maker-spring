@@ -31,18 +31,20 @@ public class RoadmapDto {
                 .build();
     }
 
-    public static RoadmapDto of(Roadmap roadmap, Member member) {
+    private static String formatDate(LocalDateTime dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy. M. dd.");
-        String createdAt = roadmap.getCreatedAt().format(formatter);
-        String updatedAt = roadmap.getUpdatedAt().format(formatter);
+        return dateTime.format(formatter);
+    }
+
+    public static RoadmapDto of(Roadmap roadmap, Member member) {
 
         return RoadmapDto.builder()
                 .id(roadmap.getId())
                 .title(roadmap.getTitle())
                 .description(roadmap.getDescription())
                 .thumbnailUrl(roadmap.getThumbnailUrl())
-                .createdAt(createdAt)
-                .updatedAt(updatedAt)
+                .createdAt(formatDate(roadmap.getCreatedAt()))
+                .updatedAt(formatDate(roadmap.getUpdatedAt()))
                 .member(MemberResponse.of(member))
                 .build();
     }
