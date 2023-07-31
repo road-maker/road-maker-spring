@@ -1,15 +1,11 @@
 package com.roadmaker.member.service;
 
-import com.roadmaker.comment.service.CommentService;
-import com.roadmaker.commons.exception.NotFoundException;
 import com.roadmaker.member.authentication.JwtProvider;
 import com.roadmaker.member.dto.*;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.entity.MemberRepository;
 import com.roadmaker.member.dto.TokenInfo;
-import com.roadmaker.comment.entity.CommentRepository;
-import com.roadmaker.roadmap.entity.inprogressnode.InProgressNodeRepository;
-import com.roadmaker.inprogressroadmap.entity.InProgressRoadmapRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,7 +14,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.roadmaker.member.authentication.SecurityUtil;
 
 import java.util.Optional;
 
@@ -29,11 +24,8 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtProvider jwtProvider;
-    private final InProgressNodeRepository inProgressNodeRepository;
-    private final InProgressRoadmapRepository inProgressRoadmapRepository;
-    private final CommentRepository commentRepository;
-    private final CommentService commentService;
     private final PasswordEncoder passwordEncoder;
+    private final HttpServletRequest httpServletRequest;
 
     @Override
     @Transactional
@@ -69,9 +61,18 @@ public class MemberServiceImpl implements MemberService {
         return member.isPresent();
     }
 
-    public Member getLoggedInMember() {
-        String email = SecurityUtil.getLoggedInMemberEmail();
-        return memberRepository.findByEmail(email).orElseThrow(NotFoundException::new);
+    public Optional<Member> getLoggedInMember() {
+        String token = jwtProvider.resolveToken((HttpServletRequest) httpServletRequest);
+
+        if (token == null || !jwtProvider.validationToken(token)) {
+            return Optional.empty();
+        }
+
+
+        Authentication authentication = jwtProvider.getAuthentication(token);
+        String email = authentication.getName();
+
+        return memberRepository.findByEmail(email);
     }
 
     @Override

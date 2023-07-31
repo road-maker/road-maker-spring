@@ -1,6 +1,8 @@
 package com.roadmaker.commons.resolver;
 
 import com.roadmaker.commons.annotation.LoginMember;
+import com.roadmaker.member.entity.Member;
+import com.roadmaker.member.exception.UnAuthenticatedException;
 import com.roadmaker.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
@@ -21,7 +23,7 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        return memberService.getLoggedInMember();
+    public Member resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+        return memberService.getLoggedInMember().orElseThrow(UnAuthenticatedException::new);
     }
 }

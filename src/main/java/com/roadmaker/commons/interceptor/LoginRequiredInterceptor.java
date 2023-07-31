@@ -2,7 +2,6 @@ package com.roadmaker.commons.interceptor;
 
 import com.roadmaker.commons.annotation.LoginRequired;
 import com.roadmaker.member.authentication.JwtProvider;
-import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.exception.UnAuthenticatedException;
 import com.roadmaker.member.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,11 +32,7 @@ public class LoginRequiredInterceptor implements HandlerInterceptor {
             }
 
             // 실제 존재하는 Member인지 검사
-            Member member = memberService.getLoggedInMember();
-
-            if(member == null) {
-                throw new UnAuthenticatedException();
-            }
+            memberService.getLoggedInMember().orElseThrow(UnAuthenticatedException::new);
         }
 
         return true;
