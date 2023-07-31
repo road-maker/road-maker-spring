@@ -7,11 +7,8 @@ import com.roadmaker.member.dto.*;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.entity.MemberRepository;
 import com.roadmaker.member.dto.TokenInfo;
-import com.roadmaker.comment.dto.CommentDto;
-import com.roadmaker.roadmap.dto.InProgressRoadmapDto;
 import com.roadmaker.comment.entity.CommentRepository;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNodeRepository;
-import com.roadmaker.inprogressroadmap.entity.InProgressRoadmap;
 import com.roadmaker.inprogressroadmap.entity.InProgressRoadmapRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,9 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.roadmaker.member.authentication.SecurityUtil;
 
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service @Slf4j
@@ -77,13 +71,7 @@ public class MemberServiceImpl implements MemberService {
 
     public Member getLoggedInMember() {
         String email = SecurityUtil.getLoggedInMemberEmail();
-        Optional<Member> memberOptional = memberRepository.findByEmail(email);
-        Member member = memberOptional.orElse(null);
-        if (member != null) {
-            return member;
-        } else {
-            throw new NotFoundException();
-        }
+        return memberRepository.findByEmail(email).orElseThrow(NotFoundException::new);
     }
 
     @Override
