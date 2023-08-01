@@ -26,4 +26,6 @@ public interface RoadmapService {
     // 진행상황 변경
     public boolean changeNodeStatus(NodeStatusChangeDto nodeStatusChangeDto);
 
+    public List<RoadmapDto> findRoadmapByKeyword(String keyword, Integer size, Integer page);
+
 }

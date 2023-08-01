@@ -26,6 +26,7 @@ public class CommentController {
         if(!commentService.saveComment(commentReqeust, member)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
+
         // 무사히 완료하였다면 OK 반환
         return ResponseEntity.status(HttpStatus.OK).build();
         }

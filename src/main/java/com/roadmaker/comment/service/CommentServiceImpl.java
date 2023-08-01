@@ -26,7 +26,6 @@ public class CommentServiceImpl implements CommentService{
     private final RoadmapRepository roadmapRepository;
     private final MemberRepository memberRepository;
 
-    // 10개, 15개 단위로 쪼개서 불러오는 기능 추가
     public List<CommentDto> findCommentByRoadmapIdAndPageRequest (Long roadmapId, Integer page, Integer size) {
         // pageable을 통해 comment를 찾아 commentDTO로 변환
         PageRequest pageRequest = PageRequest.of(page, size);
@@ -38,9 +37,7 @@ public class CommentServiceImpl implements CommentService{
 
         PageRequest pageRequest = PageRequest.of(page, size);
 
-        pageRequest.getPageSize(); //얘만 추가로 전달해주고 싶다.
         return commentRepository.findCommentByMemberId(memberId, pageRequest).map(CommentDto::of).getContent();
-//
     }
 
     public boolean saveComment (CommentDto commentDto, Member member) {
