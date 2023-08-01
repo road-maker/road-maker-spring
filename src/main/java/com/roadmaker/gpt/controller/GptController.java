@@ -8,6 +8,7 @@ import com.theokanning.openai.completion.chat.ChatMessage;
 import com.theokanning.openai.service.OpenAiService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/gpt")
 public class GptController {
     private final String OPENAI_TOKEN;
     private static final Duration DURATION = Duration.ofSeconds(120);
@@ -24,7 +26,7 @@ public class GptController {
         this.OPENAI_TOKEN = apiKey;
     }
 
-    @PostMapping("api/chat")
+    @PostMapping("/roadmap")
     public List<GptRoadmapResponse> getChatMessages(@RequestParam String prompt) {
 
         OpenAiService service = new OpenAiService(OPENAI_TOKEN, DURATION);
@@ -74,7 +76,7 @@ public class GptController {
     }
 
     @LoginRequired
-    @PostMapping("api/nodecontent")
+    @PostMapping("/detail")
     public GptDetailResponse detailContent(@RequestParam String course){
         OpenAiService service = new OpenAiService(OPENAI_TOKEN, DURATION);
         List<ChatMessage> messages = new ArrayList<>();
