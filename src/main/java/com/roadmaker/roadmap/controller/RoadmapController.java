@@ -14,6 +14,7 @@ import com.roadmaker.roadmap.service.RoadmapService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -129,4 +130,10 @@ public class RoadmapController {
         }
         return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
+
+    @GetMapping("/search/{keyword}")
+    public ResponseEntity<List<RoadmapDto>> searchTitleByKeyword(@PathVariable String keyword,@RequestParam(value = "size") Integer size, @RequestParam(value = "page") Integer page) {
+        return new ResponseEntity<> (roadmapService.findRoadmapByKeyword(keyword, size, page), HttpStatus.OK);
+    }
+
 }

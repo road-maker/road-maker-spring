@@ -12,6 +12,7 @@ import com.roadmaker.inprogressroadmap.entity.InProgressRoadmap;
 import com.roadmaker.inprogressroadmap.entity.InProgressRoadmapRepository;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import com.roadmaker.roadmap.entity.roadmap.RoadmapRepository;
+import com.roadmaker.roadmap.entity.roadmap.RoadmapRepositoryCustom;
 import com.roadmaker.roadmap.entity.roadmapedge.RoadmapEdge;
 import com.roadmaker.roadmap.entity.roadmapedge.RoadmapEdgeRepository;
 import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNode;
@@ -19,6 +20,9 @@ import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNodeRepository;
 import com.roadmaker.roadmap.entity.roadmapviewport.RoadmapViewport;
 import com.roadmaker.roadmap.entity.roadmapviewport.RoadmapViewportRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -147,6 +151,11 @@ public class RoadmapServiceImpl implements RoadmapService{
         inProgressNodeRepository.save(inProgressNode);
 
         return true;
+    }
+
+    public List<RoadmapDto> findRoadmapByKeyword(String keyword, Integer size, Integer page) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return roadmapRepository.findyBySearchOption(pageRequest, keyword);
     }
 
 }
