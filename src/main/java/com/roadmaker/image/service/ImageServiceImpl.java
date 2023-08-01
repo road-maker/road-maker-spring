@@ -29,7 +29,7 @@ public class ImageServiceImpl implements ImageService {
         String originalFilename = image.getOriginalFilename();
         String extension = StringUtils.getFilenameExtension(originalFilename);
 
-        String uuidImageName = UUID.randomUUID().toString();
+        String uuidImageName = UUID.randomUUID().toString() + "." + extension;
 
         S3Resource s3Resource = s3Template.upload(bucketName, uuidImageName, image.getInputStream(), ObjectMetadata.builder().contentType(extension).build());
 
