@@ -74,6 +74,12 @@ public class RoadmapServiceImpl implements RoadmapService{
     }
 
     @Override
+    public List<RoadmapDto> findByPage(Integer page, Integer size) {
+        Page<Roadmap> roadmaps = roadmapRepository.findAll(PageRequest.of(page, size));
+        return roadmaps.stream().map(roadmap -> RoadmapDto.of(roadmap, roadmap.getMember())).toList();
+    }
+
+    @Override
     public Roadmap findRoadmapById(Long roadmapId) {
         return roadmapRepository.findById(roadmapId).orElseThrow(NotFoundException::new);
     }

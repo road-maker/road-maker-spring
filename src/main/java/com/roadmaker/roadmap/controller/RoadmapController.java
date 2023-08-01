@@ -14,7 +14,6 @@ import com.roadmaker.roadmap.service.RoadmapService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -49,10 +48,8 @@ public class RoadmapController {
     }
 
     @GetMapping
-    public ResponseEntity<List<RoadmapDto>> getRoadmaps() {
-        List<Roadmap> roadmaps = roadmapRepository.findAll();
-        List<RoadmapDto> roadmapDtos = roadmaps.stream().map(roadmap -> RoadmapDto.of(roadmap, roadmap.getMember())).toList();
-
+    public ResponseEntity<List<RoadmapDto>> getRoadmaps(@RequestParam(name = "page") Integer page, @RequestParam(name = "size") Integer size) {
+        List<RoadmapDto> roadmapDtos = roadmapService.findByPage(page, size);
         return new ResponseEntity<>(roadmapDtos, HttpStatus.OK);
     }
 

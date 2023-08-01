@@ -1,6 +1,5 @@
 package com.roadmaker.roadmap.service;
 
-import com.roadmaker.comment.dto.CommentDto;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.roadmap.dto.*;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
@@ -17,6 +16,8 @@ public interface RoadmapService {
 
     // 로드맵 불러오기
     public Roadmap findRoadmapById(Long roadmapId);
+
+    public List<RoadmapDto> findByPage(Integer page, Integer size);
 
     public List<RoadmapDto> findRoadmapJoinedByMemberId(Long memberId);
     public List<RoadmapDto> findRoadmapCreatedByMemberId(Long memberId);
