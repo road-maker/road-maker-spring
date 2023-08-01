@@ -22,32 +22,25 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/likes")
 public class LikeController {
     private final LikeService likeService;
-    private final RoadmapRepository roadmapRepository;
-    private final RoadmapService roadmapService;
-    private final MemberRepository memberRepository;
-    private final MemberService memberService;
-
     @LoginRequired
-    @PostMapping("/click")
-    public ResponseEntity<Integer> likeRoadmap(@RequestBody Long roadmapId, @LoginMember Member member) {
-        Roadmap roadmap = roadmapRepository.findById(roadmapId).orElseThrow();
-
-        if (likeService.isLiked(roadmapId, member.getId())) { // Call isLiked from LikeService
-            // 좋아요 취소(unlike) 기능
-            likeService.unlikeRoadmap(roadmapId, member.getId()); // Call unlikeRoadmap from LikeService
+    @PostMapping("/like-roadmap/{roadmapId}")
+    public ResponseEntity<Integer> likeRoadmap(@PathVariable Long roadmapId, @LoginMember Member member) {
+        if (likeService.isLiked(roadmapId, member.getId())) {
+            // Unlike the roadmap
+            likeService.unlikeRoadmap(roadmapId, member.getId());
         } else {
-            // 좋아요(like) 기능
-            likeService.likeRoadmap(roadmapId, member.getId()); // Call likeRoadmap from LikeService
+            // Like the roadmap
+            likeService.likeRoadmap(roadmapId, member.getId());
         }
 
-        int likeCount = likeService.getLikeCount(roadmapId); // Call getLikeCount from LikeService
+        // Get the updated like count
+        int likeCount = likeService.getLikeCount(roadmapId);
         return ResponseEntity.ok(likeCount);
     }
 
     @GetMapping("/roadmap/{roadmapId}/likeCount")
     public ResponseEntity<Integer> getLikeCount(@PathVariable Long roadmapId) {
-        Roadmap roadmap = roadmapRepository.findById(roadmapId).orElseThrow();
-        int likeCount = roadmap.getLikeCount();
+        int likeCount = likeService.getLikeCount(roadmapId);
         return ResponseEntity.ok(likeCount);
     }
 }

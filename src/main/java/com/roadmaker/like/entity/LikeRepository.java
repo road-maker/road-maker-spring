@@ -13,4 +13,5 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
     public boolean existsByRoadmapIdAndMemberId(Long roadmapId, Long memberId);
     public int countByRoadmapId(Long roadmapId);
     public Like findByRoadmapAndMember(Roadmap roadmap, Member member);
+    public void deleteByRoadmapIdAndMemberId(Long roadmapId, Long memberId);
 }

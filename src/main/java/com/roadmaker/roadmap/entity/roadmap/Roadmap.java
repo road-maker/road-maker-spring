@@ -33,13 +33,6 @@ public class Roadmap extends BaseTimeEntity {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-    @OneToMany(mappedBy = "roadmap", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Like> likes = new ArrayList<>();
-
-    public int getLikeCount() {
-        return likes.size();
-    }
-
     @OneToMany(mappedBy = "roadmap")
     @JsonManagedReference
     private List<RoadmapNode> roadmapNodes;
