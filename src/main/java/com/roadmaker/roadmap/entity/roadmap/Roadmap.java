@@ -2,6 +2,7 @@ package com.roadmaker.roadmap.entity.roadmap;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.roadmaker.commons.BaseTimeEntity;
+import com.roadmaker.like.entity.Like;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.roadmap.entity.roadmapedge.RoadmapEdge;
 import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNode;
@@ -9,6 +10,7 @@ import com.roadmaker.roadmap.entity.roadmapviewport.RoadmapViewport;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -30,6 +32,13 @@ public class Roadmap extends BaseTimeEntity {
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
+
+    @OneToMany(mappedBy = "roadmap", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Like> likes = new ArrayList<>();
+
+    public int getLikeCount() {
+        return likes.size();
+    }
 
     @OneToMany(mappedBy = "roadmap")
     @JsonManagedReference
