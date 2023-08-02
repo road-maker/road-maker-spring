@@ -57,23 +57,24 @@ public class RoadmapController {
     public ResponseEntity<RoadmapResponse> getRoadmap(@PathVariable Long roadmapId) {
         Optional<Member> memberOpt = memberService.getLoggedInMember();
         Roadmap roadmap = roadmapService.findRoadmapById(roadmapId);
+        Integer joinCount = inProgressRoadmapRepository.countByRoadmapId(roadmapId);
 
         RoadmapResponse roadmapResponse;
 
         if (memberOpt.isEmpty()) {
-            roadmapResponse = RoadmapResponse.of(roadmap);
+            roadmapResponse = RoadmapResponse.of(roadmap, joinCount);
             return new ResponseEntity<>(roadmapResponse, HttpStatus.OK);
         }
-
+        
         Optional<InProgressRoadmap> inProgressRoadmap = inProgressRoadmapRepository.findByRoadmapIdAndMemberId(roadmapId, memberOpt.get().getId());
 
         if (inProgressRoadmap.isEmpty()) {
-            roadmapResponse = RoadmapResponse.of(roadmap);
+            roadmapResponse = RoadmapResponse.of(roadmap, joinCount);
             return new ResponseEntity<>(roadmapResponse, HttpStatus.OK);
         }
 
         List<InProgressNode> inProgressNodes = inProgressNodeRepository.findByRoadmapIdAndMemberId(roadmapId, memberOpt.get().getId());
-        roadmapResponse = RoadmapResponse.of(roadmap, inProgressNodes);
+        roadmapResponse = RoadmapResponse.of(roadmap, joinCount, inProgressNodes);
 
         return new ResponseEntity<>(roadmapResponse, HttpStatus.OK);
     }
@@ -81,8 +82,9 @@ public class RoadmapController {
     @GetMapping(path = "/load-roadmap/{roadmapId}")
     public ResponseEntity<RoadmapResponse> loadRoadmap(@PathVariable Long roadmapId) {
         Roadmap roadmap = roadmapService.findRoadmapById(roadmapId);
+        Integer joinCount = inProgressRoadmapRepository.countByRoadmapId(roadmapId);
 
-        RoadmapResponse roadmapResponse = RoadmapResponse.of(roadmap);
+        RoadmapResponse roadmapResponse = RoadmapResponse.of(roadmap, joinCount);
 
         return new ResponseEntity<>(roadmapResponse, HttpStatus.OK);
     }
@@ -91,15 +93,16 @@ public class RoadmapController {
     @GetMapping("/{roadmapId}/auth")
     public ResponseEntity<RoadmapResponse> loadRoadmapWithAuth(@PathVariable Long roadmapId, @LoginMember Member member) {
         Roadmap roadmap = roadmapService.findRoadmapById(roadmapId);
+        Integer joinCount = inProgressRoadmapRepository.countByRoadmapId(roadmapId);
         RoadmapResponse roadmapResponse;
 
         Optional<InProgressRoadmap> inProgressRoadmap = inProgressRoadmapRepository.findByRoadmapIdAndMemberId(roadmapId, member.getId());
 
         if (inProgressRoadmap.isEmpty()) {
-            roadmapResponse = RoadmapResponse.of(roadmap);
+            roadmapResponse = RoadmapResponse.of(roadmap, joinCount);
         } else {
             List<InProgressNode> inProgressNodes = inProgressNodeRepository.findByRoadmapIdAndMemberId(roadmapId, member.getId());
-            roadmapResponse = RoadmapResponse.of(roadmap, inProgressNodes);
+            roadmapResponse = RoadmapResponse.of(roadmap, joinCount, inProgressNodes);
         }
 
         return new ResponseEntity<>(roadmapResponse, HttpStatus.OK);
