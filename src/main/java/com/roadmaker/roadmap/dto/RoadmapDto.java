@@ -18,6 +18,8 @@ public class RoadmapDto {
     private String title;
     private String description;
     private String thumbnailUrl;
+    private Integer likeCount;
+    private Integer joinCount;
     private MemberResponse member;
     private String createdAt;
     private String updatedAt;
@@ -46,6 +48,8 @@ public class RoadmapDto {
                 .createdAt(formatDate(roadmap.getCreatedAt()))
                 .updatedAt(formatDate(roadmap.getUpdatedAt()))
                 .member(MemberResponse.of(member))
+                .likeCount(roadmap.getLikeCount())
+                .joinCount(roadmap.getInProgressRoadmapCount())
                 .build();
     }
 }
