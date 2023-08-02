@@ -7,6 +7,7 @@ import com.roadmaker.roadmap.dto.RoadmapDto;
 import com.roadmaker.roadmap.dto.RoadmapFindResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +22,10 @@ import static com.roadmaker.roadmap.entity.roadmap.QRoadmap.roadmap;
 
 @Slf4j @Repository
 public class RoadmapRepositoryImpl extends QuerydslRepositorySupport implements RoadmapRepositoryCustom{
+
+    @Value("${ip-address}")
+    private String ipAddress;
+
     @Autowired
     private JPAQueryFactory queryFactory;
 
@@ -48,12 +53,12 @@ public class RoadmapRepositoryImpl extends QuerydslRepositorySupport implements 
         String previous = null;
 
         if(pageRequest.getPageNumber() == 0) {
-            next = "http://52.79.185.147/api/roadmaps/search/"+ keyword + "?page=" + (pageRequest.getPageNumber()+2) + "&size="+pageRequest.getPageSize();
+            next = ipAddress + "api/roadmaps/search/"+ keyword + "?page=" + (pageRequest.getPageNumber()+2) + "&size="+pageRequest.getPageSize();
         } else if (pageRequest.getPageNumber() == roadmapDtoPage.getTotalPages() - 1) {
-            previous = "http://52.79.185.147/api/roadmaps/search/"+ keyword + "?page=" + (pageRequest.getPageNumber()) + "&size="+pageRequest.getPageSize();
+            previous = ipAddress + "api/roadmaps/search/"+ keyword + "?page=" + (pageRequest.getPageNumber()) + "&size="+pageRequest.getPageSize();
         } else {
-            next = "http://52.79.185.147/api/roadmaps/search/"+ keyword + "?page=" + (pageRequest.getPageNumber()+2) + "&size="+pageRequest.getPageSize();
-            previous = "http://52.79.185.147/api/roadmaps/search/"+ keyword + "?page=" + (pageRequest.getPageNumber()) + "&size="+pageRequest.getPageSize();
+            next = ipAddress + "api/roadmaps/search/"+ keyword + "?page=" + (pageRequest.getPageNumber()+2) + "&size="+pageRequest.getPageSize();
+            previous = ipAddress + "api/roadmaps/search/"+ keyword + "?page=" + (pageRequest.getPageNumber()) + "&size="+pageRequest.getPageSize();
         }
 
         return RoadmapFindResponse.builder()
