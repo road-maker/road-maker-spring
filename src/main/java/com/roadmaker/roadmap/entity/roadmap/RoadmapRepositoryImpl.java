@@ -33,26 +33,6 @@ public class RoadmapRepositoryImpl extends QuerydslRepositorySupport implements 
 
         JPQLQuery<Roadmap> query = queryFactory.selectFrom(roadmap)
                 .where(eqKeyword(keyword));
-//
-//        log.info("query: {}", query);
-//
-//        List<Roadmap> roadmaps = this.getQuerydsl().applyPagination(pageRequest, query).fetch();
-//
-//        log.info("roadmaps: {}", roadmaps);
-//
-//        List<RoadmapDto> roadmapDtos = new ArrayList<>();
-//        roadmaps.forEach(roadmap1 ->  {
-//            RoadmapDto roadmapDto = RoadmapDto.of(roadmap1, roadmap1.getMember());
-//            roadmapDtos.add(roadmapDto);
-//        });
-//
-//        log.info("roadmapDtos: {}", roadmapDtos);
-//
-//        Page<RoadmapDto> page = new PageImpl<>(roadmapDtos, pageRequest, query.fetchCount());
-//
-//        log.info("page: {}", page);
-//
-//        return page.getContent();
 
         List<Roadmap> roadmaps = Objects.requireNonNull(this.getQuerydsl()).applyPagination(pageRequest, query).fetch(); //
 
