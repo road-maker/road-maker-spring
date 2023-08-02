@@ -55,6 +55,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    @Transactional
     public UploadImageResponse uploadMemberAvatar(Member member, MultipartFile image) throws IOException {
         String imageUrl = imageService.uploadImage(image);
         member.setAvatarUrl(imageUrl);
