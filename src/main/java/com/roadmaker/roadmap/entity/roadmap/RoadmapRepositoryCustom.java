@@ -1,12 +1,9 @@
 package com.roadmaker.roadmap.entity.roadmap;
 
-import com.roadmaker.roadmap.dto.RoadmapDto;
-import com.roadmaker.roadmap.dto.RoadmapSearchResponse;
+import com.roadmaker.roadmap.dto.RoadmapFindResponse;
 import org.springframework.data.domain.PageRequest;
 
-import java.util.List;
-
 public interface RoadmapRepositoryCustom {
-    RoadmapSearchResponse findyBySearchOption(PageRequest pageRequest, String keyword);
+    RoadmapFindResponse findyBySearchOption(PageRequest pageRequest, String keyword);
 
 }

@@ -3,9 +3,8 @@ package com.roadmaker.roadmap.entity.roadmap;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.roadmaker.commons.exception.NotFoundException;
 import com.roadmaker.roadmap.dto.RoadmapDto;
-import com.roadmaker.roadmap.dto.RoadmapSearchResponse;
+import com.roadmaker.roadmap.dto.RoadmapFindResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,7 +29,7 @@ public class RoadmapRepositoryImpl extends QuerydslRepositorySupport implements 
     }
 
     @Override
-    public RoadmapSearchResponse findyBySearchOption(PageRequest pageRequest, String keyword) {
+    public RoadmapFindResponse findyBySearchOption(PageRequest pageRequest, String keyword) {
 
         JPQLQuery<Roadmap> query = queryFactory.selectFrom(roadmap)
                 .where(eqKeyword(keyword));
@@ -57,7 +56,7 @@ public class RoadmapRepositoryImpl extends QuerydslRepositorySupport implements 
             previous = "http://52.79.185.147/api/roadmaps/search/"+ keyword + "?page=" + (pageRequest.getPageNumber()) + "&size="+pageRequest.getPageSize();
         }
 
-        return RoadmapSearchResponse.builder()
+        return RoadmapFindResponse.builder()
                 .result(roadmapDtoPage.getContent())
                 .totalPage((long) roadmapDtoPage.getTotalPages())
                 .next(next)

@@ -1,6 +1,7 @@
 package com.roadmaker.member.controller;
 
 import com.roadmaker.comment.dto.CommentDto;
+import com.roadmaker.comment.dto.CommentResponse;
 import com.roadmaker.comment.service.CommentService;
 import com.roadmaker.commons.annotation.LoginMember;
 import com.roadmaker.commons.annotation.LoginRequired;
@@ -84,14 +85,12 @@ public class MemberController {
         return new ResponseEntity<>(memberResponse, HttpStatus.OK);
     }
 
-    @GetMapping(path="/{nickname}/comments")
-    public ResponseEntity<List<CommentDto>> findMemberComments(@PathVariable String nickname, Integer size, Integer page) {
-
-        Long memberId = memberService.findMemberByNickname(nickname).getId();
+    @GetMapping(path="/{memberId}/comments")
+    public ResponseEntity<CommentResponse> findMemberComments(@PathVariable Long memberId, Integer size, Integer page) {
 
         if(memberId == null) { throw new NotFoundException("해당 멤버를 찾지 못함"); }
 
-        List<CommentDto> commentsInPage = commentService.findByMemberIdAndPageRequest(memberId,page, size);
+        CommentResponse commentsInPage = commentService.findByMemberIdAndPageRequest(memberId,page, size);
         return new ResponseEntity<>(commentsInPage, HttpStatus.OK);
     }
 

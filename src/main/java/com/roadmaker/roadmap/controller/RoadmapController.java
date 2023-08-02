@@ -1,6 +1,7 @@
 package com.roadmaker.roadmap.controller;
 
 import com.roadmaker.comment.dto.CommentDto;
+import com.roadmaker.comment.dto.CommentResponse;
 import com.roadmaker.comment.service.CommentService;
 import com.roadmaker.commons.annotation.LoginMember;
 import com.roadmaker.commons.annotation.LoginRequired;
@@ -67,9 +68,11 @@ public class RoadmapController {
     }
 
     @GetMapping
-    public ResponseEntity<List<RoadmapDto>> getRoadmaps(@RequestParam(name = "page") Integer page, @RequestParam(name = "size") Integer size) {
-        List<RoadmapDto> roadmapDtos = roadmapService.findByPage(page, size);
-        return new ResponseEntity<>(roadmapDtos, HttpStatus.OK);
+    public ResponseEntity<RoadmapFindResponse> getRoadmaps(@RequestParam(name = "page") Integer page, @RequestParam(name = "size") Integer size) {
+
+        RoadmapFindResponse roadmaps = roadmapService.findByPage(page, size);
+
+        return new ResponseEntity<>(roadmaps, HttpStatus.OK);
     }
 
     @GetMapping("/{roadmapId}")
@@ -125,7 +128,8 @@ public class RoadmapController {
     }
 
     @GetMapping(path="/load-roadmap/{roadmapId}/comments")
-    public ResponseEntity<List<CommentDto>> loadRoadmapComments(@PathVariable Long roadmapId, Integer page, Integer size) {
+    public ResponseEntity<CommentResponse> loadRoadmapComments(@PathVariable Long roadmapId, Integer page, Integer size) {
+
         return new ResponseEntity<> (commentService.findCommentByRoadmapIdAndPageRequest(roadmapId, page, size), HttpStatus.OK);
     }
 
@@ -173,7 +177,7 @@ public class RoadmapController {
     }
 
     @GetMapping("/search/{keyword}")
-    public ResponseEntity<RoadmapSearchResponse> searchTitleByKeyword(@PathVariable String keyword,@RequestParam(value = "size") Integer size, @RequestParam(value = "page") Integer page) {
+    public ResponseEntity<RoadmapFindResponse> searchTitleByKeyword(@PathVariable String keyword, @RequestParam(value = "size") Integer size, @RequestParam(value = "page") Integer page) {
         return new ResponseEntity<> (roadmapService.findRoadmapByKeyword(keyword, size, page-1), HttpStatus.OK);
     }
 
