@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
-import com.roadmaker.roadmap.entity.roadmap.RoadmapRepository;
 import com.roadmaker.member.entity.Member;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,7 +35,6 @@ import java.util.*;
 public class RoadmapController {
     private final MemberService memberService;
     private final RoadmapService roadmapService;
-    private final RoadmapRepository roadmapRepository;
     private final InProgressNodeRepository inProgressNodeRepository;
     private final InProgressRoadmapRepository inProgressRoadmapRepository;
     private final CommentService commentService;
