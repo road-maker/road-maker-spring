@@ -7,6 +7,7 @@ import com.roadmaker.commons.annotation.LoginRequired;
 import com.roadmaker.image.dto.UploadImageResponse;
 import com.roadmaker.inprogressroadmap.entity.InProgressRoadmap;
 import com.roadmaker.inprogressroadmap.entity.InProgressRoadmapRepository;
+import com.roadmaker.like.service.LikeService;
 import com.roadmaker.roadmap.dto.*;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNodeRepository;
 import com.roadmaker.member.service.MemberService;
@@ -38,6 +39,7 @@ public class RoadmapController {
     private final InProgressNodeRepository inProgressNodeRepository;
     private final InProgressRoadmapRepository inProgressRoadmapRepository;
     private final CommentService commentService;
+    private final LikeService likeService;
 
     // 로드맵 발행
     @LoginRequired
@@ -76,23 +78,25 @@ public class RoadmapController {
     public ResponseEntity<RoadmapResponse> getRoadmap(@PathVariable Long roadmapId) {
         Optional<Member> memberOpt = memberService.getLoggedInMember();
         Roadmap roadmap = roadmapService.findRoadmapById(roadmapId);
+        Boolean isLiked = false;
 
         RoadmapResponse roadmapResponse;
 
         if (memberOpt.isEmpty()) {
-            roadmapResponse = RoadmapResponse.of(roadmap);
+            roadmapResponse = RoadmapResponse.of(roadmap, isLiked);
             return new ResponseEntity<>(roadmapResponse, HttpStatus.OK);
         }
         
         Optional<InProgressRoadmap> inProgressRoadmap = inProgressRoadmapRepository.findByRoadmapIdAndMemberId(roadmapId, memberOpt.get().getId());
+        isLiked = likeService.isLiked(roadmapId, memberOpt.get().getId());
 
         if (inProgressRoadmap.isEmpty()) {
-            roadmapResponse = RoadmapResponse.of(roadmap);
+            roadmapResponse = RoadmapResponse.of(roadmap, isLiked);
             return new ResponseEntity<>(roadmapResponse, HttpStatus.OK);
         }
 
         List<InProgressNode> inProgressNodes = inProgressNodeRepository.findByRoadmapIdAndMemberId(roadmapId, memberOpt.get().getId());
-        roadmapResponse = RoadmapResponse.of(roadmap, inProgressNodes);
+        roadmapResponse = RoadmapResponse.of(roadmap, isLiked, inProgressNodes);
 
         return new ResponseEntity<>(roadmapResponse, HttpStatus.OK);
     }
@@ -101,7 +105,7 @@ public class RoadmapController {
     public ResponseEntity<RoadmapResponse> loadRoadmap(@PathVariable Long roadmapId) {
         Roadmap roadmap = roadmapService.findRoadmapById(roadmapId);
 
-        RoadmapResponse roadmapResponse = RoadmapResponse.of(roadmap);
+        RoadmapResponse roadmapResponse = RoadmapResponse.of(roadmap, false);
 
         return new ResponseEntity<>(roadmapResponse, HttpStatus.OK);
     }
@@ -111,14 +115,15 @@ public class RoadmapController {
     public ResponseEntity<RoadmapResponse> loadRoadmapWithAuth(@PathVariable Long roadmapId, @LoginMember Member member) {
         Roadmap roadmap = roadmapService.findRoadmapById(roadmapId);
         RoadmapResponse roadmapResponse;
+        boolean isLiked = likeService.isLiked(roadmapId, member.getId());
 
         Optional<InProgressRoadmap> inProgressRoadmap = inProgressRoadmapRepository.findByRoadmapIdAndMemberId(roadmapId, member.getId());
 
         if (inProgressRoadmap.isEmpty()) {
-            roadmapResponse = RoadmapResponse.of(roadmap);
+            roadmapResponse = RoadmapResponse.of(roadmap, isLiked);
         } else {
             List<InProgressNode> inProgressNodes = inProgressNodeRepository.findByRoadmapIdAndMemberId(roadmapId, member.getId());
-            roadmapResponse = RoadmapResponse.of(roadmap, inProgressNodes);
+            roadmapResponse = RoadmapResponse.of(roadmap, isLiked, inProgressNodes);
         }
 
         return new ResponseEntity<>(roadmapResponse, HttpStatus.OK);
