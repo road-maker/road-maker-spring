@@ -2,6 +2,8 @@ package com.roadmaker.roadmap.service;
 
 import com.roadmaker.commons.exception.ConflictException;
 import com.roadmaker.commons.exception.NotFoundException;
+import com.roadmaker.image.dto.UploadImageResponse;
+import com.roadmaker.image.service.ImageService;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.entity.MemberRepository;
 import com.roadmaker.roadmap.dto.*;
@@ -12,7 +14,6 @@ import com.roadmaker.inprogressroadmap.entity.InProgressRoadmap;
 import com.roadmaker.inprogressroadmap.entity.InProgressRoadmapRepository;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import com.roadmaker.roadmap.entity.roadmap.RoadmapRepository;
-import com.roadmaker.roadmap.entity.roadmap.RoadmapRepositoryCustom;
 import com.roadmaker.roadmap.entity.roadmapedge.RoadmapEdge;
 import com.roadmaker.roadmap.entity.roadmapedge.RoadmapEdgeRepository;
 import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNode;
@@ -22,10 +23,11 @@ import com.roadmaker.roadmap.entity.roadmapviewport.RoadmapViewportRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -42,6 +44,7 @@ public class RoadmapServiceImpl implements RoadmapService{
     private final InProgressNodeRepository inProgressNodeRepository;
     private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;
+    private final ImageService imageService;
 
     @Override
     public Long createRoadmap(CreateRoadmapRequest createRoadmapRequest, Member member) {
@@ -71,6 +74,15 @@ public class RoadmapServiceImpl implements RoadmapService{
 
         // roadmapId 반환
         return roadmap.getId();
+    }
+
+    @Override
+    @Transactional
+    public UploadImageResponse uploadThumbnail(Roadmap roadmap, MultipartFile image) throws IOException {
+        String imageUrl = imageService.uploadImage(image);
+        roadmap.setThumbnailUrl(imageUrl);
+
+        return UploadImageResponse.builder().url(imageUrl).build();
     }
 
     @Override
@@ -159,7 +171,7 @@ public class RoadmapServiceImpl implements RoadmapService{
         return true;
     }
 
-    public List<RoadmapDto> findRoadmapByKeyword(String keyword, Integer size, Integer page) {
+    public RoadmapSearchResponse findRoadmapByKeyword(String keyword, Integer size, Integer page) {
         PageRequest pageRequest = PageRequest.of(page, size);
         return roadmapRepository.findyBySearchOption(pageRequest, keyword);
     }

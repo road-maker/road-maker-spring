@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @RequiredArgsConstructor
@@ -28,16 +29,28 @@ public class CommentServiceImpl implements CommentService{
 
     public List<CommentDto> findCommentByRoadmapIdAndPageRequest (Long roadmapId, Integer page, Integer size) {
         // pageable을 통해 comment를 찾아 commentDTO로 변환
-        PageRequest pageRequest = PageRequest.of(page, size);
-        return commentRepository.findCommentByRoadmapId(roadmapId, pageRequest).map(CommentDto::of).getContent();
+        int pageMod = page-1;
+        PageRequest pageRequest = PageRequest.of(pageMod, size);
+        List<CommentDto> comments = commentRepository.findCommentByRoadmapId(roadmapId, pageRequest).map(CommentDto::of).getContent();
+        AtomicInteger counter = new AtomicInteger(1);
+        comments.forEach(
+                commentDto -> {
+                    commentDto.setNumbering((long) ((pageMod)*size + counter.getAndIncrement()));
+                });
+        return comments;
     }
 
     @Override
     public List<CommentDto> findByMemberIdAndPageRequest(Long memberId, Integer page, Integer size) {
-
-        PageRequest pageRequest = PageRequest.of(page, size);
-
-        return commentRepository.findCommentByMemberId(memberId, pageRequest).map(CommentDto::of).getContent();
+        int pageMod = page-1;
+        PageRequest pageRequest = PageRequest.of(pageMod, size);
+        List<CommentDto> comments = commentRepository.findCommentByMemberId(memberId, pageRequest).map(CommentDto::of).getContent();
+        AtomicInteger counter = new AtomicInteger(1);
+        comments.forEach(
+                commentDto -> {
+                    commentDto.setNumbering((long) ((pageMod)*size + counter.getAndIncrement()));
+                });
+        return comments;
     }
 
     public boolean saveComment (CommentDto commentDto, Member member) {

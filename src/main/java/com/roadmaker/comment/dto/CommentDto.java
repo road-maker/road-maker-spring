@@ -14,6 +14,8 @@ public class CommentDto {
     Long roadmapId;
     @NotBlank
     String content;
+    @NotBlank
+    Long numbering;
 
     LocalDateTime createdTime;
     LocalDateTime updatedTime;

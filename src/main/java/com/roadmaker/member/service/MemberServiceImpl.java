@@ -1,5 +1,7 @@
 package com.roadmaker.member.service;
 
+import com.roadmaker.image.dto.UploadImageResponse;
+import com.roadmaker.image.service.ImageService;
 import com.roadmaker.member.authentication.JwtProvider;
 import com.roadmaker.member.dto.*;
 import com.roadmaker.member.entity.Member;
@@ -14,7 +16,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @Service @Slf4j
@@ -26,6 +30,7 @@ public class MemberServiceImpl implements MemberService {
     private final JwtProvider jwtProvider;
     private final PasswordEncoder passwordEncoder;
     private final HttpServletRequest httpServletRequest;
+    private final ImageService imageService;
 
     @Override
     @Transactional
@@ -47,6 +52,15 @@ public class MemberServiceImpl implements MemberService {
                 = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         //인증 정보 기반으로 JWT 토큰 생성
         return jwtProvider.generateToken(authentication);
+    }
+
+    @Override
+    @Transactional
+    public UploadImageResponse uploadMemberAvatar(Member member, MultipartFile image) throws IOException {
+        String imageUrl = imageService.uploadImage(image);
+        member.setAvatarUrl(imageUrl);
+
+        return UploadImageResponse.builder().url(imageUrl).build();
     }
 
     @Override
