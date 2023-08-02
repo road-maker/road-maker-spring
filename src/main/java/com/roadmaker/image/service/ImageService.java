@@ -8,4 +8,6 @@ import java.io.IOException;
 
 public interface ImageService {
     public UploadThumbnailResponse uploadThumbnail(Roadmap roadmap, MultipartFile image) throws IOException;
+
+    public String uploadImage(MultipartFile image) throws IOException;
 }
