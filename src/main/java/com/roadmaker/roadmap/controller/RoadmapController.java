@@ -175,8 +175,8 @@ public class RoadmapController {
     }
 
     @GetMapping("/search/{keyword}")
-    public ResponseEntity<List<RoadmapDto>> searchTitleByKeyword(@PathVariable String keyword,@RequestParam(value = "size") Integer size, @RequestParam(value = "page") Integer page) {
-        return new ResponseEntity<> (roadmapService.findRoadmapByKeyword(keyword, size, page), HttpStatus.OK);
+    public ResponseEntity<RoadmapSearchResponse> searchTitleByKeyword(@PathVariable String keyword,@RequestParam(value = "size") Integer size, @RequestParam(value = "page") Integer page) {
+        return new ResponseEntity<> (roadmapService.findRoadmapByKeyword(keyword, size, page-1), HttpStatus.OK);
     }
 
 }
