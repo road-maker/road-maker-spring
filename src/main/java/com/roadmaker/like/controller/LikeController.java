@@ -2,6 +2,7 @@ package com.roadmaker.like.controller;
 
 import com.roadmaker.commons.annotation.LoginMember;
 import com.roadmaker.commons.annotation.LoginRequired;
+import com.roadmaker.like.dto.LikeRoadmapResponse;
 import com.roadmaker.like.service.LikeService;
 import com.roadmaker.member.entity.Member;
 import lombok.RequiredArgsConstructor;
@@ -19,16 +20,19 @@ public class LikeController {
     private final LikeService likeService;
     @LoginRequired
     @PostMapping("/like-roadmap/{roadmapId}")
-    public ResponseEntity<Boolean> likeRoadmap(@PathVariable Long roadmapId, @LoginMember Member member) {
+    public LikeRoadmapResponse likeRoadmap(@PathVariable Long roadmapId, @LoginMember Member member) {
         if (likeService.isLiked(roadmapId, member.getId())) {
-            // 이미 좋아요 상태면 좋아요 취소
+            // 좋아요 했으면 좋아요 취소
             likeService.unlikeRoadmap(roadmapId, member.getId());
-            return ResponseEntity.ok(false);
         } else {
-            // 로드맵 좋아요
+            // 좋아요
             likeService.likeRoadmap(roadmapId, member.getId());
-            return ResponseEntity.ok(true);
         }
+
+        // 로드맵 좋아요 갯수
+        int likeCount = likeService.getLikeCount(roadmapId);
+
+        return LikeRoadmapResponse.from(likeService.isLiked(roadmapId, member.getId()), likeCount);
     }
 
     // 좋아요 갯수를 알려주는 API
