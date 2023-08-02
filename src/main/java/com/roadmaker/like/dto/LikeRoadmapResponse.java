@@ -8,12 +8,12 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 public class LikeRoadmapResponse {
-    private Boolean like;
+    private Boolean isLiked;
     private Integer likeCount;
 
-    public static LikeRoadmapResponse from(boolean like, int likeCount) {
+    public static LikeRoadmapResponse from(boolean isLiked, int likeCount) {
         return LikeRoadmapResponse.builder()
-                .like(like)
+                .isLiked(isLiked)
                 .likeCount(likeCount)
                 .build();
     }
