@@ -2,6 +2,8 @@ package com.roadmaker.like.controller;
 
 import com.roadmaker.commons.annotation.LoginMember;
 import com.roadmaker.commons.annotation.LoginRequired;
+import com.roadmaker.like.service.LikeService;
+import com.roadmaker.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 @RequiredArgsConstructor
 @RequestMapping("/api/likes")
-public class LikeRoadmapController {
+public class LikeController {
     private final LikeService likeService;
     @LoginRequired
     @PostMapping("/like-roadmap/{roadmapId}")

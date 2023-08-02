@@ -1,6 +1,7 @@
 package com.roadmaker.like.service;
 
-public interface LikeRoadmapService {
+public interface LikeService {
+
     // Check if a member has liked a roadmap
     public boolean isLiked(Long roadmapId, Long memberId);
 
