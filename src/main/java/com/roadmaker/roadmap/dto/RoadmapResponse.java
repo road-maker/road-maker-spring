@@ -21,6 +21,7 @@ public class RoadmapResponse {
     private String thumbnailUrl;
     private Boolean isJoined;
     private Integer joinCount;
+    private Integer likeCount;
     private MemberResponse member;
     private String createdAt;
     private String updatedAt;
@@ -42,6 +43,7 @@ public class RoadmapResponse {
                 .thumbnailUrl(roadmap.getThumbnailUrl())
                 .isJoined(isJoined)
                 .joinCount(joinCount)
+                .likeCount(roadmap.getLikeCount())
                 .member(MemberResponse.of(roadmap.getMember()))
                 .createdAt(formatDate(roadmap.getCreatedAt()))
                 .updatedAt(formatDate(roadmap.getUpdatedAt()))
