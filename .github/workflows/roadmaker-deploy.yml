@@ -18,6 +18,10 @@ jobs:
         with:
           submodules: recursive
           token: ${{ secrets.GIT_TOKEN }}
+      - name: Git Sumbodule Update
+        run: |
+          git pull --recurse-submodules
+          git submodule update --remote --recursive
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
