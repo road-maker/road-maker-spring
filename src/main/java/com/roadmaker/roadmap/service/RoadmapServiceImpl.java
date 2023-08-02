@@ -86,9 +86,30 @@ public class RoadmapServiceImpl implements RoadmapService{
     }
 
     @Override
-    public List<RoadmapDto> findByPage(Integer page, Integer size) {
-        Page<Roadmap> roadmaps = roadmapRepository.findAll(PageRequest.of(page, size));
-        return roadmaps.stream().map(roadmap -> RoadmapDto.of(roadmap, roadmap.getMember())).toList();
+    public RoadmapFindResponse findByPage(Integer page, Integer size) {
+
+        PageRequest pageRequest = PageRequest.of(page-1, size);
+        Page<Roadmap> roadmaps = roadmapRepository.findAll(pageRequest);
+        List<RoadmapDto> roadmapsDtoList = roadmaps.stream().map(roadmap -> RoadmapDto.of(roadmap, roadmap.getMember())).toList();
+
+        String next = null;
+        String previous = null;
+
+        if(pageRequest.getPageNumber() == 0) {
+            next = "http://52.79.185.147/api/roadmaps?page=" + (pageRequest.getPageNumber()+2) + "&size="+pageRequest.getPageSize();
+        } else if (pageRequest.getPageNumber() == roadmaps.getTotalPages() - 1) {
+            previous = "http://52.79.185.147/api/roadmaps?page=" + (pageRequest.getPageNumber()) + "&size="+pageRequest.getPageSize();
+        } else {
+            next = "http://52.79.185.147/api/roadmaps?page=" + (pageRequest.getPageNumber()+2) + "&size="+pageRequest.getPageSize();
+            previous = "http://52.79.185.147/api/roadmaps?page=" + (pageRequest.getPageNumber()) + "&size="+pageRequest.getPageSize();
+        }
+
+        return RoadmapFindResponse.builder()
+                .totalPage((long)roadmaps.getTotalPages())
+                .next(next)
+                .previous(previous)
+                .result(roadmapsDtoList)
+                .build();
     }
 
     @Override
@@ -171,7 +192,7 @@ public class RoadmapServiceImpl implements RoadmapService{
         return true;
     }
 
-    public RoadmapSearchResponse findRoadmapByKeyword(String keyword, Integer size, Integer page) {
+    public RoadmapFindResponse findRoadmapByKeyword(String keyword, Integer size, Integer page) {
         PageRequest pageRequest = PageRequest.of(page, size);
         return roadmapRepository.findyBySearchOption(pageRequest, keyword);
     }

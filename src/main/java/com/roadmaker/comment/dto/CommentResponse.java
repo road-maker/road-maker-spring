@@ -1,4 +1,4 @@
-package com.roadmaker.roadmap.dto;
+package com.roadmaker.comment.dto;
 
 import lombok.*;
 
@@ -10,9 +10,9 @@ import java.util.List;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
-public class RoadmapSearchResponse {
+public class CommentResponse {
     Long totalPage;
     String next;
     String previous;
-    List<RoadmapDto> result;
+    List<CommentDto> result;
 }

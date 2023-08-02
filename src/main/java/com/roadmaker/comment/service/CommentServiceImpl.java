@@ -1,6 +1,7 @@
 package com.roadmaker.comment.service;
 
 import com.roadmaker.comment.dto.CommentDto;
+import com.roadmaker.comment.dto.CommentResponse;
 import com.roadmaker.comment.entity.Comment;
 import com.roadmaker.comment.entity.CommentRepository;
 import com.roadmaker.member.entity.Member;
@@ -27,30 +28,66 @@ public class CommentServiceImpl implements CommentService{
     private final RoadmapRepository roadmapRepository;
     private final MemberRepository memberRepository;
 
-    public List<CommentDto> findCommentByRoadmapIdAndPageRequest (Long roadmapId, Integer page, Integer size) {
+    public CommentResponse findCommentByRoadmapIdAndPageRequest (Long roadmapId, Integer page, Integer size) {
         // pageable을 통해 comment를 찾아 commentDTO로 변환
         int pageMod = page-1;
         PageRequest pageRequest = PageRequest.of(pageMod, size);
-        List<CommentDto> comments = commentRepository.findCommentByRoadmapId(roadmapId, pageRequest).map(CommentDto::of).getContent();
+        Page<CommentDto> comments = commentRepository.findCommentByRoadmapId(roadmapId, pageRequest).map(CommentDto::of);
         AtomicInteger counter = new AtomicInteger(1);
         comments.forEach(
                 commentDto -> {
                     commentDto.setNumbering((long) ((pageMod)*size + counter.getAndIncrement()));
                 });
-        return comments;
+
+        String next = null;
+        String previous = null;
+
+        if(pageRequest.getPageNumber() == 0) {
+            next = "http://52.79.185.147/api/roadmaps/load-roadmap/"+roadmapId+"/comments?page=" + (pageRequest.getPageNumber()+2) + "&size="+pageRequest.getPageSize();
+        } else if (pageRequest.getPageNumber() == comments.getTotalPages() - 1) {
+            previous = "http://52.79.185.147/api/roadmapsload-roadmap/"+roadmapId+"/comments?page=" + (pageRequest.getPageNumber()) + "&size="+pageRequest.getPageSize();
+        } else {
+            next = "http://52.79.185.147/api/roadmapsload-roadmap/"+roadmapId+"/comments?page=" + (pageRequest.getPageNumber()+2) + "&size="+pageRequest.getPageSize();
+            previous = "http://52.79.185.147/api/roadmapsload-roadmap/"+roadmapId+"/comments?page=" + (pageRequest.getPageNumber()) + "&size="+pageRequest.getPageSize();
+        }
+
+        return CommentResponse.builder()
+                .totalPage((long)comments.getTotalPages())
+                .previous(previous)
+                .next(next)
+                .result(comments.getContent())
+                .build();
     }
 
     @Override
-    public List<CommentDto> findByMemberIdAndPageRequest(Long memberId, Integer page, Integer size) {
+    public CommentResponse findByMemberIdAndPageRequest(Long memberId, Integer page, Integer size) {
         int pageMod = page-1;
         PageRequest pageRequest = PageRequest.of(pageMod, size);
-        List<CommentDto> comments = commentRepository.findCommentByMemberId(memberId, pageRequest).map(CommentDto::of).getContent();
+        Page<CommentDto> comments = commentRepository.findCommentByMemberId(memberId, pageRequest).map(CommentDto::of);
         AtomicInteger counter = new AtomicInteger(1);
         comments.forEach(
                 commentDto -> {
                     commentDto.setNumbering((long) ((pageMod)*size + counter.getAndIncrement()));
                 });
-        return comments;
+
+        String next = null;
+        String previous = null;
+
+        if(pageRequest.getPageNumber() == 0) {
+            next = "http://52.79.185.147/api/members/"+memberId+"/comments?page=" + (pageRequest.getPageNumber()+2) + "&size="+pageRequest.getPageSize();
+        } else if (pageRequest.getPageNumber() == comments.getTotalPages() - 1) {
+            previous = "http://52.79.185.147/api/members/"+memberId+"/comments?page=" + (pageRequest.getPageNumber()) + "&size="+pageRequest.getPageSize();
+        } else {
+            next = "http://52.79.185.147/api/members/"+memberId+"/comments?page=" + (pageRequest.getPageNumber()+2) + "&size="+pageRequest.getPageSize();
+            previous = "http://52.79.185.147/api/members/"+memberId+"/comments?page=" + (pageRequest.getPageNumber()) + "&size="+pageRequest.getPageSize();
+        }
+
+        return CommentResponse.builder()
+                .totalPage((long)comments.getTotalPages())
+                .previous(previous)
+                .next(next)
+                .result(comments.getContent())
+                .build();
     }
 
     public boolean saveComment (CommentDto commentDto, Member member) {
