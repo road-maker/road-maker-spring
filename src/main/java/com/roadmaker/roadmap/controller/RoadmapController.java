@@ -4,6 +4,7 @@ import com.roadmaker.comment.dto.CommentDto;
 import com.roadmaker.comment.service.CommentService;
 import com.roadmaker.commons.annotation.LoginMember;
 import com.roadmaker.commons.annotation.LoginRequired;
+import com.roadmaker.image.dto.UploadImageResponse;
 import com.roadmaker.inprogressroadmap.entity.InProgressRoadmap;
 import com.roadmaker.inprogressroadmap.entity.InProgressRoadmapRepository;
 import com.roadmaker.roadmap.dto.*;
@@ -24,7 +25,9 @@ import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import com.roadmaker.roadmap.entity.roadmap.RoadmapRepository;
 import com.roadmaker.member.entity.Member;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 
 @RestController @Slf4j @Validated
@@ -45,6 +48,24 @@ public class RoadmapController {
         Long roadmapId = roadmapService.createRoadmap(createRoadmapRequest, member);
 
         return new ResponseEntity<>(roadmapId, HttpStatus.CREATED);
+    }
+
+    @LoginRequired
+    @PostMapping("/{roadmapId}/thumbnails")
+    public ResponseEntity<UploadImageResponse> uploadThumbnail(
+            @PathVariable Long roadmapId,
+            @RequestPart(value = "file") MultipartFile multipartFile,
+            @LoginMember Member member) throws IOException {
+
+        Roadmap roadmap = roadmapService.findRoadmapById(roadmapId);
+
+        if (!roadmap.getMember().getId().equals(member.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        UploadImageResponse uploadImageResponse = roadmapService.uploadThumbnail(roadmap, multipartFile);
+
+        return new ResponseEntity<>(uploadImageResponse, HttpStatus.CREATED);
     }
 
     @GetMapping

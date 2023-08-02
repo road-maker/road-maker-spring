@@ -1,8 +1,5 @@
 package com.roadmaker.image.service;
 
-import com.roadmaker.image.dto.UploadThumbnailResponse;
-import com.roadmaker.member.entity.Member;
-import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import io.awspring.cloud.s3.ObjectMetadata;
 import io.awspring.cloud.s3.S3Resource;
 import io.awspring.cloud.s3.S3Template;
@@ -23,15 +20,6 @@ public class ImageServiceImpl implements ImageService {
 
     @Value("${spring.cloud.aws.s3.bucket}")
     private String bucketName;
-
-    @Override
-    @Transactional
-    public UploadThumbnailResponse uploadThumbnail(Roadmap roadmap, MultipartFile image) throws IOException {
-        String imageUrl = uploadImage(image);
-        roadmap.setThumbnailUrl(imageUrl);
-
-        return UploadThumbnailResponse.builder().url(imageUrl).build();
-    }
 
     @Override
     @Transactional
