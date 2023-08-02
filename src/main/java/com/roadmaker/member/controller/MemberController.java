@@ -68,7 +68,7 @@ public class MemberController {
     }
 
     @LoginRequired
-    @PostMapping("/me/thumbnails")
+    @PostMapping("/me/avatar")
     public ResponseEntity<UploadImageResponse> uploadMemberAvatar(@RequestPart(value = "file") MultipartFile multipartFile, @LoginMember Member member) throws IOException {
         UploadImageResponse uploadImageResponse = memberService.uploadMemberAvatar(member, multipartFile);
         return new ResponseEntity<>(uploadImageResponse, HttpStatus.CREATED);
