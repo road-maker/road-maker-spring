@@ -171,7 +171,7 @@ public class RoadmapServiceImpl implements RoadmapService{
         return true;
     }
 
-    public List<RoadmapDto> findRoadmapByKeyword(String keyword, Integer size, Integer page) {
+    public RoadmapSearchResponse findRoadmapByKeyword(String keyword, Integer size, Integer page) {
         PageRequest pageRequest = PageRequest.of(page, size);
         return roadmapRepository.findyBySearchOption(pageRequest, keyword);
     }
