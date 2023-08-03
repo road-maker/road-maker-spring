@@ -30,8 +30,10 @@ public class CommentServiceImpl implements CommentService{
     private final RoadmapRepository roadmapRepository;
     private final MemberRepository memberRepository;
 
+    // api 주소 전달
     @Value("${ip-address}")
     private String ipAddress;
+    private final String commentPage = "/comments?page=";
 
     public CommentResponse findCommentByRoadmapIdAndPageRequest (Long roadmapId, Integer page, Integer size) {
         // pageable을 통해 comment를 찾아 commentDTO로 변환
@@ -40,25 +42,23 @@ public class CommentServiceImpl implements CommentService{
             throw new NotFoundException();
         }
 
+        // 1 페이지부터 시작하도록
         int pageMod = page-1;
+
+        //페이지네이션, commentDto로 가공, 불러온 페이지 내에 넘버링 부여
         PageRequest pageRequest = PageRequest.of(pageMod, size);
         Page<CommentDto> comments = commentRepository.findCommentByRoadmapId(roadmapId, pageRequest).map(CommentDto::of);
         AtomicInteger counter = new AtomicInteger(1);
         comments.forEach(
-                commentDto -> {
-                    commentDto.setNumbering((long) ((pageMod)*size + counter.getAndIncrement()));
-                });
+                commentDto -> commentDto.setNumbering(((long) (pageMod) *size + counter.getAndIncrement())));
 
-        String next = null;
-        String previous = null;
-
+        // 페이지 주소 설정
+        String next = ipAddress+ "api/roadmaps/loa-roadmap/" +roadmapId + commentPage + (pageRequest.getPageNumber()+2);
+        String previous = ipAddress+ "api/roadmaps/loa-roadmap/" +roadmapId + commentPage + (pageRequest.getPageNumber());
         if(pageRequest.getPageNumber() == 0) {
-            next = ipAddress+"api/roadmaps/load-roadmap/"+roadmapId+"/comments?page=" + (pageRequest.getPageNumber()+2);
+            previous = null;
         } else if (pageRequest.getPageNumber() == comments.getTotalPages() - 1) {
-            previous = ipAddress+"api/roadmaps/load-roadmap//api/roadmapsload-roadmap/"+roadmapId+"/comments?page=" + (pageRequest.getPageNumber());
-        } else {
-            next = ipAddress+"api/roadmaps/load-roadmap/"+roadmapId+"/comments?page=" + (pageRequest.getPageNumber()+2);
-            previous = ipAddress+"api/roadmaps/load-roadmap/"+roadmapId+"/comments?page=" + (pageRequest.getPageNumber());
+            next = null;
         }
 
         return CommentResponse.builder()
@@ -71,25 +71,24 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     public CommentResponse findByMemberIdAndPageRequest(Long memberId, Integer page, Integer size) {
+
+        // 1 페이지부터 시작하도록
         int pageMod = page-1;
+
+        //페이지네이션, commentDto로 가공, 불러온 페이지 내에 넘버링 부여
         PageRequest pageRequest = PageRequest.of(pageMod, size);
         Page<CommentDto> comments = commentRepository.findCommentByMemberId(memberId, pageRequest).map(CommentDto::of);
         AtomicInteger counter = new AtomicInteger(1);
         comments.forEach(
-                commentDto -> {
-                    commentDto.setNumbering((long) ((pageMod)*size + counter.getAndIncrement()));
-                });
+                commentDto -> commentDto.setNumbering(((long) (pageMod) *size + counter.getAndIncrement())));
 
-        String next = null;
-        String previous = null;
-
+        // 페이지 주소 설정
+        String next = ipAddress + "api/members/" +memberId + commentPage + (pageRequest.getPageNumber()+2);
+        String previous = ipAddress + "api/members/" +memberId + commentPage + (pageRequest.getPageNumber());
         if(pageRequest.getPageNumber() == 0) {
-            next = ipAddress+"api/members/"+memberId+"/comments?page=" + (pageRequest.getPageNumber()+2);
+            previous = null;
         } else if (pageRequest.getPageNumber() == comments.getTotalPages() - 1) {
-            previous = ipAddress+"api/members/"+memberId+"/comments?page=" + (pageRequest.getPageNumber());
-        } else {
-            next = ipAddress+"api/members/"+memberId+"/comments?page=" + (pageRequest.getPageNumber()+2);
-            previous = ipAddress+"api/members/"+memberId+"/comments?page=" + (pageRequest.getPageNumber());
+            next = null;
         }
 
         return CommentResponse.builder()

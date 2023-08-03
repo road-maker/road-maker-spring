@@ -1,6 +1,5 @@
 package com.roadmaker.member.dto;
 
-import com.roadmaker.comment.dto.CommentDto;
 import com.roadmaker.roadmap.dto.InProgressRoadmapDto;
 import lombok.Builder;
 import lombok.Getter;

@@ -3,10 +3,12 @@ package com.roadmaker.member.service;
 import com.roadmaker.image.dto.UploadImageResponse;
 import com.roadmaker.image.service.ImageService;
 import com.roadmaker.member.authentication.JwtProvider;
-import com.roadmaker.member.dto.*;
+import com.roadmaker.member.dto.MemberResponse;
+import com.roadmaker.member.dto.MypageRequest;
+import com.roadmaker.member.dto.SignupRequest;
+import com.roadmaker.member.dto.TokenInfo;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.entity.MemberRepository;
-import com.roadmaker.member.dto.TokenInfo;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -76,7 +78,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     public Optional<Member> getLoggedInMember() {
-        String token = jwtProvider.resolveToken((HttpServletRequest) httpServletRequest);
+        String token = jwtProvider.resolveToken(httpServletRequest);
 
         if (token == null || !jwtProvider.validationToken(token)) {
             return Optional.empty();
@@ -93,8 +95,7 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public MemberResponse saveProfile( MypageRequest request, Member member) {
         //1. 내가 입력한 닉네임이 이미 내 닉네임과 동일한 경우 충돌 피하기 위함
-        if(request.getNickname().equals(member.getNickname())) {
-        } else {
+        if(!request.getNickname().equals(member.getNickname())) {
             //2. 다른 동일한 닉네임이 존재할 경우 409리턴하도록
             if(memberRepository.findByNickname(request.getNickname()).orElse(null) != null) {
                 return null;
@@ -102,6 +103,7 @@ public class MemberServiceImpl implements MemberService {
                 member.setNickname(request.getNickname());
             }
         }
+
         member.setBio(request.getBio());
         member.setBaekjoonId(request.getBaekjoonId());
         member.setBlogUrl(request.getBlogUrl());

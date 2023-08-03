@@ -1,7 +1,6 @@
 package com.roadmaker.roadmap.dto;
 
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

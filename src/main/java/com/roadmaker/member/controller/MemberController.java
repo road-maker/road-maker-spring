@@ -1,10 +1,10 @@
 package com.roadmaker.member.controller;
 
-import com.roadmaker.comment.dto.CommentDto;
 import com.roadmaker.comment.dto.CommentResponse;
 import com.roadmaker.comment.service.CommentService;
 import com.roadmaker.commons.annotation.LoginMember;
 import com.roadmaker.commons.annotation.LoginRequired;
+import com.roadmaker.commons.exception.ConflictException;
 import com.roadmaker.commons.exception.NotFoundException;
 import com.roadmaker.image.dto.UploadImageResponse;
 import com.roadmaker.member.dto.*;
@@ -106,7 +106,7 @@ public class MemberController {
             //3. 응답 메세지 처리
             return new ResponseEntity<>(memberResponse, HttpStatus.CREATED); //
         } else {
-            return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+            throw new ConflictException();
         }
     }
 
