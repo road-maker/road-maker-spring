@@ -3,7 +3,6 @@ package com.roadmaker.member.authentication;
 import com.roadmaker.member.dto.TokenInfo;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +16,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.security.Key;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.Collection;
+import java.util.Date;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -25,7 +27,7 @@ import java.util.stream.Collectors;
 public class JwtProvider {
 
     private final Key key;
-    private final long TOKEN_VALID_TIME = 1000L * 60 * 60 * 24 * 7;
+    private static final long TOKEN_VALID_TIME = 1000L * 60 * 60 * 24 * 7;
 
     public JwtProvider(@Value("${jwt.secret}") String secretKey) {
         byte[] keyBytes = Base64.getDecoder().decode(secretKey);
@@ -72,7 +74,7 @@ public class JwtProvider {
         Claims claims = parseClaims(accessToken);
 
         if(claims.get("auth") == null) {
-            throw new RuntimeException("권한 정보가 없는 토큰");
+            throw new SecurityException("권한 정보가 없는 토큰");
         }
 
         //클레임에서 권한 정보 가져오기

@@ -1,17 +1,20 @@
 package com.roadmaker.roadmap.service;
 
+import com.roadmaker.comment.entity.CommentRepository;
 import com.roadmaker.commons.exception.ConflictException;
 import com.roadmaker.commons.exception.NotFoundException;
 import com.roadmaker.image.dto.UploadImageResponse;
 import com.roadmaker.image.service.ImageService;
-import com.roadmaker.member.entity.Member;
-import com.roadmaker.member.entity.MemberRepository;
-import com.roadmaker.roadmap.dto.*;
-import com.roadmaker.comment.entity.CommentRepository;
-import com.roadmaker.roadmap.entity.inprogressnode.InProgressNode;
-import com.roadmaker.roadmap.entity.inprogressnode.InProgressNodeRepository;
 import com.roadmaker.inprogressroadmap.entity.InProgressRoadmap;
 import com.roadmaker.inprogressroadmap.entity.InProgressRoadmapRepository;
+import com.roadmaker.member.entity.Member;
+import com.roadmaker.member.entity.MemberRepository;
+import com.roadmaker.roadmap.dto.CreateRoadmapRequest;
+import com.roadmaker.roadmap.dto.NodeStatusChangeDto;
+import com.roadmaker.roadmap.dto.RoadmapDto;
+import com.roadmaker.roadmap.dto.RoadmapFindResponse;
+import com.roadmaker.roadmap.entity.inprogressnode.InProgressNode;
+import com.roadmaker.roadmap.entity.inprogressnode.InProgressNodeRepository;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import com.roadmaker.roadmap.entity.roadmap.RoadmapRepository;
 import com.roadmaker.roadmap.entity.roadmapedge.RoadmapEdge;
@@ -31,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -96,16 +100,12 @@ public class RoadmapServiceImpl implements RoadmapService{
         Page<Roadmap> roadmaps = roadmapRepository.findAll(pageRequest);
         List<RoadmapDto> roadmapsDtoList = roadmaps.stream().map(roadmap -> RoadmapDto.of(roadmap, roadmap.getMember())).toList();
 
-        String next = null;
-        String previous = null;
-
+        String next = ipAddress + "api/roadmaps?page=" + (pageRequest.getPageNumber()+2);
+        String previous = ipAddress + "api/roadmaps?page=" + (pageRequest.getPageNumber());
         if(pageRequest.getPageNumber() == 0) {
-            next = ipAddress+"api/roadmaps?page=" + (pageRequest.getPageNumber()+2) + "&size="+pageRequest.getPageSize();
+            previous = null;
         } else if (pageRequest.getPageNumber() == roadmaps.getTotalPages() - 1) {
-            previous = ipAddress+"api/roadmaps?page=" + (pageRequest.getPageNumber()) + "&size="+pageRequest.getPageSize();
-        } else {
-            next = ipAddress+"api/roadmaps?page=" + (pageRequest.getPageNumber()+2) + "&size="+pageRequest.getPageSize();
-            previous = ipAddress+"api/roadmaps?page=" + (pageRequest.getPageNumber()) + "&size="+pageRequest.getPageSize();
+            next = null;
         }
 
         return RoadmapFindResponse.builder()
@@ -131,9 +131,8 @@ public class RoadmapServiceImpl implements RoadmapService{
          List<RoadmapDto> roadmapDtos= new ArrayList<>();
          inProgressRoadmaps.forEach( inProgressRoadmap -> {
              Roadmap roadmap = roadmapRepository.findById(inProgressRoadmap.getRoadmap().getId()).orElse(null);
-             RoadmapDto roadmapdto = RoadmapDto.of(roadmap, roadmap.getMember());
-             if (roadmapdto == null) {
-             } else {
+             RoadmapDto roadmapdto = RoadmapDto.of(Objects.requireNonNull(roadmap), roadmap.getMember());
+             if (roadmapdto != null) {
                  roadmapDtos.add(roadmapdto);
              }
          });
