@@ -24,7 +24,7 @@ public class GptController {
 
     private final GptService gptService;
 
-    @PostMapping("/roadmap")
+    @PostMapping("/roadmap") @LoginRequired
     public List<GptRoadmapResponse> getChatMessages(@RequestParam String prompt) {
 
         if(prompt == null || prompt.isEmpty()) {

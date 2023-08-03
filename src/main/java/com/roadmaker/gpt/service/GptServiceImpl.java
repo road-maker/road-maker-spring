@@ -15,8 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
-public class GptServiceImpl {
+public class GptServiceImpl implements GptService {
 
     private final OpenAiService service;
 
@@ -38,7 +37,6 @@ public class GptServiceImpl {
 
         return messages;
     }
-
     public String getGptAnswer(String content1, String content2) {
         ChatCompletionRequest completionRequest = ChatCompletionRequest.builder()
                 .messages(getMessage(content1, content2))
@@ -67,6 +65,9 @@ public class GptServiceImpl {
                 String id = parts[0].trim();
                 String content = parts[1].trim();
 
+                if(!id.matches(".*\\d.*")) {
+                    continue;
+                }
                 // 새 문장을 만들어 formattedGptRoadmapResponses에 추가합니다.
                 GptRoadmapResponse gptRoadmapResponse = new GptRoadmapResponse(id, content);
                 formattedGptRoadmapResponses.add(gptRoadmapResponse);
@@ -85,7 +86,6 @@ public class GptServiceImpl {
                 .build();
 
         return new GptDetailResponse(service.createChatCompletion(completionRequest).getChoices().get(0).getMessage().getContent());
-
     }
 //    public String makeDetailsAuto (List<GptRoadmapResponse> response) {
 //

@@ -52,7 +52,7 @@ public class RoadmapServiceImpl implements RoadmapService{
     private final ImageService imageService;
 
     @Value("${ip-address}")
-    private final String ipAddress;
+    private String ipAddress;
 
     @Override
     public Long createRoadmap(CreateRoadmapRequest createRoadmapRequest, Member member) {
