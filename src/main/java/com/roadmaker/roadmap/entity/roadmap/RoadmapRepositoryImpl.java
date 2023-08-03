@@ -53,12 +53,12 @@ public class RoadmapRepositoryImpl extends QuerydslRepositorySupport implements 
         String previous = null;
 
         if(pageRequest.getPageNumber() == 0) {
-            next = ipAddress + "api/roadmaps/search/"+ keyword + "?page=" + (pageRequest.getPageNumber()+2) + "&size="+pageRequest.getPageSize();
+            next = ipAddress + "api/roadmaps/search/"+ keyword + "?page=" + (pageRequest.getPageNumber()+2);
         } else if (pageRequest.getPageNumber() == roadmapDtoPage.getTotalPages() - 1) {
-            previous = ipAddress + "api/roadmaps/search/"+ keyword + "?page=" + (pageRequest.getPageNumber()) + "&size="+pageRequest.getPageSize();
+            previous = ipAddress + "api/roadmaps/search/"+ keyword + "?page=" + (pageRequest.getPageNumber());
         } else {
-            next = ipAddress + "api/roadmaps/search/"+ keyword + "?page=" + (pageRequest.getPageNumber()+2) + "&size="+pageRequest.getPageSize();
-            previous = ipAddress + "api/roadmaps/search/"+ keyword + "?page=" + (pageRequest.getPageNumber()) + "&size="+pageRequest.getPageSize();
+            next = ipAddress + "api/roadmaps/search/"+ keyword + "?page=" + (pageRequest.getPageNumber()+2);
+            previous = ipAddress + "api/roadmaps/search/"+ keyword + "?page=" + (pageRequest.getPageNumber());
         }
 
         return RoadmapFindResponse.builder()

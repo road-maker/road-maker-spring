@@ -70,8 +70,8 @@ public class RoadmapController {
     }
 
     @GetMapping
-    public ResponseEntity<RoadmapFindResponse> getRoadmaps(@RequestParam(name = "page") Integer page, @RequestParam(name = "size") Integer size) {
-
+    public ResponseEntity<RoadmapFindResponse> getRoadmaps(@RequestParam(name = "page") Integer page) {
+        int size = 8;
         RoadmapFindResponse roadmaps = roadmapService.findByPage(page, size);
 
         return new ResponseEntity<>(roadmaps, HttpStatus.OK);
@@ -133,8 +133,8 @@ public class RoadmapController {
     }
 
     @GetMapping(path="/load-roadmap/{roadmapId}/comments")
-    public ResponseEntity<CommentResponse> loadRoadmapComments(@PathVariable Long roadmapId, Integer page, Integer size) {
-
+    public ResponseEntity<CommentResponse> loadRoadmapComments(@PathVariable Long roadmapId, @RequestParam Integer page) {
+        int size = 8;
         return new ResponseEntity<> (commentService.findCommentByRoadmapIdAndPageRequest(roadmapId, page, size), HttpStatus.OK);
     }
 
@@ -182,7 +182,8 @@ public class RoadmapController {
     }
 
     @GetMapping("/search/{keyword}")
-    public ResponseEntity<RoadmapFindResponse> searchTitleByKeyword(@PathVariable String keyword, @RequestParam(value = "size") Integer size, @RequestParam(value = "page") Integer page) {
+    public ResponseEntity<RoadmapFindResponse> searchTitleByKeyword(@PathVariable String keyword, @RequestParam(value = "page") Integer page) {
+        int size = 8;
         return new ResponseEntity<> (roadmapService.findRoadmapByKeyword(keyword, size, page-1), HttpStatus.OK);
     }
 

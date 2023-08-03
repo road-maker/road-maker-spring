@@ -86,7 +86,8 @@ public class MemberController {
     }
 
     @GetMapping(path="/{memberId}/comments")
-    public ResponseEntity<CommentResponse> findMemberComments(@PathVariable Long memberId, Integer size, Integer page) {
+    public ResponseEntity<CommentResponse> findMemberComments(@PathVariable Long memberId,@RequestParam(name="page") Integer page) {
+        int size = 8;
 
         if(memberId == null) { throw new NotFoundException("해당 멤버를 찾지 못함"); }
 
