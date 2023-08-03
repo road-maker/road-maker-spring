@@ -53,12 +53,12 @@ public class CommentServiceImpl implements CommentService{
         String previous = null;
 
         if(pageRequest.getPageNumber() == 0) {
-            next = ipAddress+"api/roadmaps/load-roadmap/"+roadmapId+"/comments?page=" + (pageRequest.getPageNumber()+2) + "&size="+pageRequest.getPageSize();
+            next = ipAddress+"api/roadmaps/load-roadmap/"+roadmapId+"/comments?page=" + (pageRequest.getPageNumber()+2);
         } else if (pageRequest.getPageNumber() == comments.getTotalPages() - 1) {
-            previous = ipAddress+"api/roadmaps/load-roadmap//api/roadmapsload-roadmap/"+roadmapId+"/comments?page=" + (pageRequest.getPageNumber()) + "&size="+pageRequest.getPageSize();
+            previous = ipAddress+"api/roadmaps/load-roadmap//api/roadmapsload-roadmap/"+roadmapId+"/comments?page=" + (pageRequest.getPageNumber());
         } else {
-            next = ipAddress+"api/roadmaps/load-roadmap/"+roadmapId+"/comments?page=" + (pageRequest.getPageNumber()+2) + "&size="+pageRequest.getPageSize();
-            previous = ipAddress+"api/roadmaps/load-roadmap/"+roadmapId+"/comments?page=" + (pageRequest.getPageNumber()) + "&size="+pageRequest.getPageSize();
+            next = ipAddress+"api/roadmaps/load-roadmap/"+roadmapId+"/comments?page=" + (pageRequest.getPageNumber()+2);
+            previous = ipAddress+"api/roadmaps/load-roadmap/"+roadmapId+"/comments?page=" + (pageRequest.getPageNumber());
         }
 
         return CommentResponse.builder()
@@ -84,12 +84,12 @@ public class CommentServiceImpl implements CommentService{
         String previous = null;
 
         if(pageRequest.getPageNumber() == 0) {
-            next = ipAddress+"api/members/"+memberId+"/comments?page=" + (pageRequest.getPageNumber()+2) + "&size="+pageRequest.getPageSize();
+            next = ipAddress+"api/members/"+memberId+"/comments?page=" + (pageRequest.getPageNumber()+2);
         } else if (pageRequest.getPageNumber() == comments.getTotalPages() - 1) {
-            previous = ipAddress+"api/members/"+memberId+"/comments?page=" + (pageRequest.getPageNumber()) + "&size="+pageRequest.getPageSize();
+            previous = ipAddress+"api/members/"+memberId+"/comments?page=" + (pageRequest.getPageNumber());
         } else {
-            next = ipAddress+"api/members/"+memberId+"/comments?page=" + (pageRequest.getPageNumber()+2) + "&size="+pageRequest.getPageSize();
-            previous = ipAddress+"api/members/"+memberId+"/comments?page=" + (pageRequest.getPageNumber()) + "&size="+pageRequest.getPageSize();
+            next = ipAddress+"api/members/"+memberId+"/comments?page=" + (pageRequest.getPageNumber()+2);
+            previous = ipAddress+"api/members/"+memberId+"/comments?page=" + (pageRequest.getPageNumber());
         }
 
         return CommentResponse.builder()
