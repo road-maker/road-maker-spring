@@ -87,8 +87,8 @@ public class RoadmapRepositoryImpl extends QuerydslRepositorySupport implements 
         Page<RoadmapDto> roadmapDtoPage = new PageImpl<RoadmapDto>(roadmapDtos, pageRequest, query.fetchCount());
 
         //주소 설정
-        String next = ipAddress + "api/roadmaps/" + "?page=" + (pageRequest.getPageNumber()+2);
-        String previous = ipAddress + "api/roadmaps/" + "?page=" + (pageRequest.getPageNumber());
+        String next = ipAddress + "api/roadmaps/" + "?page=" + (pageRequest.getPageNumber()+2)+"&order-type=most-liked";
+        String previous = ipAddress + "api/roadmaps/" + "?page=" + (pageRequest.getPageNumber())+"&order-type=most-liked";
         if(pageRequest.getPageNumber() == 0) {
             previous = null;
         } else if (pageRequest.getPageNumber() == roadmapDtoPage.getTotalPages() - 1) {
