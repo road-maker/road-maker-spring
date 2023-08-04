@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.lang.module.FindException;
 import java.util.List;
 
 @RestController @Slf4j @RequiredArgsConstructor
@@ -22,11 +21,7 @@ public class GptController {
     private final GptService gptService;
 
     @PostMapping("/roadmap")
-    public List<GptRoadmapResponse> getChatMessages(@RequestParam String prompt) {
-
-        if(prompt == null || prompt.isEmpty()) {
-            throw new FindException("Content does not exist");
-        }
+    public List<GptRoadmapResponse> getChatMessages(@RequestParam @NotBlank String prompt) {
 
         // 명령
         String content1 = "너는 한국어를 유창하게 구사하는, 모든 개발 지식을 지닌 개발자이다. 무슨 일이 있어도 message.content를 \"1.title\n1a.item1\n1b.item2\n1c.item3\n1d.item4\n2.title\n2a.item1\n2b.item2\n2c.item3\n2d.item4\n3.title\n3a.item1\n3b.item2\n3c.item3\n3d.item4\n4.title \n4a.item1\n4b.item2\n4c.item3\n4d.item4\n\" 이 형식에 맞춰서 대답해 줘.";
