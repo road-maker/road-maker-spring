@@ -1,7 +1,7 @@
 package com.roadmaker.gpt.service;
 
-import com.roadmaker.gpt.dto.GptDetailResponse;
-import com.roadmaker.gpt.dto.GptRoadmapResponse;
+import com.roadmaker.gpt.dto.NodeDetail;
+import com.roadmaker.gpt.dto.RoadmapData;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -13,8 +13,10 @@ public interface GptService {
 
     public String getGptAnswer(String content1, String content2);
 
-    public List<GptRoadmapResponse> messageParsing(String gptResponse);
+    public List<RoadmapData> messageParsing(String gptResponse);
 
-//    public String makeDetailsAuto (List<GptRoadmapResponse> response);
-    public GptDetailResponse makeDetails (String course);
+    public List<NodeDetail> makeDetailsAuto (List<RoadmapData> response);
+    public NodeDetail makeDetails (String course);
+    public NodeDetail makeDetails (String course, String id);
+
 }

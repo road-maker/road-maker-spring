@@ -35,15 +35,20 @@ public class MemberController {
     private final CommentService commentService;
 
     @PostMapping("/signup")
-    public ResponseEntity<HttpStatus> signup(@Valid @RequestBody SignupRequest signupRequest) {
+    public ResponseEntity<String> signup(@Valid @RequestBody SignupRequest signupRequest) {
         // 이메일 중복 검사
-        if (memberService.isDuplicatedEmail(signupRequest.getEmail())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        if (memberService.isDuplicatedEmail(signupRequest.getEmail()) && memberService.isDuplicatedNickname(signupRequest.getNickname())) {
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+                    .body("이메일과 닉네임 중복");
         }
-
+        else if (memberService.isDuplicatedEmail(signupRequest.getEmail())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("이메일 중복");
+        }
         // 닉네임 중복 검사
-        if(memberService.isDuplicatedNickname(signupRequest.getNickname())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        else if(memberService.isDuplicatedNickname(signupRequest.getNickname())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("닉네임 중복");
         }
 
         // 비밀번호 암호화 후 저장
