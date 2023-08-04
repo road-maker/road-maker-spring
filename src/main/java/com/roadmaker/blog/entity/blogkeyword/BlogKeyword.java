@@ -14,7 +14,7 @@ public class BlogKeyword {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "ROADMAP_NODE")
     private RoadmapNode roadmapnode;
 
@@ -23,7 +23,7 @@ public class BlogKeyword {
 
     @Builder
     public BlogKeyword(RoadmapNode roadmapNode, String keyword){
-        this.roadmapnode =roadmapNode;
+        this.roadmapnode = roadmapNode;
         this.keyword = keyword;
     }
 }

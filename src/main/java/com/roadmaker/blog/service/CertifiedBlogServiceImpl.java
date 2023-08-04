@@ -2,6 +2,7 @@ package com.roadmaker.blog.service;
 
 import com.roadmaker.blog.dto.CertifiedBlogRequest;
 import com.roadmaker.blog.dto.CertifiedBlogResponse;
+import com.roadmaker.blog.entity.blogkeyword.BlogKeyword;
 import com.roadmaker.blog.entity.blogkeyword.BlogKeywordRepository;
 import com.roadmaker.blog.entity.certifiedblog.CertifiedBlog;
 import com.roadmaker.blog.entity.certifiedblog.CertifiedBlogRepository;
@@ -29,20 +30,11 @@ public class CertifiedBlogServiceImpl implements CertifiedBlogService {
     private final CertifiedBlogRepository certifiedBlogRepository;
     private final BlogKeywordRepository blogKeywordRepository;
 
+    @Override
     @Transactional
-    public void setKeyword(String keyword) {
-        RoadmapNode roadmapNode = roadmapNodeRepository.findByRoadmapId(roadmapNodeId).orElse(null);
-        if (roadmapNode != null) {
-            BlogKeyword blogKeyword = BlogKeyword.builder()
-                    .roadmapnode(roadmapNode)
-                    .keyword(keyword)
-                    .build();
-            blogKeywordRepository.save(blogKeyword);
-        } else {
-            // roadmapNodeId에 해당하는 RoadmapNode를 찾지 못한 경우 예외 처리
-            // 예를 들어, InvalidRoadmapNodeException 등을 던져서 해당 상황을 처리할 수 있습니다.
-            throw new RuntimeException("Invalid Roadmap Node ID: " + roadmapNodeId);
-        }
+    public void setKeyword(String keyword, RoadmapNode roadmapNodeId) {
+        BlogKeyword blogKeyword = new BlogKeyword(roadmapNodeId, keyword);
+        blogKeywordRepository.save(blogKeyword);
     }
 
     @Transactional

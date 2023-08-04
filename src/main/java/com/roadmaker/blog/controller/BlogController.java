@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class BlogController {
     private final CertifiedBlogService certifiedBlogService;
 
+    // 키워드 설정
     @LoginRequired
     @PostMapping("/setKeyword")
     public void setKeyword(@RequestParam String keyword, @LoginMember Member member) {
