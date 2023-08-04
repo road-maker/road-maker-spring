@@ -1,5 +1,6 @@
 package com.roadmaker.gpt.service;
 
+import com.roadmaker.commons.event.CloseHandler;
 import com.roadmaker.gpt.dto.NodeDetail;
 import com.roadmaker.gpt.dto.RoadmapData;
 import com.theokanning.openai.completion.chat.ChatCompletionRequest;
@@ -28,6 +29,8 @@ public class GptServiceImpl implements GptService {
 
     private final OpenAiService service;
 
+    private final String gptModel = "gpt-3.5-turbo";
+
     private static final Duration DURATION = Duration.ofSeconds(120);
 
     public GptServiceImpl(@Value("${gpt.api-key}") String apiKey) { //
@@ -50,7 +53,7 @@ public class GptServiceImpl implements GptService {
     public String getGptAnswer(String content1, String content2) {
         ChatCompletionRequest completionRequest = ChatCompletionRequest.builder()
                 .messages(getMessage(content1, content2))
-                .model("gpt-3.5-turbo")
+                .model(gptModel)
                 .build();
 
         // 받은 데이터
@@ -92,7 +95,7 @@ public class GptServiceImpl implements GptService {
 
         ChatCompletionRequest completionRequest = ChatCompletionRequest.builder()
                 .messages(getMessage(content1, content2))
-                .model("gpt-3.5-turbo")
+                .model(gptModel)
                 .build();
 
         return new NodeDetail(service.createChatCompletion(completionRequest).getChoices().get(0).getMessage().getContent());
@@ -105,7 +108,7 @@ public class GptServiceImpl implements GptService {
 
         ChatCompletionRequest completionRequest = ChatCompletionRequest.builder()
                 .messages(getMessage(content1, content2))
-                .model("gpt-3.5-turbo")
+                .model(gptModel)
                 .build();
 
         return new NodeDetail(service.createChatCompletion(completionRequest).getChoices().get(0).getMessage().getContent(), id);
@@ -118,8 +121,8 @@ public class GptServiceImpl implements GptService {
 
         // Callable: 비동기 작업의 결과물인 Future 클래스 형태로 반환함
         class Task implements Callable<NodeDetail> { // 보다 복잡한 task를 정의
-            private String course;
-            private String id;
+            private final String course;
+            private final String id;
             public Task(String course, String id) {
                 this.course = course;
                 this.id = id;
@@ -152,8 +155,11 @@ public class GptServiceImpl implements GptService {
             try{
                 NodeDetail gptResponse = future.get();
                 detailResponses.add(gptResponse);
-            } catch (InterruptedException | ExecutionException e) {
-                throw new RuntimeException();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new RuntimeException("스레드 중 예외 발생", e.getCause());
+            } catch (ExecutionException e) {
+                throw new RuntimeException("스레드 중 예외 발생", e.getCause());
             }
         }
         return detailResponses;
