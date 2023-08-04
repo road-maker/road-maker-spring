@@ -4,18 +4,15 @@ import com.roadmaker.commons.annotation.LoginRequired;
 import com.roadmaker.gpt.service.GptService;
 import com.roadmaker.gpt.dto.GptDetailResponse;
 import com.roadmaker.gpt.dto.GptRoadmapResponse;
-import com.theokanning.openai.completion.chat.ChatCompletionRequest;
-import com.theokanning.openai.service.OpenAiService;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.module.FindException;
-import java.time.Duration;
 import java.util.List;
 
 @RestController @Slf4j @RequiredArgsConstructor
@@ -47,22 +44,7 @@ public class GptController {
 
     @LoginRequired
     @PostMapping("/detail")
-    public GptDetailResponse detailContent(@RequestParam String course){
-        OpenAiService service = new OpenAiService(OPENAI_TOKEN, DURATION);
-        List<ChatMessage> messages = new ArrayList<>();
-
-        String content1 = "너는 한국어를 매우 잘하는, 모든 개발 지식을 가지고 있는 개발자이다. 입력 값의 개념을 반드시 한 단락으로 설명해줘. 단 네가 설명할 개념을 innerHTML을 이용해 보여줄 예정이니, <h1>, <p>, <b>, <ul>, <li> 태그를 적절히 활용해서 포맷팅해줘. 그리고 개행문자는 넣지 말아줘";
-        String content2 = String.format(course);
-
-        ChatMessage message1 = new ChatMessage("system", content1 );
-        ChatMessage message2 = new ChatMessage("user", content2 );
-
-        messages.add(message1);
-        messages.add(message2);
-
-        ChatCompletionRequest completionRequest = ChatCompletionRequest.builder().messages(messages)
-                .model("gpt-3.5-turbo").build();
-
-        return new GptDetailResponse(service.createChatCompletion(completionRequest).getChoices().get(0).getMessage().getContent());
+    public GptDetailResponse detailContent(@RequestParam @NotBlank String course){
+        return gptService.makeDetails(course);
     }
 }
