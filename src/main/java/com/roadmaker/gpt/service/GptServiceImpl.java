@@ -90,7 +90,7 @@ public class GptServiceImpl implements GptService {
     }
 
     public NodeDetail makeDetails(String course) {
-        String content1 = "너는 한국어를 매우 잘하는, 모든 개발 지식을 가지고 있는 개발자이다. 입력 값의 개념을 반드시 한 단락으로 설명해줘. 단 네가 설명할 개념을 innerHTML을 이용해 보여줄 예정이니, <h1>, <p>, <b>, <ul>, <li> 태그를 적절히 활용해서 포맷팅해줘. 그리고 개행문자(\n)는 넣지 말아줘.";
+        String content1 = "너는 모든 개발 지식을 가지고 있는 개발자이다. 입력 값의 개념을 반드시 한 단락으로, 한국어로 설명해줘. 단 네가 설명할 개념을 innerHTML을 이용해 보여줄 예정이니, <h1>, <p>, <b>, <ul>, <li> 태그를 적절히 활용해서 포맷팅해줘. 그리고 개행문자(\n)는 넣지 말아줘.";
         String content2 = String.format(course);
 
         ChatCompletionRequest completionRequest = ChatCompletionRequest.builder()
@@ -103,7 +103,7 @@ public class GptServiceImpl implements GptService {
 
     // 세부 답변을 구분하기 위하여 id를 포함
     public NodeDetail makeDetails(String course, String id) {
-        String content1 = "너는 한국어를 매우 잘하는, 모든 개발 지식을 가지고 있는 개발자이다. 입력 값의 개념을 반드시 한 단락으로 설명해줘. 단 네가 설명할 개념을 innerHTML을 이용해 보여줄 예정이니, <h1>, <p>, <b>, <ul>, <li> 태그를 적절히 활용해서 포맷팅해줘. 그리고 개행문자(\n)는 넣지 말아줘.";
+        String content1 = "모든 개발 지식을 가지고 있는 개발자이다. 입력 값의 개념을 반드시 한 단락으로, 한국어로 설명해줘. 단 네가 설명할 개념을 innerHTML을 이용해 보여줄 예정이니, <h1>, <p>, <b>, <ul>, <li> 태그를 적절히 활용해서 포맷팅해줘. 그리고 개행문자(\n)는 넣지 말아줘.";
         String content2 = String.format(course);
 
         ChatCompletionRequest completionRequest = ChatCompletionRequest.builder()
