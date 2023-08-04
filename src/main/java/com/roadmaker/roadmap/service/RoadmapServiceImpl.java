@@ -111,8 +111,8 @@ public class RoadmapServiceImpl implements RoadmapService{
 
             List<RoadmapDto> roadmapsDtoList = roadmaps.stream().map(roadmap -> RoadmapDto.of(roadmap, roadmap.getMember())).toList();
 
-            String next = ipAddress + "api/roadmaps?page=" + (pageRequest.getPageNumber() + 2);
-            String previous = ipAddress + "api/roadmaps?page=" + (pageRequest.getPageNumber());
+            String next = ipAddress + "api/roadmaps?page=" + (pageRequest.getPageNumber() + 2)+"&order-type="+flag;
+            String previous = ipAddress + "api/roadmaps?page=" + (pageRequest.getPageNumber())+"&order-type="+flag;
             if (pageRequest.getPageNumber() == 0) {
                 previous = null;
             } else if (pageRequest.getPageNumber() == roadmaps.getTotalPages() - 1) {
