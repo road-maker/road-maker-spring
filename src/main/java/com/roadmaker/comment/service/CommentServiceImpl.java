@@ -7,19 +7,13 @@ import com.roadmaker.comment.entity.CommentRepository;
 import com.roadmaker.commons.exception.NotFoundException;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.entity.MemberRepository;
-import com.roadmaker.roadmap.dto.RoadmapResponse;
 import com.roadmaker.roadmap.entity.roadmap.RoadmapRepository;
-import com.roadmaker.roadmap.service.RoadmapService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
@@ -53,8 +47,8 @@ public class CommentServiceImpl implements CommentService{
                 commentDto -> commentDto.setNumbering(((long) (pageMod) *size + counter.getAndIncrement())));
 
         // 페이지 주소 설정
-        String next = ipAddress+ "api/roadmaps/loa-roadmap/" +roadmapId + commentPage + (pageRequest.getPageNumber()+2);
-        String previous = ipAddress+ "api/roadmaps/loa-roadmap/" +roadmapId + commentPage + (pageRequest.getPageNumber());
+        String next = ipAddress+ "api/roadmaps/load-roadmap/" +roadmapId + commentPage + (pageRequest.getPageNumber()+2);
+        String previous = ipAddress+ "api/roadmaps/load-roadmap/" +roadmapId + commentPage + (pageRequest.getPageNumber());
         if(pageRequest.getPageNumber() == 0) {
             previous = null;
         } else if (pageRequest.getPageNumber() == comments.getTotalPages() - 1) {

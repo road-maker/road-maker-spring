@@ -2,7 +2,6 @@ package com.roadmaker.gpt.service;
 
 import com.roadmaker.gpt.dto.GptDetailResponse;
 import com.roadmaker.gpt.dto.GptRoadmapResponse;
-import com.theokanning.openai.completion.chat.ChatMessage;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 

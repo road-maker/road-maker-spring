@@ -36,6 +36,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RequestMapping("/api/roadmaps")
 public class RoadmapController {
+
     private final MemberService memberService;
     private final RoadmapService roadmapService;
     private final InProgressNodeRepository inProgressNodeRepository;
@@ -71,9 +72,10 @@ public class RoadmapController {
     }
 
     @GetMapping
-    public ResponseEntity<RoadmapFindResponse> getRoadmaps(@RequestParam(name = "page") Integer page) {
-        int size = 8;
-        RoadmapFindResponse roadmaps = roadmapService.findByPage(page, size);
+    public ResponseEntity<RoadmapFindResponse> getRoadmaps(@RequestParam(name = "page") Integer page,@RequestParam(name="order-type") String orderType) {
+        int size = 8; //default로 페이지에서 불러올 요소의 갯수
+
+        RoadmapFindResponse roadmaps = roadmapService.findByPage(page, size, orderType); // 뭘로 구분할 것인지 정리 필요
 
         return new ResponseEntity<>(roadmaps, HttpStatus.OK);
     }

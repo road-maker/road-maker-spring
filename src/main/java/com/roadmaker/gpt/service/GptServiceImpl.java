@@ -5,9 +5,7 @@ import com.roadmaker.gpt.dto.GptRoadmapResponse;
 import com.theokanning.openai.completion.chat.ChatCompletionRequest;
 import com.theokanning.openai.completion.chat.ChatMessage;
 import com.theokanning.openai.service.OpenAiService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -65,7 +63,7 @@ public class GptServiceImpl implements GptService {
                 String id = parts[0].trim();
                 String content = parts[1].trim();
 
-                if(!id.matches(".*\\d.*")) {
+                if(id.length() > 3 || !id.matches(".*\\d.*")) {
                     continue;
                 }
                 // 새 문장을 만들어 formattedGptRoadmapResponses에 추가합니다.
