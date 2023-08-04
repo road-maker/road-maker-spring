@@ -32,7 +32,7 @@ public class GptController {
         // 응답 내용 파싱
         List<RoadmapData> response = gptService.messageParsing(gptCompletion);
         // 멀티 스레드로 노드 설명 추가 요청
-        List<NodeDetail> detailResponse = gptService.makeDetailsAuto(response);
+        //List<NodeDetail> detailResponse = gptService.makeDetailsAuto(response);
 //
         return response;
     }
