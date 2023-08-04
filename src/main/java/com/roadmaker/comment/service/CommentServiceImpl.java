@@ -53,8 +53,8 @@ public class CommentServiceImpl implements CommentService{
                 commentDto -> commentDto.setNumbering(((long) (pageMod) *size + counter.getAndIncrement())));
 
         // 페이지 주소 설정
-        String next = ipAddress+ "api/roadmaps/loa-roadmap/" +roadmapId + commentPage + (pageRequest.getPageNumber()+2);
-        String previous = ipAddress+ "api/roadmaps/loa-roadmap/" +roadmapId + commentPage + (pageRequest.getPageNumber());
+        String next = ipAddress+ "api/roadmaps/load-roadmap/" +roadmapId + commentPage + (pageRequest.getPageNumber()+2);
+        String previous = ipAddress+ "api/roadmaps/load-roadmap/" +roadmapId + commentPage + (pageRequest.getPageNumber());
         if(pageRequest.getPageNumber() == 0) {
             previous = null;
         } else if (pageRequest.getPageNumber() == comments.getTotalPages() - 1) {
