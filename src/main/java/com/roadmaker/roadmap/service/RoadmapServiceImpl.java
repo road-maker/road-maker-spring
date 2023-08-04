@@ -27,10 +27,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.naming.directory.NoSuchAttributeException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +53,10 @@ public class RoadmapServiceImpl implements RoadmapService{
     private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;
     private final ImageService imageService;
+
+    private enum OrderType {
+        RECENT, MOSTLIKED
+    }
 
     @Value("${ip-address}")
     private String ipAddress;
@@ -94,26 +101,35 @@ public class RoadmapServiceImpl implements RoadmapService{
     }
 
     @Override
-    public RoadmapFindResponse findByPage(Integer page, Integer size) {
+    public RoadmapFindResponse findByPage(Integer page, Integer size, String flag) {
 
-        PageRequest pageRequest = PageRequest.of(page-1, size);
-        Page<Roadmap> roadmaps = roadmapRepository.findAll(pageRequest);
-        List<RoadmapDto> roadmapsDtoList = roadmaps.stream().map(roadmap -> RoadmapDto.of(roadmap, roadmap.getMember())).toList();
+        Page<Roadmap> roadmaps = null;
+        PageRequest pageRequest = null;
+        if (Objects.equals(flag, "recent")) { //default: 최신순
+            pageRequest = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+            roadmaps = roadmapRepository.findAll(pageRequest);
 
-        String next = ipAddress + "api/roadmaps?page=" + (pageRequest.getPageNumber()+2);
-        String previous = ipAddress + "api/roadmaps?page=" + (pageRequest.getPageNumber());
-        if(pageRequest.getPageNumber() == 0) {
-            previous = null;
-        } else if (pageRequest.getPageNumber() == roadmaps.getTotalPages() - 1) {
-            next = null;
-        }
+            List<RoadmapDto> roadmapsDtoList = roadmaps.stream().map(roadmap -> RoadmapDto.of(roadmap, roadmap.getMember())).toList();
 
-        return RoadmapFindResponse.builder()
-                .totalPage((long)roadmaps.getTotalPages())
-                .next(next)
-                .previous(previous)
-                .result(roadmapsDtoList)
-                .build();
+            String next = ipAddress + "api/roadmaps?page=" + (pageRequest.getPageNumber() + 2);
+            String previous = ipAddress + "api/roadmaps?page=" + (pageRequest.getPageNumber());
+            if (pageRequest.getPageNumber() == 0) {
+                previous = null;
+            } else if (pageRequest.getPageNumber() == roadmaps.getTotalPages() - 1) {
+                next = null;
+            }
+
+            return RoadmapFindResponse.builder()
+                    .totalPage((long) roadmaps.getTotalPages())
+                    .next(next)
+                    .previous(previous)
+                    .result(roadmapsDtoList)
+                    .build();
+
+        } else if (Objects.equals(flag, "most-liked")) { // 좋아요 순, querydsl을 써보자
+            pageRequest = PageRequest.of(page - 1, size);
+            return roadmapRepository.orderByLikes(pageRequest);
+        } else {throw new NotFoundException("orderType이 정의되지 않음");} //다른 검색 옵션(추가 가능)
     }
 
     @Override
@@ -195,9 +211,10 @@ public class RoadmapServiceImpl implements RoadmapService{
         return true;
     }
 
+    //얘도 수정 염두
     public RoadmapFindResponse findRoadmapByKeyword(String keyword, Integer size, Integer page) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        return roadmapRepository.findyBySearchOption(pageRequest, keyword);
+        return roadmapRepository.findBySearchOption(pageRequest, keyword);
     }
 
 }

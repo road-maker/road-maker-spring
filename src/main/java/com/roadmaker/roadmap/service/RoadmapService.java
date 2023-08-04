@@ -17,6 +17,7 @@ import java.util.List;
 @Service
 @Transactional
 public interface RoadmapService {
+
     // 로드맵 생성
     public Long createRoadmap(CreateRoadmapRequest createRoadmapRequest, Member member);
 
@@ -25,7 +26,7 @@ public interface RoadmapService {
     // 로드맵 불러오기
     public Roadmap findRoadmapById(Long roadmapId);
 
-    public RoadmapFindResponse findByPage(Integer page, Integer size);
+    public RoadmapFindResponse findByPage(Integer page, Integer size, String flag);
 
     public List<RoadmapDto> findRoadmapJoinedByMemberId(Long memberId);
     public List<RoadmapDto> findRoadmapCreatedByMemberId(Long memberId);

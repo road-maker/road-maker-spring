@@ -7,19 +7,13 @@ import com.roadmaker.comment.entity.CommentRepository;
 import com.roadmaker.commons.exception.NotFoundException;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.entity.MemberRepository;
-import com.roadmaker.roadmap.dto.RoadmapResponse;
 import com.roadmaker.roadmap.entity.roadmap.RoadmapRepository;
-import com.roadmaker.roadmap.service.RoadmapService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service

@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.roadmaker.roadmap.entity.roadmap.QRoadmap.roadmap;
+import static com.roadmaker.like.entity.QLike.like;
 
 @Slf4j @Repository
 public class RoadmapRepositoryImpl extends QuerydslRepositorySupport implements RoadmapRepositoryCustom{
@@ -34,7 +35,7 @@ public class RoadmapRepositoryImpl extends QuerydslRepositorySupport implements 
     }
 
     @Override
-    public RoadmapFindResponse findyBySearchOption(PageRequest pageRequest, String keyword) {
+    public RoadmapFindResponse findBySearchOption(PageRequest pageRequest, String keyword) {
 
         JPQLQuery<Roadmap> query = queryFactory.selectFrom(roadmap)
                 .where(eqKeyword(keyword));
@@ -52,6 +53,42 @@ public class RoadmapRepositoryImpl extends QuerydslRepositorySupport implements 
         //주소 설정
         String next = ipAddress + "api/roadmaps/search/" + keyword + "?page=" + (pageRequest.getPageNumber()+2);
         String previous = ipAddress + "api/roadmaps/search/" + keyword + "?page=" + (pageRequest.getPageNumber());
+        if(pageRequest.getPageNumber() == 0) {
+            previous = null;
+        } else if (pageRequest.getPageNumber() == roadmapDtoPage.getTotalPages() - 1) {
+            next = null;
+        }
+
+        return RoadmapFindResponse.builder()
+                .result(roadmapDtoPage.getContent())
+                .totalPage((long) roadmapDtoPage.getTotalPages())
+                .next(next)
+                .previous(previous)
+                .build();
+    }
+
+    @Override
+    public RoadmapFindResponse orderByLikes(PageRequest pageRequest) {
+
+        JPQLQuery<Roadmap> query = queryFactory.selectFrom(roadmap)
+                .from(roadmap)
+                .leftJoin(roadmap.likes, like)
+                .groupBy(roadmap)
+                .orderBy(like.count().desc());
+
+        List<Roadmap> roadmaps = Objects.requireNonNull(this.getQuerydsl()).applyPagination(pageRequest, query).fetch(); //
+
+        List<RoadmapDto> roadmapDtos = new ArrayList<>();
+        roadmaps.forEach(roadmap1 ->
+        {RoadmapDto roadmapDto = RoadmapDto.of(roadmap1, roadmap1.getMember());
+            roadmapDtos.add(roadmapDto);
+        });
+
+        Page<RoadmapDto> roadmapDtoPage = new PageImpl<RoadmapDto>(roadmapDtos, pageRequest, query.fetchCount());
+
+        //주소 설정
+        String next = ipAddress + "api/roadmaps/" + "?page=" + (pageRequest.getPageNumber()+2);
+        String previous = ipAddress + "api/roadmaps/" + "?page=" + (pageRequest.getPageNumber());
         if(pageRequest.getPageNumber() == 0) {
             previous = null;
         } else if (pageRequest.getPageNumber() == roadmapDtoPage.getTotalPages() - 1) {
