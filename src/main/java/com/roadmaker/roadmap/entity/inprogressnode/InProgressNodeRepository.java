@@ -1,5 +1,6 @@
 package com.roadmaker.roadmap.entity.inprogressnode;
 
+import com.roadmaker.blog.entity.certifiedblog.CertifiedBlog;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import org.springframework.data.jpa.repository.JpaRepository;
 

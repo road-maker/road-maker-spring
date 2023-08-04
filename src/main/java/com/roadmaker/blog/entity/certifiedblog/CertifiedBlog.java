@@ -25,19 +25,12 @@ public class CertifiedBlog extends BaseTimeEntity {
     private InProgressNode inProgressNode;
 
     @Column(columnDefinition = "TEXT")
-    private String blogUrl;
-
-    @Column(columnDefinition = "TEXT")
     private String submitUrl;
 
-    private String keyword;
-
     @Builder
-    public CertifiedBlog(InProgressNode inProgressNode, Member member, String submitUrl, String blogUrl, String keyword) {
+    public CertifiedBlog(Member member, InProgressNode inProgressNode, String submitUrl) {
         this.member = member;
         this.inProgressNode = inProgressNode;
         this.submitUrl = submitUrl;
-        this.blogUrl = blogUrl;
-        this.keyword = keyword;
     }
 }
