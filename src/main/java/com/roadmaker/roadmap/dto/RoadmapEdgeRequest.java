@@ -1,7 +1,6 @@
 package com.roadmaker.roadmap.dto;
 
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
-import jakarta.persistence.*;
 
 public class RoadmapEdgeRequest {
 

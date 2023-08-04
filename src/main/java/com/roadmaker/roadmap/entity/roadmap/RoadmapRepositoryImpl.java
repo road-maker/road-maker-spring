@@ -3,11 +3,11 @@ package com.roadmaker.roadmap.entity.roadmap;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.roadmaker.commons.exception.NotFoundException;
 import com.roadmaker.roadmap.dto.RoadmapDto;
-import com.roadmaker.roadmap.dto.RoadmapSearchResponse;
+import com.roadmaker.roadmap.dto.RoadmapFindResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +22,10 @@ import static com.roadmaker.roadmap.entity.roadmap.QRoadmap.roadmap;
 
 @Slf4j @Repository
 public class RoadmapRepositoryImpl extends QuerydslRepositorySupport implements RoadmapRepositoryCustom{
+
+    @Value("${ip-address}")
+    private String ipAddress;
+
     @Autowired
     private JPAQueryFactory queryFactory;
 
@@ -30,7 +34,7 @@ public class RoadmapRepositoryImpl extends QuerydslRepositorySupport implements 
     }
 
     @Override
-    public RoadmapSearchResponse findyBySearchOption(PageRequest pageRequest, String keyword) {
+    public RoadmapFindResponse findyBySearchOption(PageRequest pageRequest, String keyword) {
 
         JPQLQuery<Roadmap> query = queryFactory.selectFrom(roadmap)
                 .where(eqKeyword(keyword));
@@ -45,19 +49,16 @@ public class RoadmapRepositoryImpl extends QuerydslRepositorySupport implements 
 
         Page<RoadmapDto> roadmapDtoPage = new PageImpl<RoadmapDto>(roadmapDtos, pageRequest, query.fetchCount());
 
-        String next = null;
-        String previous = null;
-
+        //주소 설정
+        String next = ipAddress + "api/roadmaps/search/" + keyword + "?page=" + (pageRequest.getPageNumber()+2);
+        String previous = ipAddress + "api/roadmaps/search/" + keyword + "?page=" + (pageRequest.getPageNumber());
         if(pageRequest.getPageNumber() == 0) {
-            next = "http://52.79.185.147/api/roadmaps/search/"+ keyword + "?page=" + (pageRequest.getPageNumber()+2) + "&size="+pageRequest.getPageSize();
+            previous = null;
         } else if (pageRequest.getPageNumber() == roadmapDtoPage.getTotalPages() - 1) {
-            previous = "http://52.79.185.147/api/roadmaps/search/"+ keyword + "?page=" + (pageRequest.getPageNumber()) + "&size="+pageRequest.getPageSize();
-        } else {
-            next = "http://52.79.185.147/api/roadmaps/search/"+ keyword + "?page=" + (pageRequest.getPageNumber()+2) + "&size="+pageRequest.getPageSize();
-            previous = "http://52.79.185.147/api/roadmaps/search/"+ keyword + "?page=" + (pageRequest.getPageNumber()) + "&size="+pageRequest.getPageSize();
+            next = null;
         }
 
-        return RoadmapSearchResponse.builder()
+        return RoadmapFindResponse.builder()
                 .result(roadmapDtoPage.getContent())
                 .totalPage((long) roadmapDtoPage.getTotalPages())
                 .next(next)

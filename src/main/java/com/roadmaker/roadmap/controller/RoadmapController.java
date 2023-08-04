@@ -1,6 +1,6 @@
 package com.roadmaker.roadmap.controller;
 
-import com.roadmaker.comment.dto.CommentDto;
+import com.roadmaker.comment.dto.CommentResponse;
 import com.roadmaker.comment.service.CommentService;
 import com.roadmaker.commons.annotation.LoginMember;
 import com.roadmaker.commons.annotation.LoginRequired;
@@ -8,10 +8,15 @@ import com.roadmaker.image.dto.UploadImageResponse;
 import com.roadmaker.inprogressroadmap.entity.InProgressRoadmap;
 import com.roadmaker.inprogressroadmap.entity.InProgressRoadmapRepository;
 import com.roadmaker.like.service.LikeService;
-import com.roadmaker.roadmap.dto.*;
-import com.roadmaker.roadmap.entity.inprogressnode.InProgressNodeRepository;
+import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.service.MemberService;
+import com.roadmaker.roadmap.dto.CreateRoadmapRequest;
+import com.roadmaker.roadmap.dto.NodeStatusChangeDto;
+import com.roadmaker.roadmap.dto.RoadmapFindResponse;
+import com.roadmaker.roadmap.dto.RoadmapResponse;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNode;
+import com.roadmaker.roadmap.entity.inprogressnode.InProgressNodeRepository;
+import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import com.roadmaker.roadmap.service.RoadmapService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,16 +24,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import com.roadmaker.roadmap.entity.roadmap.Roadmap;
-import com.roadmaker.member.entity.Member;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @RestController @Slf4j @Validated
 @RequiredArgsConstructor
@@ -69,9 +71,11 @@ public class RoadmapController {
     }
 
     @GetMapping
-    public ResponseEntity<List<RoadmapDto>> getRoadmaps(@RequestParam(name = "page") Integer page, @RequestParam(name = "size") Integer size) {
-        List<RoadmapDto> roadmapDtos = roadmapService.findByPage(page, size);
-        return new ResponseEntity<>(roadmapDtos, HttpStatus.OK);
+    public ResponseEntity<RoadmapFindResponse> getRoadmaps(@RequestParam(name = "page") Integer page) {
+        int size = 8;
+        RoadmapFindResponse roadmaps = roadmapService.findByPage(page, size);
+
+        return new ResponseEntity<>(roadmaps, HttpStatus.OK);
     }
 
     @GetMapping("/{roadmapId}")
@@ -130,7 +134,8 @@ public class RoadmapController {
     }
 
     @GetMapping(path="/load-roadmap/{roadmapId}/comments")
-    public ResponseEntity<List<CommentDto>> loadRoadmapComments(@PathVariable Long roadmapId, Integer page, Integer size) {
+    public ResponseEntity<CommentResponse> loadRoadmapComments(@PathVariable Long roadmapId, @RequestParam Integer page) {
+        int size = 8;
         return new ResponseEntity<> (commentService.findCommentByRoadmapIdAndPageRequest(roadmapId, page, size), HttpStatus.OK);
     }
 
@@ -178,7 +183,8 @@ public class RoadmapController {
     }
 
     @GetMapping("/search/{keyword}")
-    public ResponseEntity<RoadmapSearchResponse> searchTitleByKeyword(@PathVariable String keyword,@RequestParam(value = "size") Integer size, @RequestParam(value = "page") Integer page) {
+    public ResponseEntity<RoadmapFindResponse> searchTitleByKeyword(@PathVariable String keyword, @RequestParam(value = "page") Integer page) {
+        int size = 8;
         return new ResponseEntity<> (roadmapService.findRoadmapByKeyword(keyword, size, page-1), HttpStatus.OK);
     }
 
