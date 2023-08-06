@@ -1,12 +1,10 @@
 package com.roadmaker.roadmap.entity.blogkeyword;
 
-import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNode;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.mapping.ToOne;
 
 @Entity
 @Getter

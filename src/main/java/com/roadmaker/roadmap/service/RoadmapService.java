@@ -35,5 +35,5 @@ public interface RoadmapService {
 
     public RoadmapFindResponse findRoadmapByKeyword(String keyword, Integer size, Integer page);
 
-    public void setBlogKeyword(BlogKeywordRequest request);
+    public Boolean setBlogKeyword(BlogKeywordRequest request);
 }

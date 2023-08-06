@@ -16,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -24,6 +26,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @Transactional
 public class CertifiedBlogServiceImpl implements CertifiedBlogService {
+    private final Logger logger = LoggerFactory.getLogger(CertifiedBlogServiceImpl.class);
     private final InProgressNodeRepository inProgressNodeRepository;
     private final MemberRepository memberRepository;
     private final CertifiedBlogRepository certifiedBlogRepository;
@@ -35,17 +38,21 @@ public class CertifiedBlogServiceImpl implements CertifiedBlogService {
     public CertifiedBlogResponse certifyBlog(CertifiedBlogRequest request) {
         String submitUrl = request.getSubmitUrl();
 
-        InProgressNode inProgressNode = inProgressNodeRepository.findById(request.getRoadmapNodeId())
-                .orElseThrow(() -> new RuntimeException("InProgressNode not found with ID: " + request.getRoadmapNodeId()));
-        /// 멤버 ID로 blog_url 찾기
-        Member member = memberRepository.findById(request.getMemberId())
-                .orElseThrow(() -> new RuntimeException("Member not found with ID: " + request.getMemberId()));
-        String blogUrl = member.getBlogUrl();
+        // inprogressnodeid를 통해 member id와 roadmapnode id 찾기
+        Long inProgressNodeId = request.getInProgressNodeId();
+        InProgressNode inProgressNode = inProgressNodeRepository.findById(inProgressNodeId).orElse(null);
+
+        // 멤버 ID로 member 엔티티 찾기
+        Long memberId = inProgressNode != null ? inProgressNode.getMember().getId() : null;
+        Member member = memberRepository.findById(memberId).orElse(null);
+
+        String blogUrl = member != null ? member.getBlogUrl() : null;
 
         // 로드맵 노드 ID로 블로그 키워드 찾기
+        Long roadmapNodeId = inProgressNode != null ? inProgressNode.getRoadmapNode().getId() : null;
+        BlogKeyword blogKeyword = blogKeywordRepository.findByRoadmapNodeId(roadmapNodeId);
 
-        BlogKeyword blogKeyword = blogKeywordRepository.findByRoadmapNodeId(request.getRoadmapNodeId());
-        String keyword = blogKeyword.getKeyword();
+        String keyword = blogKeyword != null ? blogKeyword.getKeyword() : null;
 
         try {
             // Jsoup 라이브러리를 사용하여 블로그 콘텐츠 가져오기
@@ -53,11 +60,9 @@ public class CertifiedBlogServiceImpl implements CertifiedBlogService {
 
             Elements blogContents = doc.select("#content");
 
-            boolean keywordExists = false;
-
-            // 블로그 콘텐츠에 해당 키워드가 있는지 확인
-            keywordExists = blogContents.stream()
-                    .anyMatch(element -> element.text().contains(keyword));
+            // 블로그 콘텐츠에 해당 키워드가 있는지 확인 && 본인 블로그인지 확인
+            boolean keywordExists = blogContents.stream()
+                    .anyMatch(element -> element.text().contains(keyword) && submitUrl.startsWith(blogUrl));
 
             // 키워드가 있는 경우 CertifiedBlog 엔터티를 저장합니다.
             if (keywordExists) {
@@ -72,7 +77,7 @@ public class CertifiedBlogServiceImpl implements CertifiedBlogService {
                 return new CertifiedBlogResponse(submitUrl, true);
             }
         } catch (IOException e) {
-            log.error("Error : {}", e.getMessage());
+            logger.error("Error : {}", e.getMessage());
         }
         return new CertifiedBlogResponse(submitUrl, false);
     }
