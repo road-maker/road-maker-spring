@@ -6,13 +6,13 @@ import lombok.Setter;
 @Getter @Setter
 public class NodeDetail {
     private String id;
-    private String content;
+    private String detailedContent;
 
     public NodeDetail(String content) {
-        this.content = content;
+        this.detailedContent = content;
     }
     public NodeDetail(String content, String id) {
-        this.content = content;
+        this.detailedContent = content;
         this.id = id;
     }
 }

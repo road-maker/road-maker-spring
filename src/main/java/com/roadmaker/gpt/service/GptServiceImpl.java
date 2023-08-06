@@ -89,8 +89,9 @@ public class GptServiceImpl implements GptService {
         return formattedRoadmapRespons;
     }
 
+    //개별 노드의 설명을 생성하는 요청
     public NodeDetail makeDetails(String course) {
-        String content1 = "너는 모든 개발 지식을 가지고 있는 개발자이다. 입력 값의 개념을 반드시 한 단락으로, 한국어로 설명해줘. 단 네가 설명할 개념을 innerHTML을 이용해 보여줄 예정이니, <h1>, <p>, <b>, <ul>, <li> 태그를 적절히 활용해서 포맷팅해줘. 그리고 개행문자(\n)는 넣지 말아줘.";
+        String content1 = "너는 모든 개발 지식을 가지고 있는 개발자이다. 입력 값의 개념을 한국어로 설명해줘. 단 네가 설명할 개념을 innerHTML을 이용해 보여줄 예정이니, <h1>, <p>, <b>, <ul>, <li> 태그를 적절히 활용해서 포맷팅해줘. 그리고 개행문자(\n)는 넣지 말아줘.";
         String content2 = String.format(course);
 
         ChatCompletionRequest completionRequest = ChatCompletionRequest.builder()
@@ -101,9 +102,9 @@ public class GptServiceImpl implements GptService {
         return new NodeDetail(service.createChatCompletion(completionRequest).getChoices().get(0).getMessage().getContent());
     }
 
-    // 세부 답변을 구분하기 위하여 id를 포함
+    // 한번에 여러 개의 노드의 gpt 설명을 추가하기 위한 메서드
     public NodeDetail makeDetails(String course, String id) {
-        String content1 = "모든 개발 지식을 가지고 있는 개발자이다. 입력 값의 개념을 반드시 한 단락으로, 한국어로 설명해줘. 단 네가 설명할 개념을 innerHTML을 이용해 보여줄 예정이니, <h1>, <p>, <b>, <ul>, <li> 태그를 적절히 활용해서 포맷팅해줘. 그리고 개행문자(\n)는 넣지 말아줘.";
+        String content1 = "너는 모든 개발 지식을 가지고 있는 개발자이다. 입력 값의 개념을 한국어로 설명해줘. 단 네가 설명할 개념을 innerHTML을 이용해 보여줄 예정이니, <h1>, <p>, <b>, <ul>, <li> 태그를 적절히 활용해서 포맷팅해줘. 그리고 개행문자(\n)는 넣지 말아줘.";
         String content2 = String.format(course);
 
         ChatCompletionRequest completionRequest = ChatCompletionRequest.builder()
@@ -134,9 +135,9 @@ public class GptServiceImpl implements GptService {
             }
         }
 
-        for(RoadmapData indivisualResponse : response) {
-            String id = indivisualResponse.getId();
-            String course = indivisualResponse.getContent();
+        for(RoadmapData individualResponse : response) {
+            String id = individualResponse.getId();
+            String course = individualResponse.getContent();
 
             Future<NodeDetail> future = executor.submit(new Task(course,id));
             futures.add(future);
