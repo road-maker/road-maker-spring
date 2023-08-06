@@ -47,19 +47,6 @@ public class CertifiedBlogServiceImpl implements CertifiedBlogService {
         BlogKeyword blogKeyword = blogKeywordRepository.findByRoadmapNodeId(request.getRoadmapNodeId());
         String keyword = blogKeyword.getKeyword();
 
-        // 제출된 URL에서 프로토콜 접두사 제거
-//        if (submitUrl.startsWith("https://")) {
-//            submitUrl = submitUrl.replaceFirst("https://", "");
-//        } else if (submitUrl.startsWith("http://")) {
-//            submitUrl = submitUrl.replaceFirst("http://", "");
-//        }
-
-        // 제출된 URL이 회원의 블로그에 속하는지 확인
-//        if (!submitUrl.startsWith(blogUrl)) {
-//            System.out.println("false 1");
-//            return new CertifiedBlogResponse(submitUrl, false);
-//        }
-
         try {
             // Jsoup 라이브러리를 사용하여 블로그 콘텐츠 가져오기
             Document doc = Jsoup.connect(submitUrl).get();
@@ -69,12 +56,6 @@ public class CertifiedBlogServiceImpl implements CertifiedBlogService {
             boolean keywordExists = false;
 
             // 블로그 콘텐츠에 해당 키워드가 있는지 확인
-//            for (org.jsoup.nodes.Element element : blogContents) {
-//                if (element.text().contains(keyword)) {
-//                    keywordExists = true;
-//                    break;
-//                }
-//            }
             keywordExists = blogContents.stream()
                     .anyMatch(element -> element.text().contains(keyword));
 
@@ -88,13 +69,11 @@ public class CertifiedBlogServiceImpl implements CertifiedBlogService {
                         .build();
 
                 certifiedBlogRepository.save(certifiedBlog);
-                System.out.println("false 2");
                 return new CertifiedBlogResponse(submitUrl, true);
             }
         } catch (IOException e) {
             log.error("Error : {}", e.getMessage());
         }
-        System.out.println("keyword를 찾고있지 못함");
         return new CertifiedBlogResponse(submitUrl, false);
     }
 }
