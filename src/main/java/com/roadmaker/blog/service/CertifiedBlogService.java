@@ -1,9 +1,12 @@
 package com.roadmaker.blog.service;
 
 import com.roadmaker.blog.dto.CertifiedBlogRequest;
-import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNode;
+import com.roadmaker.blog.dto.CertifiedBlogResponse;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Service
+@Transactional
 public interface CertifiedBlogService {
-    void setKeyword(String keyword, RoadmapNode roadmapNodeId);
-    void certifyBlog(CertifiedBlogRequest certifiedBlogRequest);
+    CertifiedBlogResponse certifyBlog(CertifiedBlogRequest certifiedBlogRequest);
 }

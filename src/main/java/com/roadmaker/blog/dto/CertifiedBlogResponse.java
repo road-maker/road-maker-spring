@@ -1,18 +1,23 @@
 package com.roadmaker.blog.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import com.roadmaker.blog.entity.certifiedblog.CertifiedBlog;
+import com.roadmaker.member.dto.MemberResponse;
+import com.roadmaker.member.entity.Member;
+import lombok.*;
 
 @Getter
-@Setter
 @ToString
+@Builder
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class CertifiedBlogResponse {
     private String submitUrl;
     private Boolean doneBlog;
 
-    public CertifiedBlogResponse(String submitUrl, boolean doneBlog) {
-        this.submitUrl = submitUrl;
-        this.doneBlog = doneBlog;
+    public static CertifiedBlogResponse of(CertifiedBlog certifiedBlog) {
+        return CertifiedBlogResponse.builder()
+                .submitUrl(certifiedBlog.getSubmitUrl())
+                .doneBlog(certifiedBlog.getDone())
+                .build();
     }
 }

@@ -1,12 +1,17 @@
 package com.roadmaker.blog.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
-@Getter
-@Setter
-@ToString
+@Builder
+@Data
+@AllArgsConstructor
 public class CertifiedBlogRequest {
+
+    private Long memberId;
+
+    private Long roadmapNodeId;
+
+    private Long inProgressNodeId;
+
     private String submitUrl;
 }

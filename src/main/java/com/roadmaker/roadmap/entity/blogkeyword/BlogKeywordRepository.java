@@ -1,6 +1,7 @@
-package com.roadmaker.blog.entity.blogkeyword;
+package com.roadmaker.roadmap.entity.blogkeyword;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BlogKeywordRepository extends JpaRepository<BlogKeyword, Long> {
+    public BlogKeyword findByRoadmapNodeId(Long roadmapNodeId);
 }

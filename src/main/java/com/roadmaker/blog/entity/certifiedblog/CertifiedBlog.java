@@ -8,9 +8,9 @@ import lombok.*;
 
 @Entity
 @Getter
-@Setter
 @Table(name = "CERTIFIED_BLOG")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 
 public class CertifiedBlog extends BaseTimeEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,10 +27,14 @@ public class CertifiedBlog extends BaseTimeEntity {
     @Column(columnDefinition = "TEXT")
     private String submitUrl;
 
+    @Column
+    private Boolean done;
+
     @Builder
-    public CertifiedBlog(Member member, InProgressNode inProgressNode, String submitUrl) {
+    public CertifiedBlog(Member member, InProgressNode inProgressNode, String submitUrl, Boolean done) {
         this.member = member;
         this.inProgressNode = inProgressNode;
         this.submitUrl = submitUrl;
+        this.done = done;
     }
 }
