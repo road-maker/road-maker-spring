@@ -1,8 +1,6 @@
 package com.roadmaker.blog.dto;
 
 import com.roadmaker.blog.entity.certifiedblog.CertifiedBlog;
-import com.roadmaker.member.dto.MemberResponse;
-import com.roadmaker.member.entity.Member;
 import lombok.*;
 
 @Getter
