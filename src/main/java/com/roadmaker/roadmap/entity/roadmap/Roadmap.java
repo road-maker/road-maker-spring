@@ -24,7 +24,7 @@ public class Roadmap extends BaseTimeEntity {
 
     @Column(nullable = false)
     private String title;
-    @Column(nullable = false)
+    @Column(nullable = false, length = 500)
     private String description;
 
     private String thumbnailUrl;
