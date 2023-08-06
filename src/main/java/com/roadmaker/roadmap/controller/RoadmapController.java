@@ -186,4 +186,9 @@ public class RoadmapController {
         int size = 8;
         return new ResponseEntity<> (roadmapService.findRoadmapByKeyword(keyword, size, page-1), HttpStatus.OK);
     }
+
+    @PostMapping("/keyword")
+    public void setKeyword(@RequestBody BlogKeywordRequest request){
+        roadmapService.setBlogKeyword(request);
+    }
 }

@@ -9,6 +9,4 @@ import java.util.Optional;
 
 public interface RoadmapNodeRepository extends JpaRepository<RoadmapNode, Long> {
     public List<RoadmapNode> findByRoadmapId(Long roadmapId);
-
-    public RoadmapNode findByRoadmapNodeId(Long roadmapNodeId);
 }
