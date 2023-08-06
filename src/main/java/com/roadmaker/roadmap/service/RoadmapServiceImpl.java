@@ -9,10 +9,9 @@ import com.roadmaker.inprogressroadmap.entity.InProgressRoadmap;
 import com.roadmaker.inprogressroadmap.entity.InProgressRoadmapRepository;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.entity.MemberRepository;
-import com.roadmaker.roadmap.dto.CreateRoadmapRequest;
-import com.roadmaker.roadmap.dto.NodeStatusChangeDto;
-import com.roadmaker.roadmap.dto.RoadmapDto;
-import com.roadmaker.roadmap.dto.RoadmapFindResponse;
+import com.roadmaker.roadmap.dto.*;
+import com.roadmaker.roadmap.entity.blogkeyword.BlogKeyword;
+import com.roadmaker.roadmap.entity.blogkeyword.BlogKeywordRepository;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNode;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNodeRepository;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
@@ -53,6 +52,7 @@ public class RoadmapServiceImpl implements RoadmapService{
     private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;
     private final ImageService imageService;
+    private final BlogKeywordRepository blogKeywordRepository;
 
     private enum OrderType {
         RECENT, MOSTLIKED
@@ -217,4 +217,16 @@ public class RoadmapServiceImpl implements RoadmapService{
         return roadmapRepository.findBySearchOption(pageRequest, keyword);
     }
 
+    @Override
+    public void setBlogKeyword(BlogKeywordRequest request) {
+        Long roadmapNodeId = request.getRoadmapNodeId();
+        String keyword = request.getKeyword();
+
+        BlogKeyword blogKeyword = BlogKeyword.builder()
+                .roadmapNodeId(roadmapNodeId)
+                .keyword(keyword)
+                .build();
+
+        blogKeywordRepository.save(blogKeyword);
+    }
 }

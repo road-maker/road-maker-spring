@@ -10,10 +10,9 @@ import com.roadmaker.inprogressroadmap.entity.InProgressRoadmapRepository;
 import com.roadmaker.like.service.LikeService;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.service.MemberService;
-import com.roadmaker.roadmap.dto.CreateRoadmapRequest;
-import com.roadmaker.roadmap.dto.NodeStatusChangeDto;
-import com.roadmaker.roadmap.dto.RoadmapFindResponse;
-import com.roadmaker.roadmap.dto.RoadmapResponse;
+import com.roadmaker.roadmap.dto.*;
+import com.roadmaker.roadmap.entity.blogkeyword.BlogKeyword;
+import com.roadmaker.roadmap.entity.blogkeyword.BlogKeywordRepository;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNode;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNodeRepository;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
@@ -190,4 +189,8 @@ public class RoadmapController {
         return new ResponseEntity<> (roadmapService.findRoadmapByKeyword(keyword, size, page-1), HttpStatus.OK);
     }
 
+    @PostMapping("/keyword")
+    public void setKeyword(@RequestBody BlogKeywordRequest request){
+        roadmapService.setBlogKeyword(request);
+    }
 }
