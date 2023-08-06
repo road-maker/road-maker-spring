@@ -188,7 +188,7 @@ public class RoadmapController {
     }
 
     @PostMapping("/keyword")
-    public void setKeyword(@RequestBody BlogKeywordRequest request){
-        roadmapService.setBlogKeyword(request);
+    public Boolean setKeyword(@RequestBody BlogKeywordRequest request){
+        return roadmapService.setBlogKeyword(request);
     }
 }

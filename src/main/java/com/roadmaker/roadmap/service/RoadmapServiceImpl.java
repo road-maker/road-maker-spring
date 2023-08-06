@@ -201,7 +201,7 @@ public class RoadmapServiceImpl implements RoadmapService{
     }
 
     @Override
-    public void setBlogKeyword(BlogKeywordRequest request) {
+    public Boolean setBlogKeyword(BlogKeywordRequest request) {
         Long roadmapNodeId = request.getRoadmapNodeId();
         String keyword = request.getKeyword();
 
@@ -211,5 +211,6 @@ public class RoadmapServiceImpl implements RoadmapService{
                 .build();
 
         blogKeywordRepository.save(blogKeyword);
+        return true;
     }
 }

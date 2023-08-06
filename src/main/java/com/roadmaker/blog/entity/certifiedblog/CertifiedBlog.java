@@ -20,7 +20,7 @@ public class CertifiedBlog extends BaseTimeEntity {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "IN_PROGRESS_NODE_ID")
     private InProgressNode inProgressNode;
 
