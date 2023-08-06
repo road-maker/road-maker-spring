@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Data @Builder @AllArgsConstructor
 public class CommentDto {
@@ -17,13 +18,18 @@ public class CommentDto {
     @NotBlank
     Long numbering;
 
-    LocalDateTime createdTime;
-    LocalDateTime updatedTime;
+    String createdAt;
+    String updatedAt;
+
+    private static String formatDate(LocalDateTime dateTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy. M. dd.");
+        return dateTime.format(formatter);
+    }
 
     public static CommentDto of(Comment comment) {
         return CommentDto.builder()
-                .createdTime(comment.getCreatedAt())
-                .updatedTime(comment.getUpdatedAt())
+                .createdAt(formatDate(comment.getCreatedAt()))
+                .updatedAt(formatDate(comment.getUpdatedAt()))
                 .content(comment.getContent())
                 .roadmapId(comment.getRoadmap().getId())
                 .build();
