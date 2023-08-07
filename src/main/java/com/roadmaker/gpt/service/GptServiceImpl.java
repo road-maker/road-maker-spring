@@ -70,17 +70,17 @@ public class GptServiceImpl implements GptService {
             line = line.trim();
 
             // 각 line에 점(.) 문자가 포함되어 있는지 확인
-            if (line.contains(".")) {
+            if (line.contains(":")) {
                 // 점을 기준으로 줄을 ID와 콘텐츠로 분할합니다.
-                String[] parts = line.split("\\.", 2); // Split into two parts at the first dot
+                String[] parts = line.split("\\:", 2); // Split into two parts at the first dot
 
                 // parts에서 ID와 content를 추출합니다. (trim은 공백 제거)
                 String id = parts[0].trim();
                 String content = parts[1].trim();
 
-                if (id.length() > 3) {
-                    continue;
-                }
+//                if (id.length() > 3) {
+//                    continue;
+//                }
                 // 새 문장을 만들어 formattedGptRoadmapResponses에 추가합니다.
                 RoadmapData roadmapData = new RoadmapData(id, content);
                 formattedRoadmapRespons.add(roadmapData);
