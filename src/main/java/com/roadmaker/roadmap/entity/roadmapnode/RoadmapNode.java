@@ -3,6 +3,7 @@ package com.roadmaker.roadmap.entity.roadmapnode;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.roadmaker.commons.BaseTimeEntity;
 import com.roadmaker.roadmap.entity.blogkeyword.BlogKeyword;
+import com.roadmaker.roadmap.entity.bojprob.BojProb;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import com.roadmaker.roadmap.entity.roadmapnodedata.RoadmapNodeData;
 import com.roadmaker.roadmap.entity.roadmapnodeposition.RoadmapNodePosition;
@@ -59,6 +60,10 @@ public class RoadmapNode extends BaseTimeEntity {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "BLOG_KEYWORD")
     private BlogKeyword blogKeyword;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "BLOG_KEYWORD")
+    private BojProb bojProb;
 
     @Builder
     public RoadmapNode(Roadmap roadmap, Integer width, Integer height, String sourcePosition, String targetPosition, String clientNodeId, String type, String detailedContent, RoadmapNodeStyle style, RoadmapNodeData data, RoadmapNodePosition position, RoadmapNodePositionAbsolute positionAbsolute) {
