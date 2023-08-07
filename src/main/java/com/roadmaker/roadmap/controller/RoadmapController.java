@@ -142,16 +142,16 @@ public class RoadmapController {
 
     @LoginRequired
     @PostMapping(path="/{roadmapId}/join")
-    public ResponseEntity<HttpStatus> joinRoadmap(@PathVariable Long roadmapId, @LoginMember Member member) {
+    public ResponseEntity<Integer> joinRoadmap(@PathVariable Long roadmapId, @LoginMember Member member) {
         // 1. 필요한 로드맵을 소환: 로드맵 아이디로
 
         Roadmap roadmap = roadmapService.findRoadmapById(roadmapId);
 
         //2. 로드맵 조인, 실패 시 false 반환: 비즈니스 로직
-        roadmapService.joinRoadmap(roadmap, member);
+        Integer count = roadmapService.joinRoadmap(roadmap, member);
 
         // 3. 성공 신호 전달
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return new ResponseEntity<>(count, HttpStatus.OK);
     }
 
     @LoginRequired

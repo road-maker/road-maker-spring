@@ -28,7 +28,7 @@ public interface RoadmapService {
     public List<RoadmapDto> findRoadmapJoinedByMemberId(Long memberId);
     public List<RoadmapDto> findRoadmapCreatedByMemberId(Long memberId);
 
-    public void joinRoadmap(Roadmap roadmap, Member member);
+    public Integer joinRoadmap(Roadmap roadmap, Member member);
 
     // 진행상황 변경
     public boolean changeNodeStatus(NodeStatusChangeDto nodeStatusChangeDto);
