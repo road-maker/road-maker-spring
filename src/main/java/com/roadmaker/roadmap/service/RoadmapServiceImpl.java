@@ -229,34 +229,36 @@ public class RoadmapServiceImpl implements RoadmapService{
         Long roadmapNodeId = request.getRoadmapNodeId();
         String keyword = request.getKeyword();
 
-        boolean blogKeywordExists = blogKeywordRepository.existsById(roadmapNodeId);
-        if (blogKeywordExists) {
-            return false; // Data already exists, return false to indicate failure.
+        // keyword가 존재하면 false를 반환하며 종료
+        BlogKeyword existingKeyword = blogKeywordRepository.findByRoadmapNodeId(roadmapNodeId);
+        if (existingKeyword != null) {
+            return false;
         }
-
+        // 새로운 키워드 등록
         BlogKeyword blogKeyword = BlogKeyword.builder()
                 .roadmapNodeId(roadmapNodeId)
                 .keyword(keyword)
                 .build();
 
         blogKeywordRepository.save(blogKeyword);
+
         return true;
     }
 
     @Override
     public Boolean setBojProblem(BojProbRequest request) {
         Long roadmapNodeId = request.getRoadmapNodeId();
-        Integer bojNumber = request.getProbNumber();
-        String probNumber = bojNumber.toString();
+        String bojNumber = request.getProbNumber();
 
-        boolean bojProblemExists = bojProbRepository.existsById(roadmapNodeId);
-        if (bojProblemExists) {
-            return false; // Data already exists, return false to indicate failure.
+        BojProb bojProblemExists = bojProbRepository.findByRoadmapNodeId(roadmapNodeId);
+        if (bojProblemExists != null) {
+            return false;
         }
 
         try {
             // Jsoup을 이용하여 해당 웹 페이지에 연결
-            Document doc = Jsoup.connect(String.format("https://www.acmicpc.net/user/%s", probNumber)).get();
+            String url = String.format("https://www.acmicpc.net/problem/%s", bojNumber);
+            Document doc = Jsoup.connect(url).get();
 
             String bojTitle = doc.getElementById("problem_title").text();
 

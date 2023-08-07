@@ -20,7 +20,7 @@ public class BojController {
     private final CertifiedBojService certifiedBojService;
 
     @LoginRequired
-    @PostMapping("/checkProb")
+    @PostMapping("/check-prob")
     public CertifiedBojResponse certifyBlog(@RequestBody CertifiedBojRequest request, @LoginMember Member member) {
         return certifiedBojService.certifyBoj(request);
     }

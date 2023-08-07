@@ -1,6 +1,5 @@
 package com.roadmaker.boj.entity.certifiedboj;
 
-import com.roadmaker.blog.entity.certifiedblog.CertifiedBlog;
 import com.roadmaker.commons.BaseTimeEntity;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNode;
 import jakarta.persistence.*;

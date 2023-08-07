@@ -57,14 +57,6 @@ public class RoadmapNode extends BaseTimeEntity {
     @JoinColumn(name = "ROADMAP_NODE_POSITION_ABSOLUTE_ID")
     private RoadmapNodePositionAbsolute positionAbsolute;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "BLOG_KEYWORD")
-    private BlogKeyword blogKeyword;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "BLOG_KEYWORD")
-    private BojProb bojProb;
-
     @Builder
     public RoadmapNode(Roadmap roadmap, Integer width, Integer height, String sourcePosition, String targetPosition, String clientNodeId, String type, String detailedContent, RoadmapNodeStyle style, RoadmapNodeData data, RoadmapNodePosition position, RoadmapNodePositionAbsolute positionAbsolute) {
         this.roadmap = roadmap;

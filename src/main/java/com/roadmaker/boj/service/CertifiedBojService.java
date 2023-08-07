@@ -54,7 +54,7 @@ public class CertifiedBojService {
 
         // 노드에서 bojProb 참조해서 원하는 값 추출
         String probTitle = bojProb != null ? bojProb.getBojTitle() : null;
-        Integer probNumber = bojProb != null ? bojProb.getBojNumber() : null;
+        String probNumber = bojProb != null ? bojProb.getBojNumber() : null;
         String probNumString = String.valueOf(probNumber);
 
         try {

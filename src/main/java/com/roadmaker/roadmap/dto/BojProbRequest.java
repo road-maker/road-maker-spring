@@ -9,5 +9,5 @@ import lombok.*;
 @AllArgsConstructor
 public class BojProbRequest {
     private Long roadmapNodeId;
-    private Integer probNumber;
+    private String probNumber;
 }

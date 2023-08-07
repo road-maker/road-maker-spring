@@ -19,14 +19,14 @@ public class BojProb {
     @Column
     private Long roadmapNodeId;
 
-    @Column
-    private Integer bojNumber;
+    @Column(unique = true)
+    private String bojNumber;
 
-    @Column
+    @Column(unique = true)
     private String bojTitle;
 
     @Builder
-    public BojProb(Long roadmapNodeId, Integer bojNumber, String bojTitle) {
+    public BojProb(Long roadmapNodeId, String bojNumber, String bojTitle) {
         this.roadmapNodeId = roadmapNodeId;
         this.bojNumber = bojNumber;
         this.bojTitle = bojTitle;
