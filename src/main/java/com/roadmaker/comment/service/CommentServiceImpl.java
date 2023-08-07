@@ -42,9 +42,6 @@ public class CommentServiceImpl implements CommentService{
         //페이지네이션, commentDto로 가공, 불러온 페이지 내에 넘버링 부여
         PageRequest pageRequest = PageRequest.of(pageMod, size);
         Page<CommentDto> comments = commentRepository.findCommentByRoadmapId(roadmapId, pageRequest).map(CommentDto::of);
-        AtomicInteger counter = new AtomicInteger(1);
-        comments.forEach(
-                commentDto -> commentDto.setNumbering(((long) (pageMod) *size + counter.getAndIncrement())));
 
         // 페이지 주소 설정
         String next = ipAddress+ "api/roadmaps/load-roadmap/" +roadmapId + commentPage + (pageRequest.getPageNumber()+2);
@@ -72,9 +69,6 @@ public class CommentServiceImpl implements CommentService{
         //페이지네이션, commentDto로 가공, 불러온 페이지 내에 넘버링 부여
         PageRequest pageRequest = PageRequest.of(pageMod, size);
         Page<CommentDto> comments = commentRepository.findCommentByMemberId(memberId, pageRequest).map(CommentDto::of);
-        AtomicInteger counter = new AtomicInteger(1);
-        comments.forEach(
-                commentDto -> commentDto.setNumbering(((long) (pageMod) *size + counter.getAndIncrement())));
 
         // 페이지 주소 설정
         String next = ipAddress + "api/members/" +memberId + commentPage + (pageRequest.getPageNumber()+2);

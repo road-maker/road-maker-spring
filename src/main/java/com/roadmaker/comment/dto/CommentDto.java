@@ -16,8 +16,6 @@ public class CommentDto {
     @NotBlank
     String content;
     @NotBlank
-    Long numbering;
-    @NotBlank
     String nickname;
 
     String createdAt;
