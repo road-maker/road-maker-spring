@@ -1,5 +1,6 @@
 package com.roadmaker.inprogressroadmap.entity;
 
+import com.roadmaker.roadmap.dto.RoadmapFindResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -17,6 +17,8 @@ public class CommentDto {
     String content;
     @NotBlank
     Long numbering;
+    @NotBlank
+    String memberNickname;
 
     String createdAt;
     String updatedAt;
@@ -30,6 +32,7 @@ public class CommentDto {
         return CommentDto.builder()
                 .createdAt(formatDate(comment.getCreatedAt()))
                 .updatedAt(formatDate(comment.getUpdatedAt()))
+                .memberNickname(comment.getMember().getNickname())
                 .content(comment.getContent())
                 .roadmapId(comment.getRoadmap().getId())
                 .build();

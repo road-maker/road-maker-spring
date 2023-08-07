@@ -115,24 +115,24 @@ public class RoadmapController {
         return new ResponseEntity<>(roadmapResponse, HttpStatus.OK);
     }
 
-    @LoginRequired
-    @GetMapping("/{roadmapId}/auth")
-    public ResponseEntity<RoadmapResponse> loadRoadmapWithAuth(@PathVariable Long roadmapId, @LoginMember Member member) {
-        Roadmap roadmap = roadmapService.findRoadmapById(roadmapId);
-        RoadmapResponse roadmapResponse;
-        boolean isLiked = likeService.isLiked(roadmapId, member.getId());
-
-        Optional<InProgressRoadmap> inProgressRoadmap = inProgressRoadmapRepository.findByRoadmapIdAndMemberId(roadmapId, member.getId());
-
-        if (inProgressRoadmap.isEmpty()) {
-            roadmapResponse = RoadmapResponse.of(roadmap, isLiked);
-        } else {
-            List<InProgressNode> inProgressNodes = inProgressNodeRepository.findByRoadmapIdAndMemberId(roadmapId, member.getId());
-            roadmapResponse = RoadmapResponse.of(roadmap, isLiked, inProgressNodes);
-        }
-
-        return new ResponseEntity<>(roadmapResponse, HttpStatus.OK);
-    }
+//    @LoginRequired
+//    @GetMapping("/{roadmapId}/auth")
+//    public ResponseEntity<RoadmapResponse> loadRoadmapWithAuth(@PathVariable Long roadmapId, @LoginMember Member member) {
+//        Roadmap roadmap = roadmapService.findRoadmapById(roadmapId);
+//        RoadmapResponse roadmapResponse;
+//        boolean isLiked = likeService.isLiked(roadmapId, member.getId());
+//
+//        Optional<InProgressRoadmap> inProgressRoadmap = inProgressRoadmapRepository.findByRoadmapIdAndMemberId(roadmapId, member.getId());
+//
+//        if (inProgressRoadmap.isEmpty()) {
+//            roadmapResponse = RoadmapResponse.of(roadmap, isLiked);
+//        } else {
+//            List<InProgressNode> inProgressNodes = inProgressNodeRepository.findByRoadmapIdAndMemberId(roadmapId, member.getId());
+//            roadmapResponse = RoadmapResponse.of(roadmap, isLiked, inProgressNodes);
+//        }
+//
+//        return new ResponseEntity<>(roadmapResponse, HttpStatus.OK);
+//    }
 
     @GetMapping(path="/load-roadmap/{roadmapId}/comments")
     public ResponseEntity<CommentResponse> loadRoadmapComments(@PathVariable Long roadmapId, @RequestParam Integer page) {

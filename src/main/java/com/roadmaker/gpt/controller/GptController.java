@@ -22,11 +22,13 @@ public class GptController {
     @PostMapping("/roadmap")
     public List<RoadmapData> getRoadmapDraft(@RequestParam @NotBlank String prompt) {
         // 명령
-        String content1 = "너는 모든 개발 지식을 지닌 개발자이다. " +
-                "무슨 일이 있어도 message.content를 한국어로," +
-                " \"1.title\n1a.item1\n1b.item2\n1c.item3\n1d.item4\n2.title\n2a.item1\n2b.item2\n2c.item3\n2d.item4\n3.title\n3a.item1\n3b.item2\n3c.item3\n3d.item4\n4.title \n4a.item1\n4b.item2\n4c.item3\n4d.item4\n\"" +
-                " 이 형식에 맞춰서 모든 대답해 줘.";
-        String content2 = String.format("각각 4개의 코스로 구성된 4개의 타이틀에서 %s를 위한 로드맵을 만들어 줘", prompt);
+        String content1 = "With every development and computer science knowledge, struct useful roadmap for developers. Language you answer must be Korean, at any case." +
+                "Answer 'message.content' in a form as following example. Forms are must-follow, but composition or quantity of list can vary as you want" +
+                "\"1:title\n1.1:item1\n1.1.1:subItem1\n1.1.2:subItem2\n1.1.3:subItem3\n1.2:item2\n1.2.1:subItem1\n1.2.2:subItem2\n1.2.3:subItem3\n1.3:item3\n1.3.1:subItem1\n1.3.2:subItem2\n1.4:item4\n1.4.1:subItem1\n2:title\n2.1:item1\n2.1:item2\n2.3:item3\n2.4:item4\n3:title\n3.1:item1\n3.2:item2\n3.3:item3\n3.4:item4\n4:title\n4.1:item1\n4.2:item2\n4.3:item3\n4.4:item4\n\"" +
+                "Plus, add explanation in one lines(but it can be multiple sentences) of next three things in format shown next.\"0.1:expectations of this roadmap\n0.2:further recommended subject\n0.3:Explain the reason why this roadmap has its sequences or contents.\n\"" +
+                "You can add or delete items or layers for adequate need to guide people with given subject." +
+                "Layer structures are essential to this roadmap. For example, 1.1, 1.2, 1.3 and 1.4 are all related to and belong to upper layer 1.";
+        String content2 = String.format("Make roadmap for '%s'", prompt);
 
         // gpt 요청 객체 생성 후 응답 받기
         String gptCompletion = gptService.getGptAnswer(content1, content2);
