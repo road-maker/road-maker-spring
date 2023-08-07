@@ -2,6 +2,10 @@ package com.roadmaker.boj.service;
 
 import com.roadmaker.blog.entity.certifiedblog.CertifiedBlogRepository;
 import com.roadmaker.blog.service.CertifiedBlogServiceImpl;
+import com.roadmaker.boj.dto.CertifiedBojRequest;
+import com.roadmaker.boj.dto.CertifiedBojResponse;
+import com.roadmaker.boj.entity.certifiedboj.CertifiedBoj;
+import com.roadmaker.boj.entity.certifiedboj.CertifiedBojRepository;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.entity.MemberRepository;
 import com.roadmaker.roadmap.entity.bojprob.BojProb;
@@ -18,7 +22,7 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +36,10 @@ public class CertifiedBojService {
     private final CertifiedBlogRepository certifiedBlogRepository;
     private final BojProbRepository bojProbRepository;
     private final MemberRepository memberRepository;
+    private final CertifiedBojRepository certifiedBojRepository;
 
-    public Boolean certifyBoj(@RequestParam Long inProgressNodeId) {
+    public CertifiedBojResponse certifyBoj(@RequestBody CertifiedBojRequest request) {
+        Long inProgressNodeId = request.getInProgressNodeId();
         InProgressNode inProgressNode = inProgressNodeRepository.findById(inProgressNodeId).orElse(null);
 
         // 진행중인 노드를 통해 로드맵 노드의 Id 찾기
@@ -49,6 +55,7 @@ public class CertifiedBojService {
         // 노드에서 bojProb 참조해서 원하는 값 추출
         String probTitle = bojProb != null ? bojProb.getBojTitle() : null;
         Integer probNumber = bojProb != null ? bojProb.getBojNumber() : null;
+        String probNumString = String.valueOf(probNumber);
 
         try {
             // Jsoup을 이용하여 해당 웹 페이지에 연결
@@ -73,7 +80,7 @@ public class CertifiedBojService {
             }
 
             // 이분 탐색으로 대조
-            int targetValue = Integer.parseInt(String.valueOf(probNumber));
+            int targetValue = Integer.parseInt(probNumString);
             int low = 0;
             int high = dataToCompare.size() - 1;
             while (low <= high) {
@@ -82,7 +89,12 @@ public class CertifiedBojService {
 
                 if (midValue == targetValue) {
                     // 찾았으면 true를 반환하고 메서드를 종료합니다.
-                    return true;
+                    CertifiedBoj certifiedBoj = CertifiedBoj.builder()
+                            .inProgressNode(inProgressNode)
+                            .done(true)
+                            .build();
+                    certifiedBojRepository.save(certifiedBoj);
+                    return new CertifiedBojResponse(probNumString,probTitle,true);
                 } else if (midValue < targetValue) {
                     low = mid + 1;
                 } else {
@@ -93,7 +105,7 @@ public class CertifiedBojService {
             logger.debug("Error:", e);
         }
         // 원하는 정보를 찾지 못했을 경우 false를 반환합니다.
-        return false;
+        return new CertifiedBojResponse(probNumString,probTitle,false);
     }
 
 }
