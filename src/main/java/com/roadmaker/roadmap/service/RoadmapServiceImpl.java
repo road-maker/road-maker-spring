@@ -15,6 +15,7 @@ import com.roadmaker.roadmap.dto.RoadmapDto;
 import com.roadmaker.roadmap.dto.RoadmapFindResponse;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNode;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNodeRepository;
+import com.roadmaker.roadmap.entity.inprogressnode.QInProgressNode;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import com.roadmaker.roadmap.entity.roadmap.RoadmapRepository;
 import com.roadmaker.roadmap.entity.roadmapedge.RoadmapEdge;
@@ -164,11 +165,11 @@ public class RoadmapServiceImpl implements RoadmapService{
 
     @Override
     @Transactional
-    public void joinRoadmap(Roadmap roadmap, Member member) {
+    public Integer joinRoadmap(Roadmap roadmap, Member member) {
         // 이미 참여중인지 확인
         Optional<InProgressRoadmap> inProgressRoadmapOptional = inProgressRoadmapRepository.findByRoadmapIdAndMemberId(roadmap.getId(), member.getId());
         if (inProgressRoadmapOptional.isPresent()) {
-            throw new ConflictException();
+            throw new ConflictException("Already joined this roadmap");
         }
         
         // InProgresRoadmap 생성
@@ -193,6 +194,8 @@ public class RoadmapServiceImpl implements RoadmapService{
                         .build();
                     inProgressNodeRepository.save(inProgressNode);
                 });
+
+        return inProgressRoadmapRepository.countByRoadmapId(roadmap.getId());
     }
 
     @Override
