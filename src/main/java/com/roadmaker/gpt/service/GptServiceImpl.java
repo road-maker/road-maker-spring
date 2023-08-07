@@ -70,13 +70,15 @@ public class GptServiceImpl implements GptService {
             line = line.trim();
 
             // 각 line에 점(.) 문자가 포함되어 있는지 확인
-            if (line.contains(":")) {
+            if (line.contains("?")) {
                 // 점을 기준으로 줄을 ID와 콘텐츠로 분할합니다.
-                String[] parts = line.split("\\:", 2); // Split into two parts at the first dot
+                String[] parts = line.split("\\?", 2); // Split into two parts at the first dot
 
                 // parts에서 ID와 content를 추출합니다. (trim은 공백 제거)
                 String id = parts[0].trim();
                 String content = parts[1].trim();
+
+                System.out.println("Content: " + content);
 
 //                if (id.length() > 3) {
 //                    continue;
@@ -84,6 +86,7 @@ public class GptServiceImpl implements GptService {
                 // 새 문장을 만들어 formattedGptRoadmapResponses에 추가합니다.
                 RoadmapData roadmapData = new RoadmapData(id, content);
                 formattedRoadmapRespons.add(roadmapData);
+                System.out.println("roadmapData:" + roadmapData);
             }
         }
         return formattedRoadmapRespons;
@@ -91,7 +94,10 @@ public class GptServiceImpl implements GptService {
 
     //개별 노드의 설명을 생성하는 요청
     public NodeDetail makeDetails(String course) {
-        String content1 = "너는 모든 개발 지식을 가지고 있는 개발자이다. 입력 값의 개념을 한국어로 설명해줘. 단 네가 설명할 개념을 innerHTML을 이용해 보여줄 예정이니, <h1>, <p>, <b>, <ul>, <li> 태그를 적절히 활용해서 포맷팅해줘. 그리고 개행문자(\n)는 넣지 말아줘.";
+        String content1 =
+        "With every reliable and valid development and computer science knowledge, explain the concept of the provided argument. All your answers must be in Korean." +
+        "Your answer should be in innerHTML format and you should only use tags <h1>, <p>, <b>, <ul> and <li>. Your answers should only be in paragraphs.";
+
         String content2 = String.format(course);
 
         ChatCompletionRequest completionRequest = ChatCompletionRequest.builder()
@@ -104,7 +110,9 @@ public class GptServiceImpl implements GptService {
 
     // 한번에 여러 개의 노드의 gpt 설명을 추가하기 위한 메서드
     public NodeDetail makeDetails(String course, String id) {
-        String content1 = "너는 모든 개발 지식을 가지고 있는 개발자이다. 입력 값의 개념을 한국어로 설명해줘. 단 네가 설명할 개념을 innerHTML을 이용해 보여줄 예정이니, <h1>, <p>, <b>, <ul>, <li> 태그를 적절히 활용해서 포맷팅해줘. 그리고 개행문자(\n)는 넣지 말아줘.";
+        String content1 =
+                "With every reliable and valid development and computer science knowledge, explain the concept of the provided argument. All your answers must be in Korean." +
+                "Your answer should be in innerHTML format and you should only use tags <h1>, <p>, <b>, <ul> and <li>. Your answers should only be in paragraphs.";
         String content2 = String.format(course);
 
         ChatCompletionRequest completionRequest = ChatCompletionRequest.builder()
