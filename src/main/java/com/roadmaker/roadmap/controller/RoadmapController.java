@@ -189,8 +189,13 @@ public class RoadmapController {
         return new ResponseEntity<> (roadmapService.findRoadmapByKeyword(keyword, size, page-1), HttpStatus.OK);
     }
 
-    @PostMapping("/keyword")
+    @PostMapping("/blog_keyword")
     public Boolean setKeyword(@RequestBody BlogKeywordRequest request){
         return roadmapService.setBlogKeyword(request);
+    }
+
+    @PostMapping("/boj_problem")
+    public Boolean setProblem(@RequestBody BojProbRequest request){
+        return roadmapService.setBojProblem(request);
     }
 }
