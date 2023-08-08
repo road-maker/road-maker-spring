@@ -1,6 +1,5 @@
 package com.roadmaker.boj.service;
 
-import com.roadmaker.blog.entity.certifiedblog.CertifiedBlogRepository;
 import com.roadmaker.blog.service.CertifiedBlogServiceImpl;
 import com.roadmaker.boj.dto.CertifiedBojRequest;
 import com.roadmaker.boj.dto.CertifiedBojResponse;
@@ -33,7 +32,6 @@ import java.util.List;
 public class CertifiedBojService {
     private final Logger logger = LoggerFactory.getLogger(CertifiedBlogServiceImpl.class);
     private final InProgressNodeRepository inProgressNodeRepository;
-    private final CertifiedBlogRepository certifiedBlogRepository;
     private final BojProbRepository bojProbRepository;
     private final MemberRepository memberRepository;
     private final CertifiedBojRepository certifiedBojRepository;
@@ -57,9 +55,14 @@ public class CertifiedBojService {
         String probNumber = bojProb != null ? bojProb.getBojNumber() : null;
         String probNumString = String.valueOf(probNumber);
 
+        CertifiedBojResponse certifiedBojResponse = BojAlreadyDone(request);
+        if (certifiedBojResponse != null) {
+            return certifiedBojResponse;
+        }
+
         try {
             // Jsoup을 이용하여 해당 웹 페이지에 연결
-            Document doc = Jsoup.connect(String.format("https://www.acmicpc.net/user/%s",probNumber)).get();
+            Document doc = Jsoup.connect(String.format("https://www.acmicpc.net/user/%s",baekjoonId)).get();
 
             // 원하는 정보가 있는 특정 클래스(class) 선택
             String targetClass = "problem-list"; // 대상 클래스 이름으로 변경해야 합니다.
@@ -108,4 +111,13 @@ public class CertifiedBojService {
         return new CertifiedBojResponse(probNumString,probTitle,false);
     }
 
+    // 인증이 저장되어있는지 확인하는 로직
+    private CertifiedBojResponse BojAlreadyDone(CertifiedBojRequest request) {
+        CertifiedBoj certifiedBoj = certifiedBojRepository.findById(request.getInProgressNodeId()).orElse(null);
+        if (certifiedBoj != null) {
+            BojProb bojProb = bojProbRepository.findByRoadmapNodeId(certifiedBoj.getInProgressNode().getRoadmapNode().getId());
+            return new CertifiedBojResponse(bojProb.getBojNumber(), bojProb.getBojTitle(), true);
+        }
+        return null;
+    }
 }
