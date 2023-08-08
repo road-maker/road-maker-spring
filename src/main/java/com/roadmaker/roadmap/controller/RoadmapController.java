@@ -189,8 +189,25 @@ public class RoadmapController {
         return new ResponseEntity<> (roadmapService.findRoadmapByKeyword(keyword, size, page-1), HttpStatus.OK);
     }
 
-    @PostMapping("/keyword")
-    public Boolean setKeyword(@RequestBody BlogKeywordRequest request){
-        return roadmapService.setBlogKeyword(request);
+    @PostMapping("/blog_keyword")
+    public ResponseEntity<HttpStatus> setKeyword(@RequestBody BlogKeywordRequest request){
+        boolean result = roadmapService.setBlogKeyword(request);
+
+        if (!result) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PostMapping("/boj_problem")
+    public ResponseEntity<HttpStatus> setProblem(@RequestBody BojProbRequest request){
+        boolean result = roadmapService.setBojProblem(request);
+
+        if (!result) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

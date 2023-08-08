@@ -67,7 +67,6 @@ public class CertifiedBlogServiceImpl implements CertifiedBlogService {
             // 키워드가 있는 경우 CertifiedBlog 엔터티를 저장합니다.
             if (keywordExists) {
                 CertifiedBlog certifiedBlog = CertifiedBlog.builder()
-                        .member(member)
                         .inProgressNode(inProgressNode)
                         .submitUrl(submitUrl)
                         .done(true)

@@ -1,4 +1,4 @@
-package com.roadmaker.roadmap.entity.blogkeyword;
+package com.roadmaker.roadmap.entity.bojprob;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "BLOG_KEYWORD")
-public class BlogKeyword {
+@Table(name = "BOJ_PROB")
+public class BojProb {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,11 +20,15 @@ public class BlogKeyword {
     private Long roadmapNodeId;
 
     @Column(unique = true)
-    private String keyword;
+    private String bojNumber;
+
+    @Column(unique = true)
+    private String bojTitle;
 
     @Builder
-    public BlogKeyword(Long roadmapNodeId, String keyword) {
+    public BojProb(Long roadmapNodeId, String bojNumber, String bojTitle) {
         this.roadmapNodeId = roadmapNodeId;
-        this.keyword = keyword;
+        this.bojNumber = bojNumber;
+        this.bojTitle = bojTitle;
     }
 }
