@@ -1,6 +1,5 @@
 package com.roadmaker.gpt.service;
 
-import com.roadmaker.commons.event.CloseHandler;
 import com.roadmaker.gpt.dto.NodeDetail;
 import com.roadmaker.gpt.dto.RoadmapData;
 import com.theokanning.openai.completion.chat.ChatCompletionRequest;
@@ -105,7 +104,7 @@ public class GptServiceImpl implements GptService {
                 .model(gptModel)
                 .build();
 
-        return new NodeDetail(service.createChatCompletion(completionRequest).getChoices().get(0).getMessage().getContent());
+        return new NodeDetail(service.createChatCompletion(completionRequest).getChoices().get(0).getMessage().getContent().replace("\n", ""));
     }
 
     // 한번에 여러 개의 노드의 gpt 설명을 추가하기 위한 메서드
@@ -120,7 +119,7 @@ public class GptServiceImpl implements GptService {
                 .model(gptModel)
                 .build();
 
-        return new NodeDetail(service.createChatCompletion(completionRequest).getChoices().get(0).getMessage().getContent(), id);
+        return new NodeDetail(service.createChatCompletion(completionRequest).getChoices().get(0).getMessage().getContent().replace("\n", ""), id);
     }
 
     @Async("executor")
