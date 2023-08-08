@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class GptServiceImpl implements GptService {
@@ -103,7 +105,8 @@ public class GptServiceImpl implements GptService {
                 .model(gptModel)
                 .build();
 
-        return new NodeDetail(service.createChatCompletion(completionRequest).getChoices().get(0).getMessage().getContent().replace("\n\n", "\n"));
+        String output = newlineCharacterReplacer(service.createChatCompletion(completionRequest).getChoices().get(0).getMessage().getContent());
+        return new NodeDetail(output);
     }
 
     // 한번에 여러 개의 노드의 gpt 설명을 추가하기 위한 메서드
@@ -118,7 +121,29 @@ public class GptServiceImpl implements GptService {
                 .model(gptModel)
                 .build();
 
-        return new NodeDetail(service.createChatCompletion(completionRequest).getChoices().get(0).getMessage().getContent().replace("\n\n", "\n"), id);
+        String output = newlineCharacterReplacer(service.createChatCompletion(completionRequest).getChoices().get(0).getMessage().getContent());
+        return new NodeDetail(output, id);
+    }
+
+    private String newlineCharacterReplacer(String input) {
+        String codeBlockRegex = "<code>(.*?)</code>";
+        Pattern codeBlockPattern = Pattern.compile(codeBlockRegex, Pattern.DOTALL);
+        Matcher codeBlockMatcher = codeBlockPattern.matcher(input);
+
+        StringBuilder output = new StringBuilder();
+        int lastEnd = 0;
+        while (codeBlockMatcher.find()) {
+            String beforeCodeBlock = input.substring(lastEnd, codeBlockMatcher.start());
+            String codeBlockContent = codeBlockMatcher.group(1);
+            output.append(beforeCodeBlock.replace("\n\n", "\n"));
+            output.append("<code>");
+            output.append(codeBlockContent);
+            output.append("</code>");
+            lastEnd = codeBlockMatcher.end();
+        }
+        output.append(input.substring(lastEnd).replace("\n\n", "\n"));
+
+        return output.toString();
     }
 
     @Async("executor")
