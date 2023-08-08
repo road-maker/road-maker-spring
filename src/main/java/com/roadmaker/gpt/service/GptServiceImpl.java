@@ -94,9 +94,8 @@ public class GptServiceImpl implements GptService {
     //개별 노드의 설명을 생성하는 요청
     public NodeDetail makeDetails(String course) {
         String content1 =
-        "With every reliable and valid development and computer science knowledge, explain the concept of the provided argument. All your answers must be in Korean." +
-        "Your answer should be in innerHTML format and you should only use tags <h1>, <p>, <b>, <ul> and <li>. Your answers should only be in paragraphs.";
-
+                "With every reliable and valid development and computer science knowledge, explain the concept of the provided argument. All your answers must be in Korean." +
+                "Your answer should be in innerHTML format and you should only use tags <h1>, <p>, <b>, <ul> and <li>. Your answers should only be in paragraphs.";
         String content2 = String.format(course);
 
         ChatCompletionRequest completionRequest = ChatCompletionRequest.builder()
@@ -104,7 +103,7 @@ public class GptServiceImpl implements GptService {
                 .model(gptModel)
                 .build();
 
-        return new NodeDetail(service.createChatCompletion(completionRequest).getChoices().get(0).getMessage().getContent().replace("\n", ""));
+        return new NodeDetail(service.createChatCompletion(completionRequest).getChoices().get(0).getMessage().getContent().replace("\n\n", "\n"));
     }
 
     // 한번에 여러 개의 노드의 gpt 설명을 추가하기 위한 메서드
@@ -119,7 +118,7 @@ public class GptServiceImpl implements GptService {
                 .model(gptModel)
                 .build();
 
-        return new NodeDetail(service.createChatCompletion(completionRequest).getChoices().get(0).getMessage().getContent().replace("\n", ""), id);
+        return new NodeDetail(service.createChatCompletion(completionRequest).getChoices().get(0).getMessage().getContent().replace("\n\n", "\n"), id);
     }
 
     @Async("executor")
