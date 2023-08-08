@@ -1,8 +1,9 @@
 package com.roadmaker.boj.dto;
 
-import com.roadmaker.boj.entity.certifiedboj.CertifiedBoj;
-import com.roadmaker.boj.entity.certifiedboj.CertifiedBojRepository;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.ToString;
 
 @Getter
 @ToString

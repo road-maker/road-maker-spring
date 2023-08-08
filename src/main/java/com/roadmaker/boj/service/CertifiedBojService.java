@@ -30,7 +30,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional
 public class CertifiedBojService {
-    private final Logger logger = LoggerFactory.getLogger(CertifiedBlogServiceImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(CertifiedBojService.class);
     private final InProgressNodeRepository inProgressNodeRepository;
     private final BojProbRepository bojProbRepository;
     private final MemberRepository memberRepository;
