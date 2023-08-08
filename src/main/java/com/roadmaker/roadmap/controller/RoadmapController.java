@@ -190,13 +190,24 @@ public class RoadmapController {
     }
 
     @PostMapping("/blog_keyword")
-    public Boolean setKeyword(@RequestBody BlogKeywordRequest request){
+    public ResponseEntity<HttpStatus> setKeyword(@RequestBody BlogKeywordRequest request){
+        boolean result = roadmapService.setBlogKeyword(request);
 
-        return roadmapService.setBlogKeyword(request);
+        if (!result) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @PostMapping("/boj_problem")
-    public Boolean setProblem(@RequestBody BojProbRequest request){
-        return roadmapService.setBojProblem(request);
+    public ResponseEntity<HttpStatus> setProblem(@RequestBody BojProbRequest request){
+        boolean result = roadmapService.setBojProblem(request);
+
+        if (!result) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
