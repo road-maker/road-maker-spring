@@ -55,6 +55,7 @@ public class GptServiceImpl implements GptService {
         ChatCompletionRequest completionRequest = ChatCompletionRequest.builder()
                 .messages(getMessage(content1, content2))
                 .model(gptModel)
+                .temperature(0.2)
                 .build();
 
         // 받은 데이터
