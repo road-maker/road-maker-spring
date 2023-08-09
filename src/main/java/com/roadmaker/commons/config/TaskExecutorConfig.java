@@ -12,8 +12,8 @@ public class TaskExecutorConfig {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         //사용할 스레드 설정 goes on here
         executor.setCorePoolSize(10);
-        executor.setMaxPoolSize(20);
-        executor.setQueueCapacity(10);
+        executor.setMaxPoolSize(30);
+        executor.setQueueCapacity(30);
         executor.setThreadNamePrefix("executor-");
         executor.initialize();
 
