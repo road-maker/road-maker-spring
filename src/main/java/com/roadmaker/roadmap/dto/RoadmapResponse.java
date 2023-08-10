@@ -32,7 +32,7 @@ public class RoadmapResponse {
     private List<RoadmapNodeDto> nodes;
 
     private static String formatDate(LocalDateTime dateTime) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy. M. dd.");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy. M. dd");
         return dateTime.format(formatter);
     }
 
