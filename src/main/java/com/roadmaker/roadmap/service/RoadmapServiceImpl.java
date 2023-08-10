@@ -62,9 +62,9 @@ public class RoadmapServiceImpl implements RoadmapService{
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private enum OrderType {
-        RECENT, MOSTLIKED
-    }
+//    private enum OrderType {
+//        RECENT, MOSTLIKED
+//    }
 
     @Value("${ip-address}")
     private String ipAddress;
@@ -148,11 +148,12 @@ public class RoadmapServiceImpl implements RoadmapService{
     public List<RoadmapDto> findRoadmapJoinedByMemberId(Long memberId){
 
          List<InProgressRoadmap> inProgressRoadmaps = inProgressRoadmapRepository.findAllByMemberId(memberId);
-         if (inProgressRoadmaps.isEmpty()) {
-             throw new NotFoundException();
+        List<RoadmapDto> roadmapDtos= new ArrayList<>();
+
+        if (inProgressRoadmaps.isEmpty()) {
+             return roadmapDtos; // 진행중인 로드맵이 없는 경우
          }
 
-         List<RoadmapDto> roadmapDtos= new ArrayList<>();
          inProgressRoadmaps.forEach( inProgressRoadmap -> {
              Roadmap roadmap = roadmapRepository.findById(inProgressRoadmap.getRoadmap().getId()).orElse(null);
              RoadmapDto roadmapdto = RoadmapDto.of(Objects.requireNonNull(roadmap), roadmap.getMember());
@@ -223,7 +224,7 @@ public class RoadmapServiceImpl implements RoadmapService{
 
     //얘도 수정 염두
     public RoadmapFindResponse findRoadmapByKeyword(String keyword, Integer size, Integer page) {
-        PageRequest pageRequest = PageRequest.of(page, size);
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "CreatedAt"));
         return roadmapRepository.findBySearchOption(pageRequest, keyword);
     }
 

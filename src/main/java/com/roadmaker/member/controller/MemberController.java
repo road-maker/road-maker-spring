@@ -119,6 +119,7 @@ public class MemberController {
     @GetMapping(path="/{nickname}/in-progress-roadmaps")
     public ResponseEntity<List<RoadmapDto>> callRoadmapJoined(@PathVariable String nickname) {
         Long memberId = memberService.findMemberByNickname(nickname).getId();
+        //해당 멤버를 찾을 수 없는경우: 발생할 일 없음
 
         //이 멤버가 조인하고 잇는 모든 로드맵을 dto형태로의 리스트로 전달
         List<RoadmapDto> joiningRoadmaps = roadmapService.findRoadmapJoinedByMemberId(memberId);

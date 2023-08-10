@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -40,8 +41,9 @@ public class CommentServiceImpl implements CommentService{
         int pageMod = page-1;
 
         //페이지네이션, commentDto로 가공, 불러온 페이지 내에 넘버링 부여
-        PageRequest pageRequest = PageRequest.of(pageMod, size);
+        PageRequest pageRequest = PageRequest.of(pageMod, size, Sort.by(Sort.Direction.DESC, "CreatedAt"));
         Page<CommentDto> comments = commentRepository.findCommentByRoadmapId(roadmapId, pageRequest).map(CommentDto::of);
+
 
         // 페이지 주소 설정
         String next = ipAddress+ "api/roadmaps/load-roadmap/" +roadmapId + commentPage + (pageRequest.getPageNumber()+2);
@@ -67,7 +69,7 @@ public class CommentServiceImpl implements CommentService{
         int pageMod = page-1;
 
         //페이지네이션, commentDto로 가공, 불러온 페이지 내에 넘버링 부여
-        PageRequest pageRequest = PageRequest.of(pageMod, size);
+        PageRequest pageRequest = PageRequest.of(pageMod, size, Sort.by(Sort.Direction.DESC, "CreatedAt"));
         Page<CommentDto> comments = commentRepository.findCommentByMemberId(memberId, pageRequest).map(CommentDto::of);
 
         // 페이지 주소 설정
