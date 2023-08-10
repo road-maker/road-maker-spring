@@ -35,7 +35,9 @@ public interface RoadmapService {
 
     public RoadmapFindResponse findRoadmapByKeyword(String keyword, Integer size, Integer page);
 
+    /*
     public Boolean setBlogKeyword(BlogKeywordRequest request);
 
     public Boolean setBojProblem(BojProbRequest request);
+     */
 }

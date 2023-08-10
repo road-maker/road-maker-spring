@@ -93,6 +93,7 @@ public class RoadmapServiceImpl implements RoadmapService{
                 .map(nodeDto -> nodeDto.toEntity(roadmap))
                 .toList();
 
+
         roadmapNodeRepository.saveAll(roadmapNodes);
 
         // roadmapId 반환
@@ -231,6 +232,7 @@ public class RoadmapServiceImpl implements RoadmapService{
         return roadmapRepository.findBySearchOption(pageRequest, keyword);
     }
 
+    /*
     @Override
     public Boolean setBlogKeyword(BlogKeywordRequest request) {
         Long roadmapNodeId = request.getRoadmapNodeId();
@@ -283,4 +285,5 @@ public class RoadmapServiceImpl implements RoadmapService{
             return false;
         }
     }
+    */
 }
