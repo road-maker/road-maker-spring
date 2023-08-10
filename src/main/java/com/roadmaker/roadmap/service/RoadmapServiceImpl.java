@@ -147,14 +147,14 @@ public class RoadmapServiceImpl implements RoadmapService{
 
     public List<RoadmapDto> findRoadmapJoinedByMemberId(Long memberId){
 
-        List<InProgressRoadmap> inProgressRoadmaps = inProgressRoadmapRepository.findAllByMemberId(memberId);
+        List<InProgressRoadmap> inProgressRoadmaps = inProgressRoadmapRepository.findAllByMemberId(memberId, Sort.by(Sort.Direction.DESC, "CreatedAt"));
         List<RoadmapDto> roadmapDtos= new ArrayList<>();
 
         if (inProgressRoadmaps.isEmpty()) {
             RoadmapDto roadmapdto = RoadmapDto.builder()
                     .build();
             roadmapDtos.add(roadmapdto);
-             return roadmapDtos; // 진행중인 로드맵이 없는 경우
+            return roadmapDtos; // 진행중인 로드맵이 없는 경우
          }
 
          inProgressRoadmaps.forEach( inProgressRoadmap -> {
@@ -169,7 +169,7 @@ public class RoadmapServiceImpl implements RoadmapService{
     }
     public List<RoadmapDto> findRoadmapCreatedByMemberId(Long memberId){
         Optional<Member> member = memberRepository.findById(memberId);
-        List<Roadmap> roadmaps = roadmapRepository.findByMemberId(memberId);
+        List<Roadmap> roadmaps = roadmapRepository.findByMemberId(memberId, Sort.by(Sort.Direction.DESC, "CreatedAt"));
         return roadmaps.stream().map(roadmap -> RoadmapDto.of(roadmap, member.get())).toList();
     }
 
