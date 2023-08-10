@@ -54,21 +54,20 @@ public class CertifiedBlogServiceImpl implements CertifiedBlogService {
         System.out.println(blogUrl);
 
         // 로드맵 노드 ID로 블로그 키워드 찾기
-        Long roadmapNodeId = inProgressNode != null ? inProgressNode.getRoadmapNode().getId() : null;
-
-        System.out.println(roadmapNodeId);
-
-        BlogKeyword blogKeyword = blogKeywordRepository.findByRoadmapNodeId(roadmapNodeId);
+        BlogKeyword blogKeyword = inProgressNode != null ? inProgressNode.getRoadmapNode().getBlogKeyword() : null;
 
         String keyword = blogKeyword != null ? blogKeyword.getKeyword() : null;
 
         System.out.println(keyword);
+        System.out.println(request.getSubmitUrl());
 
         try {
             // Jsoup 라이브러리를 사용하여 블로그 콘텐츠 가져오기
             Document doc = Jsoup.connect(submitUrl).get();
 
-            Elements blogContents = doc.select("#content");
+            Elements blogContents = doc.select(".article_view");
+
+            System.out.println(blogContents);
 
             // 블로그 콘텐츠에 해당 키워드가 있는지 확인 && 본인 블로그인지 확인
             boolean keywordExists = blogContents.stream()
@@ -90,6 +89,7 @@ public class CertifiedBlogServiceImpl implements CertifiedBlogService {
         } catch (IOException e) {
             logger.error("Error : {}", e.getMessage());
         }
+        System.out.println("false to impl");
         return new CertifiedBlogResponse(submitUrl, false);
     }
 }

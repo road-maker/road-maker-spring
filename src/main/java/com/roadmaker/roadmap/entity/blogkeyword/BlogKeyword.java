@@ -17,14 +17,10 @@ public class BlogKeyword {
     private Long id;
 
     @Column
-    private Long roadmapNodeId;
-
-    @Column
     private String keyword;
 
     @Builder
-    public BlogKeyword(Long roadmapNodeId, String keyword) {
-        this.roadmapNodeId = roadmapNodeId;
+    public BlogKeyword(String keyword) {
         this.keyword = keyword;
     }
 }
