@@ -37,7 +37,6 @@ public class CertifiedBlogServiceImpl implements CertifiedBlogService {
     @Transactional
     public CertifiedBlogResponse certifyBlog(CertifiedBlogRequest request) {
         String submitUrl = request.getSubmitUrl();
-        System.out.println(submitUrl);
 
         // inprogressnodeid를 통해 member id와 roadmapnode id 찾기
         Long inProgressNodeId = request.getInProgressNodeId();
