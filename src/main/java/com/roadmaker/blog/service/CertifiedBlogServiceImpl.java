@@ -37,10 +37,13 @@ public class CertifiedBlogServiceImpl implements CertifiedBlogService {
     @Transactional
     public CertifiedBlogResponse certifyBlog(CertifiedBlogRequest request) {
         String submitUrl = request.getSubmitUrl();
+        System.out.println(submitUrl);
 
         // inprogressnodeid를 통해 member id와 roadmapnode id 찾기
         Long inProgressNodeId = request.getInProgressNodeId();
         InProgressNode inProgressNode = inProgressNodeRepository.findById(inProgressNodeId).orElse(null);
+
+        System.out.println(inProgressNode);
 
         // 멤버 ID로 member 엔티티 찾기
         Long memberId = inProgressNode != null ? inProgressNode.getMember().getId() : null;
@@ -48,11 +51,18 @@ public class CertifiedBlogServiceImpl implements CertifiedBlogService {
 
         String blogUrl = member != null ? member.getBlogUrl() : null;
 
+        System.out.println(blogUrl);
+
         // 로드맵 노드 ID로 블로그 키워드 찾기
         Long roadmapNodeId = inProgressNode != null ? inProgressNode.getRoadmapNode().getId() : null;
+
+        System.out.println(roadmapNodeId);
+
         BlogKeyword blogKeyword = blogKeywordRepository.findByRoadmapNodeId(roadmapNodeId);
 
         String keyword = blogKeyword != null ? blogKeyword.getKeyword() : null;
+
+        System.out.println(keyword);
 
         try {
             // Jsoup 라이브러리를 사용하여 블로그 콘텐츠 가져오기
@@ -63,6 +73,8 @@ public class CertifiedBlogServiceImpl implements CertifiedBlogService {
             // 블로그 콘텐츠에 해당 키워드가 있는지 확인 && 본인 블로그인지 확인
             boolean keywordExists = blogContents.stream()
                     .anyMatch(element -> element.text().contains(keyword) && submitUrl.startsWith(blogUrl));
+
+            System.out.println(keywordExists);
 
             // 키워드가 있는 경우 CertifiedBlog 엔터티를 저장합니다.
             if (keywordExists) {

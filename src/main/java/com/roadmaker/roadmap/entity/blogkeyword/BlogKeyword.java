@@ -19,7 +19,7 @@ public class BlogKeyword {
     @Column
     private Long roadmapNodeId;
 
-    @Column(unique = true)
+    @Column
     private String keyword;
 
     @Builder
