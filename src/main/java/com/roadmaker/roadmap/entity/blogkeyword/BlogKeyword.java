@@ -17,10 +17,10 @@ public class BlogKeyword {
     private Long id;
 
     @Column
-    private String keyword;
+    private String keyword = "";
 
     @Builder
     public BlogKeyword(String keyword) {
-        this.keyword = keyword;
+        this.keyword = keyword != null ? keyword : this.keyword;
     }
 }
