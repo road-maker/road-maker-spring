@@ -16,9 +16,14 @@ public class CertifiedBlogResponse {
         if (certifiedBlog == null) {
             throw new IllegalArgumentException("CertifiedBlog cannot be null");
         }
+
+        String submitUrl = certifiedBlog.getSubmitUrl() != null ? certifiedBlog.getSubmitUrl() : "";
+        Boolean doneBlog = certifiedBlog.getDone() != null ? certifiedBlog.getDone() : false;
+
         return CertifiedBlogResponse.builder()
-                .submitUrl(certifiedBlog.getSubmitUrl())
-                .doneBlog(certifiedBlog.getDone())
+                .submitUrl(submitUrl)
+                .doneBlog(doneBlog)
                 .build();
     }
+
 }
