@@ -5,9 +5,7 @@ import com.roadmaker.blog.dto.CertifiedBlogResponse;
 import com.roadmaker.blog.entity.certifiedblog.CertifiedBlog;
 import com.roadmaker.blog.entity.certifiedblog.CertifiedBlogRepository;
 import com.roadmaker.member.entity.Member;
-import com.roadmaker.member.entity.MemberRepository;
 import com.roadmaker.roadmap.entity.blogkeyword.BlogKeyword;
-import com.roadmaker.roadmap.entity.blogkeyword.BlogKeywordRepository;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNode;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNodeRepository;
 import jakarta.transaction.Transactional;
@@ -21,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Service @Slf4j
 @RequiredArgsConstructor
@@ -28,41 +27,66 @@ import java.io.IOException;
 public class CertifiedBlogServiceImpl implements CertifiedBlogService {
     private final Logger logger = LoggerFactory.getLogger(CertifiedBlogServiceImpl.class);
     private final InProgressNodeRepository inProgressNodeRepository;
-    private final MemberRepository memberRepository;
     private final CertifiedBlogRepository certifiedBlogRepository;
-    private final BlogKeywordRepository blogKeywordRepository;
 
 
     @Override
     @Transactional
     public CertifiedBlogResponse certifyBlog(CertifiedBlogRequest request) {
+        if (request == null) {
+            logger.error("Request is null.");
+            throw new IllegalArgumentException("Request cannot be null.");
+        }
+
         String submitUrl = request.getSubmitUrl();
+        if (submitUrl == null || submitUrl.isEmpty()) {
+            logger.error("Submit URL is invalid.");
+            throw new IllegalArgumentException("Submit URL cannot be null or empty.");
+        }
 
-        // inprogressnodeid를 통해 member id와 roadmapnode id 찾기
         Long inProgressNodeId = request.getInProgressNodeId();
+        if (inProgressNodeId == null) {
+            logger.error("InProgressNodeId is null.");
+            throw new IllegalArgumentException("InProgressNodeId cannot be null.");
+        }
+
         InProgressNode inProgressNode = inProgressNodeRepository.findById(inProgressNodeId).orElse(null);
+        if (inProgressNode == null) {
+            logger.error("InProgressNode not found for ID: {}", inProgressNodeId);
+            return new CertifiedBlogResponse(submitUrl, false);
+        }
 
-        // 멤버 ID로 member 엔티티 찾기
-        Long memberId = inProgressNode != null ? inProgressNode.getMember().getId() : null;
-        Member member = memberRepository.findById(memberId).orElse(null);
+        Member member = Optional.ofNullable(inProgressNode.getMember())
+                .orElseThrow(() -> {
+                    logger.error("Member not found.");
+                    return new IllegalArgumentException("Member associated with InProgressNode is null.");
+                });
 
-        String blogUrl = member != null ? member.getBlogUrl() : null;
+        String blogUrl = member.getBlogUrl();
+        if (blogUrl == null || blogUrl.isEmpty()) {
+            logger.error("Blog URL for member is invalid.");
+            throw new IllegalArgumentException("Blog URL cannot be null or empty.");
+        }
 
-        // 로드맵 노드 ID로 블로그 키워드 찾기
-        BlogKeyword blogKeyword = inProgressNode != null ? inProgressNode.getRoadmapNode().getBlogKeyword() : null;
-        String keyword = blogKeyword != null ? blogKeyword.getKeyword() : null;
+        BlogKeyword blogKeyword = Optional.ofNullable(inProgressNode.getRoadmapNode().getBlogKeyword())
+                .orElseThrow(() -> {
+                    logger.error("BlogKeyword not found.");
+                    return new IllegalArgumentException("BlogKeyword associated with InProgressNode is null.");
+                });
+
+        String keyword = blogKeyword.getKeyword();
+        if (keyword == null || keyword.isEmpty()) {
+            logger.error("Keyword is invalid.");
+            throw new IllegalArgumentException("Keyword cannot be null or empty.");
+        }
 
         try {
-            // Jsoup 라이브러리를 사용하여 블로그 콘텐츠 가져오기
             Document doc = Jsoup.connect(submitUrl).get();
-
             Elements blogContents = doc.select(".article_view");
 
-            // 블로그 콘텐츠에 해당 키워드가 있는지 확인 && 본인 블로그인지 확인
             boolean keywordExists = blogContents.stream()
                     .anyMatch(element -> element.text().contains(keyword) && submitUrl.startsWith(blogUrl));
 
-            // 키워드가 있는 경우 CertifiedBlog 엔터티를 저장합니다.
             if (keywordExists) {
                 CertifiedBlog certifiedBlog = CertifiedBlog.builder()
                         .inProgressNode(inProgressNode)
@@ -74,8 +98,10 @@ public class CertifiedBlogServiceImpl implements CertifiedBlogService {
                 return new CertifiedBlogResponse(submitUrl, true);
             }
         } catch (IOException e) {
-            logger.error("Error : {}", e.getMessage());
+            logger.error("Error while connecting to the URL: {}", e.getMessage());
         }
+
         return new CertifiedBlogResponse(submitUrl, false);
     }
+
 }

@@ -13,6 +13,9 @@ public class CertifiedBlogResponse {
     private Boolean doneBlog;
 
     public static CertifiedBlogResponse of(CertifiedBlog certifiedBlog) {
+        if (certifiedBlog == null) {
+            throw new IllegalArgumentException("CertifiedBlog cannot be null");
+        }
         return CertifiedBlogResponse.builder()
                 .submitUrl(certifiedBlog.getSubmitUrl())
                 .doneBlog(certifiedBlog.getDone())
