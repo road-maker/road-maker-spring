@@ -11,14 +11,18 @@ import com.roadmaker.roadmap.entity.inprogressnode.InProgressNodeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
+import org.jsoup.UnsupportedMimeTypeException;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.jsoup.select.Selector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.Optional;
 
 @Service @Slf4j
@@ -80,10 +84,29 @@ public class CertifiedBlogServiceImpl implements CertifiedBlogService {
             throw new IllegalArgumentException("Keyword cannot be null or empty.");
         }
 
+        Document doc = null;
+        Elements blogContents = null;
         try {
-            Document doc = Jsoup.connect(submitUrl).get();
-            Elements blogContents = doc.select(".article_view");
+            doc = Jsoup.connect(submitUrl).get();
+        } catch (HttpStatusException e) {
+            logger.error("HTTP error while connecting to the URL: {} - Status: {}", e.getUrl(), e.getStatusCode());
+        } catch (UnsupportedMimeTypeException e) {
+            logger.error("Unsupported MIME type: {}", e.getMimeType());
+        } catch (SocketTimeoutException e) {
+            logger.error("Connection timed out for URL: {}", submitUrl);
+        } catch (IOException e) {
+            logger.error("General IO error while connecting to the URL: {}", e.getMessage());
+        }
 
+        if (doc != null) {
+            try {
+                blogContents = doc.select(".article_view");
+            } catch (Selector.SelectorParseException e) {
+                logger.error("Invalid CSS selector used: {}", e.getMessage());
+            }
+        }
+
+        if (blogContents != null && !blogContents.isEmpty()) {
             boolean keywordExists = blogContents.stream()
                     .anyMatch(element -> element.text().contains(keyword) && submitUrl.startsWith(blogUrl));
 
@@ -97,11 +120,8 @@ public class CertifiedBlogServiceImpl implements CertifiedBlogService {
                 certifiedBlogRepository.save(certifiedBlog);
                 return new CertifiedBlogResponse(submitUrl, true);
             }
-        } catch (IOException e) {
-            logger.error("Error while connecting to the URL: {}", e.getMessage());
         }
 
         return new CertifiedBlogResponse(submitUrl, false);
     }
-
 }

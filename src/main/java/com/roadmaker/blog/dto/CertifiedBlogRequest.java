@@ -1,5 +1,6 @@
 package com.roadmaker.blog.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Builder
@@ -7,7 +8,9 @@ import lombok.*;
 @AllArgsConstructor
 public class CertifiedBlogRequest {
 
+    @NotNull(message = "inProgressNodeId cannot be null")
     private Long inProgressNodeId;
 
-    private String submitUrl;
+    @Builder.Default
+    private final String submitUrl = "";
 }

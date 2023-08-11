@@ -20,15 +20,15 @@ public class CertifiedBlog extends BaseTimeEntity {
     private InProgressNode inProgressNode;
 
     @Column(columnDefinition = "TEXT")
-    private String submitUrl;
+    private String submitUrl = "";
 
     @Column
-    private Boolean done;
+    private Boolean done = false;
 
     @Builder
     public CertifiedBlog(InProgressNode inProgressNode, String submitUrl, Boolean done) {
         this.inProgressNode = inProgressNode;
-        this.submitUrl = submitUrl;
-        this.done = done;
+        this.submitUrl = submitUrl != null ? submitUrl : this.submitUrl;
+        this.done = done != null ? done : this.done;
     }
 }
