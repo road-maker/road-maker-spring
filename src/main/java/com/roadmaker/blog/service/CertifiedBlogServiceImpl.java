@@ -4,10 +4,8 @@ import com.roadmaker.blog.dto.CertifiedBlogRequest;
 import com.roadmaker.blog.dto.CertifiedBlogResponse;
 import com.roadmaker.blog.entity.certifiedblog.CertifiedBlog;
 import com.roadmaker.blog.entity.certifiedblog.CertifiedBlogRepository;
-import com.roadmaker.member.entity.Member;
 import com.roadmaker.roadmap.entity.blogkeyword.BlogKeyword;
-import com.roadmaker.roadmap.entity.inprogressnode.InProgressNode;
-import com.roadmaker.roadmap.entity.inprogressnode.InProgressNodeRepository;
+import com.roadmaker.roadmap.entity.blogkeyword.BlogKeywordRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,16 +21,14 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
-import java.util.Optional;
 
 @Service @Slf4j
 @RequiredArgsConstructor
 @Transactional
 public class CertifiedBlogServiceImpl implements CertifiedBlogService {
     private final Logger logger = LoggerFactory.getLogger(CertifiedBlogServiceImpl.class);
-    private final InProgressNodeRepository inProgressNodeRepository;
     private final CertifiedBlogRepository certifiedBlogRepository;
-
+    private final BlogKeywordRepository blogKeywordRepository;
 
     @Override
     @Transactional
@@ -48,44 +44,22 @@ public class CertifiedBlogServiceImpl implements CertifiedBlogService {
             throw new IllegalArgumentException("Submit URL cannot be null or empty.");
         }
 
-        Long inProgressNodeId = request.getInProgressNodeId();
-        if (inProgressNodeId == null) {
-            logger.error("InProgressNodeId is null.");
-            throw new IllegalArgumentException("InProgressNodeId cannot be null.");
+        Long blogKeywordId = request.getBlogKeywordId();
+        if (blogKeywordId == null) {
+            logger.error("BlogKeywordId is null.");
+            throw new IllegalArgumentException("BlogKeywordId cannot be null.");
         }
 
-        InProgressNode inProgressNode = inProgressNodeRepository.findById(inProgressNodeId).orElse(null);
-        if (inProgressNode == null) {
-            logger.error("InProgressNode not found for ID: {}", inProgressNodeId);
+        // Assuming you have a BlogKeywordRepository and a method to fetch the keyword by its ID.
+        BlogKeyword blogKeyword = blogKeywordRepository.findById(blogKeywordId).orElse(null);
+        if (blogKeyword == null) {
+            logger.error("BlogKeyword not found for ID: {}", blogKeywordId);
             return new CertifiedBlogResponse(submitUrl, false);
         }
 
-        Member member = Optional.ofNullable(inProgressNode.getMember())
-                .orElseThrow(() -> {
-                    logger.error("Member not found.");
-                    return new IllegalArgumentException("Member associated with InProgressNode is null.");
-                });
-
-        String blogUrl = member.getBlogUrl();
-        if (blogUrl == null || blogUrl.isEmpty()) {
-            logger.error("Blog URL for member is invalid.");
-            throw new IllegalArgumentException("Blog URL cannot be null or empty.");
-        }
-
-        BlogKeyword blogKeyword = Optional.ofNullable(inProgressNode.getRoadmapNode().getBlogKeyword())
-                .orElseThrow(() -> {
-                    logger.error("BlogKeyword not found.");
-                    return new IllegalArgumentException("BlogKeyword associated with InProgressNode is null.");
-                });
-
         String keyword = blogKeyword.getKeyword();
-        if (keyword == null || keyword.isEmpty()) {
-            logger.error("Keyword is invalid.");
-            throw new IllegalArgumentException("Keyword cannot be null or empty.");
-        }
 
         Document doc = null;
-        Elements blogContents = null;
         try {
             doc = Jsoup.connect(submitUrl).get();
         } catch (HttpStatusException e) {
@@ -99,26 +73,23 @@ public class CertifiedBlogServiceImpl implements CertifiedBlogService {
         }
 
         if (doc != null) {
+            Elements blogContents;
             try {
                 blogContents = doc.select(".article_view");
+                boolean keywordExists = blogContents.stream()
+                        .anyMatch(element -> element.text().contains(keyword));
+
+                if (keywordExists) {
+                    CertifiedBlog certifiedBlog = CertifiedBlog.builder()
+                            .submitUrl(submitUrl)
+                            .done(true)
+                            .build();
+
+                    certifiedBlogRepository.save(certifiedBlog);
+                    return new CertifiedBlogResponse(submitUrl, true);
+                }
             } catch (Selector.SelectorParseException e) {
                 logger.error("Invalid CSS selector used: {}", e.getMessage());
-            }
-        }
-
-        if (blogContents != null && !blogContents.isEmpty()) {
-            boolean keywordExists = blogContents.stream()
-                    .anyMatch(element -> element.text().contains(keyword) && submitUrl.startsWith(blogUrl));
-
-            if (keywordExists) {
-                CertifiedBlog certifiedBlog = CertifiedBlog.builder()
-                        .inProgressNode(inProgressNode)
-                        .submitUrl(submitUrl)
-                        .done(true)
-                        .build();
-
-                certifiedBlogRepository.save(certifiedBlog);
-                return new CertifiedBlogResponse(submitUrl, true);
             }
         }
 
