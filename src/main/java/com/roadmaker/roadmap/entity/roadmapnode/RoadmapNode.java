@@ -62,6 +62,10 @@ public class RoadmapNode extends BaseTimeEntity {
 
     private BlogKeyword blogKeyword;
 
+    public String getKeywordFromBlogKeyword() {
+        return blogKeyword.getKeyword();
+    }
+
     @Builder
     public RoadmapNode(Roadmap roadmap, Integer width, Integer height, String sourcePosition, String targetPosition, String clientNodeId, String type, String detailedContent, RoadmapNodeStyle style, RoadmapNodeData data, RoadmapNodePosition position, RoadmapNodePositionAbsolute positionAbsolute, BlogKeyword blogKeyword) {
         this.roadmap = roadmap;
