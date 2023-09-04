@@ -35,53 +35,77 @@
 
 [바로 가기](http://roadmaker.site)
 
-- demo 계정:
-- demo 계정:
-- 시연 연상:
-- 현장 발표 영상:
+- demo 계정: test@test.com
+- demo 계정 비밀번호: test1234!
+- 시연 연상: 업로드 예정
 
 <a id="intro"></a>
 ## 2. 서비스 소개
 
-개발자들은 개발 공부를 할 때 로드맵을 참고한다. developer-roadmap 리포지토리는 24만개의 star를 받았을 정도로 인기가 많다.
+프로그래머가 되고 싶어하는 사람들은 "로드맵"이나 "커리큘럼"이라는 키워드로 자료를 검색합니다.
 
-기존 로드맵을 사용하다보니 나도 로드맵을 만들고 공유할 수 있으면 좋겠다는 생각이 들었고 그렇게 RoadMaker를 개발하게 되었습니다.
+이러한 정보가 모여있는 "[developer-roadmap](https://github.com/kamranahmedse/developer-roadmap)" 리포지토리가 24만 개의 star를 받은 것은 이러한 수요를 잘 보여주는 예입니다.
+
+하지만, 기존의 로드맵을 사용하다 보면 '나도 로드맵을 만들어보고 싶다내가 만든 로드맵을 다른 사람과 공유하고 싶다'는 생각이 들게 됩니다.
+
+이런 필요성에 응답하여, "RoadMaker"를 개발하게 되었습니다.
+
+RoadMaker는 사용자가 자신만의 개발 로드맵을 쉽게 만들고 공유할 수 있는 플랫폼입니다.
 
 ### 2.1. 주요 기능
 
 1. 로드맵 자동 생성
-   - GPT API를 이용하여 로드맵 초안을 자동 생성할 수 있습니다.
-2. 로드맵 참여 및 진행 
+   - GPT API를 이용하여 로드맵 초안을 자동 생성합니다.
+2. 로드맵 참여 및 진행
+   - 로드맵에 참여하고 진행도를 업데이트 할 수 있습니다.
 3. 댓글 작성
+   - 로드맵에 대해 궁금한 내용을 댓글을 달아 질문할 수 있습니다.
 4. 검색 기능
+   - 원하는 로드맵을 검색을 통해 찾을 수 있습니다.
 
 <a id="issue"></a>
 ## 3. 기술적 issue 해결 과정
 
 - Blue/Green 배포 자동화 구축하기
 - Thread Pool을 이용하여 GPT API 응답 속도를 줄인 과정
-- lambda와 cloudfront를 이용하여 온디맨드 이미지 리사이징을 구축한 과정
+- Lambda와 CloudFront, S3를 이용하여 온디맨드 이미지 리사이징을 구축한 과정
 - MySQL full text search를 이용하여 검색 기능을 구현한 과정
 
 <a id="architecture"></a>
 ## 4. 프로젝트 아키텍처
 
+![image](https://github.com/road-maker/road-maker-spring/assets/60874549/3a0a5263-fe33-4df0-827e-504b50dffbcc) 
+
 <a id="poster"></a>
 ## 5. 프로젝트 포스터
 
+![ROADMAKER POSTER](https://github.com/road-maker/road-maker-spring/assets/60874549/03e43fc1-e4ed-46ed-8330-d74cd11ff934)
+
 <a id="commit-convention"></a>
-## 6. Commit Convention
+## 6. 커밋 컨벤션
 
 본 프로젝트에서는 AngularJS commit Convention을 채택했습니다.
 
-### 6.1. Commit Message & Description
-> [#Issue Number] Type: Commit Title Description goes on here
+> [#이슈 번호] 이슈 타입: 커밋 메시지
 
-### 6.2. Commit Rules
+### 6.1. 타입 목록
 
-> Reference: [커밋을 잘게 쪼개자 - 커밋은 언제 하는 것이 가장 좋을까?](https://jaeheon.kr/257)
+Type | Description
+-- | --
+Feat | 새로운 기능 추가
+Fix | 버그 수정 또는 typo
+Refactor | 리팩토링
+Design | CSS 등 사용자 UI 디자인 변경
+Comment | 필요한 주석 추가 및 변경
+Style | 코드 포맷팅, 세미콜론 누락, 코드 변경이 없는 경우(함수/변수명 변경은 포함)
+Test | 테스트(테스트 코드 추가/수정/삭제), 테스트 리팩토링
+Perf | 성능 개선
+Init | 프로젝트 초기 생성
+Rename | 파일 혹은 폴더명을 수정하거나 옮기는 경우
+Remove | 파일을 삭제하는 작업만 수행하는 경우
+Docs | 문서 작업, 수정
+Build | 빌드 관련 파일 수정
+CI | CI 관련 설정 수정
 
-1. 커밋 단위는 메세지 한 줄로 설명할 수 있는 행동
-2. 간단한 커밋을 지향해야 한다: 한 커밋에 한 액션
 
 
