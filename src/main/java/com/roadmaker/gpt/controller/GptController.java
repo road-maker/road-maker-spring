@@ -32,7 +32,6 @@ public class GptController {
 
         // gpt 요청 객체 생성 후 응답 받기
         String gptCompletion = gptService.getGptAnswer(content1, content2);
-        System.out.println(gptCompletion);
         // 응답 내용 파싱
         return gptService.messageParsing(gptCompletion);
     }

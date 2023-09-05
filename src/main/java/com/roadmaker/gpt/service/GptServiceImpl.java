@@ -80,15 +80,12 @@ public class GptServiceImpl implements GptService {
                 String id = parts[0].trim();
                 String content = parts[1].trim();
 
-                System.out.println("Content: " + content);
-
 //                if (id.length() > 3) {
 //                    continue;
 //                }
                 // 새 문장을 만들어 formattedGptRoadmapResponses에 추가합니다.
                 RoadmapData roadmapData = new RoadmapData(id, content);
                 formattedRoadmapRespons.add(roadmapData);
-                System.out.println("roadmapData:" + roadmapData);
             }
         }
         return formattedRoadmapRespons;
