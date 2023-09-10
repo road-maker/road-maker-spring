@@ -37,7 +37,7 @@
 
 - demo 계정: test@test.com
 - demo 계정 비밀번호: test1234!
-- 시연 연상: 업로드 예정
+- 시연 연상: https://youtu.be/RqMJgGFdEws?feature=shared
 
 <a id="intro"></a>
 ## 2. 서비스 소개
