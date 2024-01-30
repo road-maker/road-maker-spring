@@ -67,9 +67,7 @@ RoadMaker는 사용자가 자신만의 개발 로드맵을 쉽게 만들고 공�
 ## 3. 기술적 issue 해결 과정
 
 - Blue/Green 배포 자동화 구축하기
-- Thread Pool을 이용하여 GPT API 응답 속도를 줄인 과정
 - Lambda와 CloudFront, S3를 이용하여 온디맨드 이미지 리사이징을 구축한 과정
-- MySQL full text search를 이용하여 검색 기능을 구현한 과정
 
 <a id="architecture"></a>
 ## 4. 프로젝트 아키텍처
