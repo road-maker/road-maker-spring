@@ -31,12 +31,14 @@
 - [전서인](https://github.com/Seo1n)(FE)
 - [임희호](https://github.com/HH981010)(BE)
 
-### 1.3. 웹사이트
+### 1.3. 시연 연상
 
+<!--
 [바로 가기](http://roadmaker.site)
 
 - demo 계정: test@test.com
 - demo 계정 비밀번호: test1234!
+-->
 - 시연 연상: https://youtu.be/RqMJgGFdEws?feature=shared
 
 <a id="intro"></a>
