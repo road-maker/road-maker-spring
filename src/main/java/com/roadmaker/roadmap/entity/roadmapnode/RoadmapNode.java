@@ -2,8 +2,6 @@ package com.roadmaker.roadmap.entity.roadmapnode;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.roadmaker.commons.BaseTimeEntity;
-import com.roadmaker.roadmap.entity.blogkeyword.BlogKeyword;
-import com.roadmaker.roadmap.entity.bojprob.BojProb;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import com.roadmaker.roadmap.entity.roadmapnodedata.RoadmapNodeData;
 import com.roadmaker.roadmap.entity.roadmapnodeposition.RoadmapNodePosition;
@@ -57,17 +55,8 @@ public class RoadmapNode extends BaseTimeEntity {
     @JoinColumn(name = "ROADMAP_NODE_POSITION_ABSOLUTE_ID")
     private RoadmapNodePositionAbsolute positionAbsolute;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "BLOG_KEYWORD")
-
-    private BlogKeyword blogKeyword;
-
-    public String getKeywordFromBlogKeyword() {
-        return blogKeyword.getKeyword();
-    }
-
     @Builder
-    public RoadmapNode(Roadmap roadmap, Integer width, Integer height, String sourcePosition, String targetPosition, String clientNodeId, String type, String detailedContent, RoadmapNodeStyle style, RoadmapNodeData data, RoadmapNodePosition position, RoadmapNodePositionAbsolute positionAbsolute, BlogKeyword blogKeyword) {
+    public RoadmapNode(Roadmap roadmap, Integer width, Integer height, String sourcePosition, String targetPosition, String clientNodeId, String type, String detailedContent, RoadmapNodeStyle style, RoadmapNodeData data, RoadmapNodePosition position, RoadmapNodePositionAbsolute positionAbsolute) {
         this.roadmap = roadmap;
         this.clientNodeId = clientNodeId;
         this.width = width;
@@ -80,6 +69,5 @@ public class RoadmapNode extends BaseTimeEntity {
         this.data = data;
         this.position = position;
         this.positionAbsolute = positionAbsolute;
-        this.blogKeyword = blogKeyword;
     }
 }

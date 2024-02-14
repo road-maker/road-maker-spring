@@ -1,6 +1,5 @@
 package com.roadmaker.roadmap.dto;
 
-import com.roadmaker.roadmap.entity.blogkeyword.BlogKeyword;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNode;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNode;
@@ -29,9 +28,6 @@ public class RoadmapNodeDto {
     private RoadmapNodePositionDto position;
     private RoadmapNodePositionAbsoluteDto positionAbsolute;
 
-    private BlogKeyword blogKeyword;
-
-
     public RoadmapNode toEntity(Roadmap roadmap) {
         return RoadmapNode.builder()
                 .roadmap(roadmap)
@@ -46,7 +42,6 @@ public class RoadmapNodeDto {
                 .data(this.data.toEntity())
                 .position(this.position.toEntity())
                 .positionAbsolute(this.positionAbsolute.toEntity())
-                .blogKeyword(this.blogKeyword)
                 .build();
     }
 
@@ -64,7 +59,6 @@ public class RoadmapNodeDto {
                 .data(RoadmapNodeDataDto.of(roadmapNode.getData()))
                 .position(RoadmapNodePositionDto.of(roadmapNode.getPosition()))
                 .positionAbsolute(RoadmapNodePositionAbsoluteDto.of(roadmapNode.getPositionAbsolute()))
-                .blogKeyword(roadmapNode.getBlogKeyword())
                 .build();
     }
 
@@ -82,7 +76,6 @@ public class RoadmapNodeDto {
                 .data(RoadmapNodeDataDto.of(inProgressNode.getRoadmapNode().getData()))
                 .position(RoadmapNodePositionDto.of(inProgressNode.getRoadmapNode().getPosition()))
                 .positionAbsolute(RoadmapNodePositionAbsoluteDto.of(inProgressNode.getRoadmapNode().getPositionAbsolute()))
-                .blogKeyword(inProgressNode.getRoadmapNode().getBlogKeyword())
                 .build();
     }
 }

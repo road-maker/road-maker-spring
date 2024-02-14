@@ -42,15 +42,12 @@ public class InProgressNode extends BaseTimeEntity {
 
     private Boolean done;
 
-    private String blogKeyword = "";
-
     @Builder
-    public InProgressNode(Roadmap roadmap, RoadmapNode roadmapNode, Member member, Boolean done, InProgressRoadmap inProgressRoadmap, String blogKeyword) {
+    public InProgressNode(Roadmap roadmap, RoadmapNode roadmapNode, Member member, Boolean done, InProgressRoadmap inProgressRoadmap) {
         this.roadmap = roadmap;
         this.roadmapNode = roadmapNode;
         this.member = member;
         this.done = done;
         this.inProgressRoadmap = inProgressRoadmap;
-        this.blogKeyword = blogKeyword != null ? blogKeyword : this.blogKeyword;
     }
 }
