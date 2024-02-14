@@ -11,8 +11,6 @@ import com.roadmaker.like.service.LikeService;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.service.MemberService;
 import com.roadmaker.roadmap.dto.*;
-import com.roadmaker.roadmap.entity.blogkeyword.BlogKeyword;
-import com.roadmaker.roadmap.entity.blogkeyword.BlogKeywordRepository;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNode;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNodeRepository;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
@@ -115,25 +113,6 @@ public class RoadmapController {
         return new ResponseEntity<>(roadmapResponse, HttpStatus.OK);
     }
 
-//    @LoginRequired
-//    @GetMapping("/{roadmapId}/auth")
-//    public ResponseEntity<RoadmapResponse> loadRoadmapWithAuth(@PathVariable Long roadmapId, @LoginMember Member member) {
-//        Roadmap roadmap = roadmapService.findRoadmapById(roadmapId);
-//        RoadmapResponse roadmapResponse;
-//        boolean isLiked = likeService.isLiked(roadmapId, member.getId());
-//
-//        Optional<InProgressRoadmap> inProgressRoadmap = inProgressRoadmapRepository.findByRoadmapIdAndMemberId(roadmapId, member.getId());
-//
-//        if (inProgressRoadmap.isEmpty()) {
-//            roadmapResponse = RoadmapResponse.of(roadmap, isLiked);
-//        } else {
-//            List<InProgressNode> inProgressNodes = inProgressNodeRepository.findByRoadmapIdAndMemberId(roadmapId, member.getId());
-//            roadmapResponse = RoadmapResponse.of(roadmap, isLiked, inProgressNodes);
-//        }
-//
-//        return new ResponseEntity<>(roadmapResponse, HttpStatus.OK);
-//    }
-
     @GetMapping(path="/load-roadmap/{roadmapId}/comments")
     public ResponseEntity<CommentResponse> loadRoadmapComments(@PathVariable Long roadmapId, @RequestParam Integer page) {
         int size = 8;
@@ -188,28 +167,4 @@ public class RoadmapController {
         int size = 8;
         return new ResponseEntity<> (roadmapService.findRoadmapByKeyword(keyword, size, page-1), HttpStatus.OK);
     }
-
-    /*
-    @PostMapping("/blog_keyword")
-    public ResponseEntity<HttpStatus> setKeyword(@RequestBody BlogKeywordRequest request){
-        boolean result = roadmapService.setBlogKeyword(request);
-
-        if (!result) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
-
-        return ResponseEntity.status(HttpStatus.OK).build();
-    }
-
-    @PostMapping("/boj_problem")
-    public ResponseEntity<HttpStatus> setProblem(@RequestBody BojProbRequest request){
-        boolean result = roadmapService.setBojProblem(request);
-
-        if (!result) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
-
-        return ResponseEntity.status(HttpStatus.OK).build();
-    }
-    */
 }

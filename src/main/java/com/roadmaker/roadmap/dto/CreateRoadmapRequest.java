@@ -1,7 +1,6 @@
 package com.roadmaker.roadmap.dto;
 
 import com.roadmaker.member.entity.Member;
-import com.roadmaker.roadmap.entity.blogkeyword.BlogKeyword;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import com.roadmaker.roadmap.entity.roadmapedge.RoadmapEdge;
 import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNode;
@@ -162,8 +161,6 @@ public class CreateRoadmapRequest {
         @Valid @NotNull
         private PositionAbsoluteDto positionAbsolute;
 
-        private BlogKeywordDto blogKeyword;
-
         public RoadmapNode toEntity(Roadmap roadmap) {
             return RoadmapNode.builder()
                     .roadmap(roadmap)
@@ -178,7 +175,6 @@ public class CreateRoadmapRequest {
                     .data(this.data.toEntity())
                     .position(this.position.toEntity())
                     .positionAbsolute(this.positionAbsolute.toEntity())
-                    .blogKeyword(this.blogKeyword.toEntity())
                     .build();
         }
 
@@ -263,22 +259,6 @@ public class CreateRoadmapRequest {
                 return RoadmapNodePositionAbsolute.builder()
                         .x(this.x)
                         .y(this.y)
-                        .build();
-            }
-        }
-
-        @Getter
-        @ToString
-        @Builder
-        @NoArgsConstructor(access = AccessLevel.PRIVATE)
-        @AllArgsConstructor
-        public static class BlogKeywordDto {
-
-            private String keyword;
-
-            public BlogKeyword toEntity() {
-                return BlogKeyword.builder()
-                        .keyword(keyword)
                         .build();
             }
         }

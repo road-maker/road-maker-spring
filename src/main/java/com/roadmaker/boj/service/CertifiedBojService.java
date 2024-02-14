@@ -1,6 +1,5 @@
 package com.roadmaker.boj.service;
 
-import com.roadmaker.blog.service.CertifiedBlogServiceImpl;
 import com.roadmaker.boj.dto.CertifiedBojRequest;
 import com.roadmaker.boj.dto.CertifiedBojResponse;
 import com.roadmaker.boj.entity.certifiedboj.CertifiedBoj;
@@ -55,7 +54,7 @@ public class CertifiedBojService {
         String probNumber = bojProb != null ? bojProb.getBojNumber() : null;
         String probNumString = String.valueOf(probNumber);
 
-        CertifiedBojResponse certifiedBojResponse = BojAlreadyDone(request);
+        CertifiedBojResponse certifiedBojResponse = bojAlreadyDone(request);
         if (certifiedBojResponse != null) {
             return certifiedBojResponse;
         }
@@ -112,7 +111,7 @@ public class CertifiedBojService {
     }
 
     // 인증이 저장되어있는지 확인하는 로직
-    private CertifiedBojResponse BojAlreadyDone(CertifiedBojRequest request) {
+    private CertifiedBojResponse bojAlreadyDone(CertifiedBojRequest request) {
         CertifiedBoj certifiedBoj = certifiedBojRepository.findById(request.getInProgressNodeId()).orElse(null);
         if (certifiedBoj != null) {
             BojProb bojProb = bojProbRepository.findByRoadmapNodeId(certifiedBoj.getInProgressNode().getRoadmapNode().getId());

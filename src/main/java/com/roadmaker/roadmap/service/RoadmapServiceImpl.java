@@ -10,13 +10,9 @@ import com.roadmaker.inprogressroadmap.entity.InProgressRoadmapRepository;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.entity.MemberRepository;
 import com.roadmaker.roadmap.dto.*;
-import com.roadmaker.roadmap.entity.blogkeyword.BlogKeyword;
-import com.roadmaker.roadmap.entity.blogkeyword.BlogKeywordRepository;
-import com.roadmaker.roadmap.entity.bojprob.BojProb;
 import com.roadmaker.roadmap.entity.bojprob.BojProbRepository;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNode;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNodeRepository;
-import com.roadmaker.roadmap.entity.inprogressnode.QInProgressNode;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import com.roadmaker.roadmap.entity.roadmap.RoadmapRepository;
 import com.roadmaker.roadmap.entity.roadmapedge.RoadmapEdge;
@@ -26,8 +22,6 @@ import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNodeRepository;
 import com.roadmaker.roadmap.entity.roadmapviewport.RoadmapViewport;
 import com.roadmaker.roadmap.entity.roadmapviewport.RoadmapViewportRepository;
 import lombok.RequiredArgsConstructor;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -57,14 +51,9 @@ public class RoadmapServiceImpl implements RoadmapService{
     private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;
     private final ImageService imageService;
-    private final BlogKeywordRepository blogKeywordRepository;
     private final BojProbRepository bojProbRepository;
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-//    private enum OrderType {
-//        RECENT, MOSTLIKED
-//    }
 
     @Value("${ip-address}")
     private String ipAddress;
@@ -231,59 +220,4 @@ public class RoadmapServiceImpl implements RoadmapService{
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "CreatedAt"));
         return roadmapRepository.findBySearchOption(pageRequest, keyword);
     }
-
-    /*
-    @Override
-    public Boolean setBlogKeyword(BlogKeywordRequest request) {
-        Long roadmapNodeId = request.getRoadmapNodeId();
-        String keyword = request.getKeyword();
-
-        // keyword가 존재하면 false를 반환하며 종료
-        BlogKeyword existingKeyword = blogKeywordRepository.findByRoadmapNodeId(roadmapNodeId);
-        if (existingKeyword != null) {
-            return false;
-        }
-        // 새로운 키워드 등록
-        BlogKeyword blogKeyword = BlogKeyword.builder()
-                .roadmapNodeId(roadmapNodeId)
-                .keyword(keyword)
-                .build();
-
-        blogKeywordRepository.save(blogKeyword);
-
-        return true;
-    }
-
-    @Override
-    public Boolean setBojProblem(BojProbRequest request) {
-        Long roadmapNodeId = request.getRoadmapNodeId();
-        String bojNumber = request.getProbNumber();
-
-        BojProb bojProblemExists = bojProbRepository.findByRoadmapNodeId(roadmapNodeId);
-        if (bojProblemExists != null) {
-            return false;
-        }
-
-        try {
-            // Jsoup을 이용하여 해당 웹 페이지에 연결
-            String url = String.format("https://www.acmicpc.net/problem/%s", bojNumber);
-            Document doc = Jsoup.connect(url).get();
-
-            String bojTitle = doc.getElementById("problem_title").text();
-
-            BojProb bojProb = BojProb.builder()
-                    .roadmapNodeId(roadmapNodeId)
-                    .bojNumber(bojNumber)
-                    .bojTitle(bojTitle)
-                    .build();
-
-            bojProbRepository.save(bojProb);
-            return true;
-
-        } catch (Exception e) {
-            logger.debug("Error:", e);
-            return false;
-        }
-    }
-    */
 }
