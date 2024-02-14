@@ -10,7 +10,6 @@ import com.roadmaker.inprogressroadmap.entity.InProgressRoadmapRepository;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.entity.MemberRepository;
 import com.roadmaker.roadmap.dto.*;
-import com.roadmaker.roadmap.entity.bojprob.BojProbRepository;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNode;
 import com.roadmaker.roadmap.entity.inprogressnode.InProgressNodeRepository;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
@@ -51,12 +50,13 @@ public class RoadmapServiceImpl implements RoadmapService{
     private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;
     private final ImageService imageService;
-    private final BojProbRepository bojProbRepository;
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Value("${ip-address}")
     private String ipAddress;
+
+    private static final String SORT_PROPERTIES = "CreatedAt";
 
     @Override
     public Long createRoadmap(CreateRoadmapRequest createRoadmapRequest, Member member) {
@@ -104,7 +104,7 @@ public class RoadmapServiceImpl implements RoadmapService{
         Page<Roadmap> roadmaps = null;
         PageRequest pageRequest = null;
         if (Objects.equals(flag, "recent")) { //default: 최신순
-            pageRequest = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+            pageRequest = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, SORT_PROPERTIES));
             roadmaps = roadmapRepository.findAll(pageRequest);
 
             List<RoadmapDto> roadmapsDtoList = roadmaps.stream().map(roadmap -> RoadmapDto.of(roadmap, roadmap.getMember())).toList();
@@ -137,7 +137,7 @@ public class RoadmapServiceImpl implements RoadmapService{
 
     public List<RoadmapDto> findRoadmapJoinedByMemberId(Long memberId){
 
-        List<InProgressRoadmap> inProgressRoadmaps = inProgressRoadmapRepository.findAllByMemberId(memberId, Sort.by(Sort.Direction.DESC, "CreatedAt"));
+        List<InProgressRoadmap> inProgressRoadmaps = inProgressRoadmapRepository.findAllByMemberId(memberId, Sort.by(Sort.Direction.DESC, SORT_PROPERTIES));
         List<RoadmapDto> roadmapDtos= new ArrayList<>();
 
         if (inProgressRoadmaps.isEmpty()) {
@@ -159,7 +159,7 @@ public class RoadmapServiceImpl implements RoadmapService{
     }
     public List<RoadmapDto> findRoadmapCreatedByMemberId(Long memberId){
         Optional<Member> member = memberRepository.findById(memberId);
-        List<Roadmap> roadmaps = roadmapRepository.findByMemberId(memberId, Sort.by(Sort.Direction.DESC, "CreatedAt"));
+        List<Roadmap> roadmaps = roadmapRepository.findByMemberId(memberId, Sort.by(Sort.Direction.DESC, SORT_PROPERTIES));
         return roadmaps.stream().map(roadmap -> RoadmapDto.of(roadmap, member.get())).toList();
     }
 
@@ -217,7 +217,7 @@ public class RoadmapServiceImpl implements RoadmapService{
 
     //얘도 수정 염두
     public RoadmapFindResponse findRoadmapByKeyword(String keyword, Integer size, Integer page) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "CreatedAt"));
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, SORT_PROPERTIES));
         return roadmapRepository.findBySearchOption(pageRequest, keyword);
     }
 }
