@@ -1,4 +1,4 @@
-package com.roadmaker.global.exception;
+package com.roadmaker.global.error.exception;
 
 public class NotFoundException  extends RuntimeException{
     public NotFoundException() {

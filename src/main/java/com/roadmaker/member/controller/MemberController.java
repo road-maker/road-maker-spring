@@ -4,11 +4,11 @@ import com.roadmaker.comment.dto.CommentResponse;
 import com.roadmaker.comment.service.CommentService;
 import com.roadmaker.global.annotation.LoginMember;
 import com.roadmaker.global.annotation.LoginRequired;
-import com.roadmaker.global.exception.ConflictException;
-import com.roadmaker.global.exception.NotFoundException;
 import com.roadmaker.image.dto.UploadImageResponse;
 import com.roadmaker.member.dto.*;
 import com.roadmaker.member.entity.Member;
+import com.roadmaker.member.exception.EmailAlreadyRegisteredException;
+import com.roadmaker.member.exception.NicknameAlreadyRegisteredException;
 import com.roadmaker.member.service.MemberService;
 import com.roadmaker.roadmap.dto.RoadmapDto;
 import com.roadmaker.roadmap.service.RoadmapService;
@@ -36,24 +36,14 @@ public class MemberController {
 
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@Valid @RequestBody SignupRequest signupRequest) {
-        // 이메일 중복 검사
-        if (memberService.isDuplicatedEmail(signupRequest.getEmail()) && memberService.isDuplicatedNickname(signupRequest.getNickname())) {
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-                    .body("이메일과 닉네임 중복");
+        if (memberService.isDuplicatedEmail(signupRequest.getEmail())) {
+            throw new EmailAlreadyRegisteredException();
         }
-        else if (memberService.isDuplicatedEmail(signupRequest.getEmail())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body("이메일 중복");
-        }
-        // 닉네임 중복 검사
-        else if(memberService.isDuplicatedNickname(signupRequest.getNickname())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("닉네임 중복");
+        if(memberService.isDuplicatedNickname(signupRequest.getNickname())) {
+            throw new NicknameAlreadyRegisteredException();
         }
 
-        // 비밀번호 암호화 후 저장
         memberService.signUp(signupRequest);
-
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -84,19 +74,13 @@ public class MemberController {
     @GetMapping(path="/{memberId}")
     public ResponseEntity<MemberResponse> findMember(@PathVariable Long memberId) {
         MemberResponse memberResponse = memberService.findMemberByMemberId(memberId);
-        if (memberResponse == null) {
-            throw new NotFoundException("해당 멤버를 찾지 못함");
-        }
         return new ResponseEntity<>(memberResponse, HttpStatus.OK);
     }
 
     @GetMapping(path="/{memberId}/comments")
-    public ResponseEntity<CommentResponse> findMemberComments(@PathVariable Long memberId,@RequestParam(name="page") Integer page) {
-        int size = 8;
-
-        if(memberId == null) { throw new NotFoundException("해당 멤버를 찾지 못함"); }
-
-        CommentResponse commentsInPage = commentService.findByMemberIdAndPageRequest(memberId,page, size);
+    public ResponseEntity<CommentResponse> findMemberComments(@PathVariable Long memberId, @RequestParam(name="page") Integer page) {
+        final int size = 8;
+        CommentResponse commentsInPage = commentService.findByMemberIdAndPageRequest(memberId, page, size);
         return new ResponseEntity<>(commentsInPage, HttpStatus.OK);
     }
 
@@ -107,12 +91,10 @@ public class MemberController {
         //2. 내가 넣으려는 닉네임이 중복되는 경우 예외 409처리
         //2. 비즈니스 로직 처리
         MemberResponse memberResponse = memberService.saveProfile(request, member);
-        if(memberResponse!=null) {
-            //3. 응답 메세지 처리
-            return new ResponseEntity<>(memberResponse, HttpStatus.CREATED); //
-        } else {
-            throw new ConflictException();
+        if (memberResponse == null) {
+            throw new NicknameAlreadyRegisteredException();
         }
+        return new ResponseEntity<>(memberResponse, HttpStatus.CREATED);
     }
 
     @LoginRequired

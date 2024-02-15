@@ -1,15 +1,10 @@
 package com.roadmaker.member.exception;
 
-public class UnAuthenticatedException extends RuntimeException {
+import com.roadmaker.global.error.ApiException;
+import org.springframework.http.HttpStatus;
+
+public class UnAuthenticatedException extends ApiException {
     public UnAuthenticatedException() {
-        super();
-    }
-
-    public UnAuthenticatedException(String message) {
-        super(message);
-    }
-
-    public UnAuthenticatedException(String message, Throwable cause) {
-        super(message, cause);
+        super(HttpStatus.UNAUTHORIZED, "인증되지 않은 사용자입니다. 로그인이 필요합니다.");
     }
 }

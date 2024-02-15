@@ -1,8 +1,7 @@
 package com.roadmaker.roadmap.service;
 
 import com.roadmaker.comment.entity.CommentRepository;
-import com.roadmaker.global.exception.ConflictException;
-import com.roadmaker.global.exception.NotFoundException;
+import com.roadmaker.global.error.exception.NotFoundException;
 import com.roadmaker.image.dto.UploadImageResponse;
 import com.roadmaker.image.service.ImageService;
 import com.roadmaker.inprogressroadmap.entity.InProgressRoadmap;
@@ -20,6 +19,8 @@ import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNode;
 import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNodeRepository;
 import com.roadmaker.roadmap.entity.roadmapviewport.RoadmapViewport;
 import com.roadmaker.roadmap.entity.roadmapviewport.RoadmapViewportRepository;
+import com.roadmaker.roadmap.exception.RoadmapAlreadyJoinedException;
+import com.roadmaker.roadmap.exception.RoadmapNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -132,7 +133,7 @@ public class RoadmapServiceImpl implements RoadmapService{
 
     @Override
     public Roadmap findRoadmapById(Long roadmapId) {
-        return roadmapRepository.findById(roadmapId).orElseThrow(NotFoundException::new);
+        return roadmapRepository.findById(roadmapId).orElseThrow(RoadmapNotFoundException::new);
     }
 
     public List<RoadmapDto> findRoadmapJoinedByMemberId(Long memberId){
@@ -170,7 +171,7 @@ public class RoadmapServiceImpl implements RoadmapService{
         // 이미 참여중인지 확인
         Optional<InProgressRoadmap> inProgressRoadmapOptional = inProgressRoadmapRepository.findByRoadmapIdAndMemberId(roadmap.getId(), member.getId());
         if (inProgressRoadmapOptional.isPresent()) {
-            throw new ConflictException("Already joined this roadmap");
+            throw new RoadmapAlreadyJoinedException();
         }
         
         // InProgresRoadmap 생성
