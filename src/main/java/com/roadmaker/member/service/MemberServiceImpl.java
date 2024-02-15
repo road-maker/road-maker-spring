@@ -121,13 +121,8 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public MemberResponse findMemberByEmail(String email) {
-        Optional<Member> member = memberRepository.findByEmail(email);
-
-        if (member.isEmpty()) {
-            return null;
-        }
-
-        return MemberResponse.of(member.get());
+        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+        return MemberResponse.of(member);
     }
 
     public MemberResponse findMemberByNickname(String nickname) {
