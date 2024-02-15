@@ -9,6 +9,7 @@ import com.roadmaker.global.exception.NotFoundException;
 import com.roadmaker.image.dto.UploadImageResponse;
 import com.roadmaker.member.dto.*;
 import com.roadmaker.member.entity.Member;
+import com.roadmaker.member.exception.EmailAlreadyRegisteredException;
 import com.roadmaker.member.service.MemberService;
 import com.roadmaker.roadmap.dto.RoadmapDto;
 import com.roadmaker.roadmap.service.RoadmapService;
@@ -36,22 +37,15 @@ public class MemberController {
 
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@Valid @RequestBody SignupRequest signupRequest) {
-        // 이메일 중복 검사
-        if (memberService.isDuplicatedEmail(signupRequest.getEmail()) && memberService.isDuplicatedNickname(signupRequest.getNickname())) {
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-                    .body("이메일과 닉네임 중복");
+        if (memberService.isDuplicatedEmail(signupRequest.getEmail())) {
+            throw new EmailAlreadyRegisteredException();
         }
-        else if (memberService.isDuplicatedEmail(signupRequest.getEmail())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body("이메일 중복");
-        }
-        // 닉네임 중복 검사
-        else if(memberService.isDuplicatedNickname(signupRequest.getNickname())) {
+
+        if(memberService.isDuplicatedNickname(signupRequest.getNickname())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("닉네임 중복");
         }
 
-        // 비밀번호 암호화 후 저장
         memberService.signUp(signupRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
