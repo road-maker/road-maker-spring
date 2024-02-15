@@ -23,8 +23,8 @@ public class CommentController {
 
     @LoginRequired
     @PostMapping
-    public ResponseEntity<HttpStatus> saveComment(@LoginMember Member member, @RequestBody CommentDto commentReqeust) {
-        commentService.saveComment(commentReqeust, member);
+    public ResponseEntity<HttpStatus> saveComment(@LoginMember Member member, @RequestBody CommentDto commentDto) {
+        commentService.saveComment(commentDto, member);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
