@@ -1,7 +1,7 @@
-package com.roadmaker.commons.advice;
+package com.roadmaker.global.advice;
 
-import com.roadmaker.commons.exception.ConflictException;
-import com.roadmaker.commons.exception.NotFoundException;
+import com.roadmaker.global.exception.ConflictException;
+import com.roadmaker.global.exception.NotFoundException;
 import com.roadmaker.member.exception.UnAuthenticatedException;
 import lombok.Getter;
 import lombok.Setter;

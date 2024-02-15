@@ -1,4 +1,4 @@
-package com.roadmaker.commons.exception;
+package com.roadmaker.global.exception;
 
 public class ExecutionException extends RuntimeException{
     public ExecutionException() {

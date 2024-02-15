@@ -2,8 +2,8 @@ package com.roadmaker.roadmap.controller;
 
 import com.roadmaker.comment.dto.CommentResponse;
 import com.roadmaker.comment.service.CommentService;
-import com.roadmaker.commons.annotation.LoginMember;
-import com.roadmaker.commons.annotation.LoginRequired;
+import com.roadmaker.global.annotation.LoginMember;
+import com.roadmaker.global.annotation.LoginRequired;
 import com.roadmaker.image.dto.UploadImageResponse;
 import com.roadmaker.inprogressroadmap.entity.InProgressRoadmap;
 import com.roadmaker.inprogressroadmap.entity.InProgressRoadmapRepository;

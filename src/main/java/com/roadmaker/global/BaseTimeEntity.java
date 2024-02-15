@@ -1,4 +1,4 @@
-package com.roadmaker.commons;
+package com.roadmaker.global;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;

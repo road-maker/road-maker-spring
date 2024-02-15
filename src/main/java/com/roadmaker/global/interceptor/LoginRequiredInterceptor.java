@@ -1,6 +1,6 @@
-package com.roadmaker.commons.interceptor;
+package com.roadmaker.global.interceptor;
 
-import com.roadmaker.commons.annotation.LoginRequired;
+import com.roadmaker.global.annotation.LoginRequired;
 import com.roadmaker.member.exception.UnAuthenticatedException;
 import com.roadmaker.member.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,7 +19,7 @@ public class LoginRequiredInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler) throws Exception {
 
-        if (handler instanceof HandlerMethod && ((HandlerMethod) handler).hasMethodAnnotation(LoginRequired.class)) {
+        if (handler instanceof HandlerMethod handlerMethod && handlerMethod.hasMethodAnnotation(LoginRequired.class)) {
             // 실제 존재하는 Member인지 검사
             memberService.getLoggedInMember().orElseThrow(UnAuthenticatedException::new);
         }

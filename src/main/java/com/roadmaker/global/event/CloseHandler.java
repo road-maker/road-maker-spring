@@ -1,4 +1,4 @@
-package com.roadmaker.commons.event;
+package com.roadmaker.global.event;
 
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;

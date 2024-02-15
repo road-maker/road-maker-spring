@@ -1,6 +1,6 @@
 package com.roadmaker.member.entity;
 
-import com.roadmaker.commons.BaseTimeEntity;
+import com.roadmaker.global.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;

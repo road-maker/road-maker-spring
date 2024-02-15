@@ -1,6 +1,6 @@
-package com.roadmaker.commons.resolver;
+package com.roadmaker.global.resolver;
 
-import com.roadmaker.commons.annotation.LoginMember;
+import com.roadmaker.global.annotation.LoginMember;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.exception.UnAuthenticatedException;
 import com.roadmaker.member.service.MemberService;

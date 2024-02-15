@@ -1,7 +1,7 @@
-package com.roadmaker.commons.config;
+package com.roadmaker.global.config;
 
-import com.roadmaker.commons.interceptor.LoginRequiredInterceptor;
-import com.roadmaker.commons.resolver.LoginMemberArgumentResolver;
+import com.roadmaker.global.interceptor.LoginRequiredInterceptor;
+import com.roadmaker.global.resolver.LoginMemberArgumentResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
