@@ -9,6 +9,7 @@ import com.roadmaker.member.dto.SignupRequest;
 import com.roadmaker.member.dto.TokenInfo;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.entity.MemberRepository;
+import com.roadmaker.member.exception.MemberNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -107,7 +108,6 @@ public class MemberServiceImpl implements MemberService {
         member.setBio(request.getBio());
         member.setBaekjoonId(request.getBaekjoonId());
         member.setBlogUrl(request.getBlogUrl());
-//        member.setGithubUrl(request.getGithubUrl());
         memberRepository.save(member);
 
         return MemberResponse.of(member);
@@ -125,18 +125,12 @@ public class MemberServiceImpl implements MemberService {
     }
 
     public MemberResponse findMemberByNickname(String nickname) {
-        Member member = memberRepository.findByNickname(nickname).orElse(null);
-        if(member==null) {
-            return null;
-        }
+        Member member = memberRepository.findByNickname(nickname).orElseThrow(MemberNotFoundException::new);
         return MemberResponse.of(member);
     }
 
     public MemberResponse findMemberByMemberId(Long memberId) {
-        Optional<Member> member = memberRepository.findById(memberId);
-        if(member.isEmpty()) {
-            return null;
-        }
-        return MemberResponse.of(member.get());
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
+        return MemberResponse.of(member);
     }
 }

@@ -4,7 +4,6 @@ import com.roadmaker.comment.dto.CommentResponse;
 import com.roadmaker.comment.service.CommentService;
 import com.roadmaker.global.annotation.LoginMember;
 import com.roadmaker.global.annotation.LoginRequired;
-import com.roadmaker.global.exception.NotFoundException;
 import com.roadmaker.image.dto.UploadImageResponse;
 import com.roadmaker.member.dto.*;
 import com.roadmaker.member.entity.Member;
@@ -75,19 +74,13 @@ public class MemberController {
     @GetMapping(path="/{memberId}")
     public ResponseEntity<MemberResponse> findMember(@PathVariable Long memberId) {
         MemberResponse memberResponse = memberService.findMemberByMemberId(memberId);
-        if (memberResponse == null) {
-            throw new NotFoundException("해당 멤버를 찾지 못함");
-        }
         return new ResponseEntity<>(memberResponse, HttpStatus.OK);
     }
 
     @GetMapping(path="/{memberId}/comments")
-    public ResponseEntity<CommentResponse> findMemberComments(@PathVariable Long memberId,@RequestParam(name="page") Integer page) {
-        int size = 8;
-
-        if(memberId == null) { throw new NotFoundException("해당 멤버를 찾지 못함"); }
-
-        CommentResponse commentsInPage = commentService.findByMemberIdAndPageRequest(memberId,page, size);
+    public ResponseEntity<CommentResponse> findMemberComments(@PathVariable Long memberId, @RequestParam(name="page") Integer page) {
+        final int size = 8;
+        CommentResponse commentsInPage = commentService.findByMemberIdAndPageRequest(memberId, page, size);
         return new ResponseEntity<>(commentsInPage, HttpStatus.OK);
     }
 
