@@ -1,5 +1,6 @@
 package com.roadmaker.global.error;
 
+import com.roadmaker.global.common.ErrorResponse;
 import com.roadmaker.global.exception.ConflictException;
 import com.roadmaker.global.exception.NotFoundException;
 import com.roadmaker.member.exception.UnAuthenticatedException;
@@ -15,6 +16,12 @@ import java.util.List;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    @ExceptionHandler(ApiException.class)
+    public ResponseEntity<ErrorResponse> handleApiException(ApiException e) {
+        return ResponseEntity.status(e.getHttpStatus()).body(ErrorResponse.of(e));
+    }
+
+
     @ExceptionHandler(UnAuthenticatedException.class)
     public ResponseEntity<HttpStatus> authenticatedException() {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
