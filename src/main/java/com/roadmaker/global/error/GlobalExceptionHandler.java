@@ -1,4 +1,4 @@
-package com.roadmaker.global.advice;
+package com.roadmaker.global.error;
 
 import com.roadmaker.global.exception.ConflictException;
 import com.roadmaker.global.exception.NotFoundException;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.List;
 
 @RestControllerAdvice
-public class ExceptionAdvice {
+public class GlobalExceptionHandler {
     @ExceptionHandler(UnAuthenticatedException.class)
     public ResponseEntity<HttpStatus> authenticatedException() {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
