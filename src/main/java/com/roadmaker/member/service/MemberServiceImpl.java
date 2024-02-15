@@ -9,7 +9,9 @@ import com.roadmaker.member.dto.SignupRequest;
 import com.roadmaker.member.dto.TokenInfo;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.entity.MemberRepository;
+import com.roadmaker.member.exception.EmailAlreadyRegisteredException;
 import com.roadmaker.member.exception.MemberNotFoundException;
+import com.roadmaker.member.exception.NicknameAlreadyRegisteredException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,10 +26,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Optional;
 
-@Service @Slf4j
+@Service
+@Slf4j
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
-
     private final MemberRepository memberRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtProvider jwtProvider;
@@ -38,6 +40,13 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public void signUp(SignupRequest signupRequest) {
+        if (isDuplicatedEmail(signupRequest.getEmail())) {
+            throw new EmailAlreadyRegisteredException();
+        }
+        if (isDuplicatedNickname(signupRequest.getNickname())) {
+            throw new NicknameAlreadyRegisteredException();
+        }
+
         Member member = signupRequest.toEntity(passwordEncoder);
         memberRepository.save(member);
     }
@@ -68,14 +77,12 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public boolean isDuplicatedEmail(String email) {
-        Optional<Member> member = memberRepository.findByEmail(email);
-        return member.isPresent();
+        return memberRepository.findByEmail(email).isPresent();
     }
 
     @Override
     public boolean isDuplicatedNickname(String nickname) {
-        Optional<Member> member = memberRepository.findByNickname(nickname);
-        return member.isPresent();
+        return memberRepository.findByNickname(nickname).isPresent();
     }
 
     public Optional<Member> getLoggedInMember() {
@@ -94,15 +101,14 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public MemberResponse saveProfile( MypageRequest request, Member member) {
+    public MemberResponse saveProfile(MypageRequest request, Member member) {
         //1. 내가 입력한 닉네임이 이미 내 닉네임과 동일한 경우 충돌 피하기 위함
-        if(!request.getNickname().equals(member.getNickname())) {
+        if (!request.getNickname().equals(member.getNickname())) {
             //2. 다른 동일한 닉네임이 존재할 경우 409리턴하도록
-            if(memberRepository.findByNickname(request.getNickname()).orElse(null) != null) {
-                return null;
-            } else {
-                member.setNickname(request.getNickname());
+            if (isDuplicatedNickname(request.getNickname())) {
+                throw new NicknameAlreadyRegisteredException();
             }
+            member.setNickname(request.getNickname());
         }
 
         member.setBio(request.getBio());
@@ -115,13 +121,8 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public MemberResponse findMemberByEmail(String email) {
-        Optional<Member> member = memberRepository.findByEmail(email);
-
-        if (member.isEmpty()) {
-            return null;
-        }
-
-        return MemberResponse.of(member.get());
+        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+        return MemberResponse.of(member);
     }
 
     public MemberResponse findMemberByNickname(String nickname) {
