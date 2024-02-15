@@ -3,11 +3,13 @@ package com.roadmaker.global.error;
 import com.roadmaker.global.common.ErrorResponse;
 import com.roadmaker.global.error.exception.InternalServerError;
 import com.roadmaker.global.error.exception.InvalidRequestBodyException;
+import com.roadmaker.global.error.exception.MethodNotAllowedException;
 import com.roadmaker.global.error.exception.NotFoundException;
 import com.roadmaker.member.exception.UnAuthenticatedException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -38,5 +40,12 @@ public class GlobalExceptionHandler {
         log.error("handleMethodArgumentNotValidException", e);
         InvalidRequestBodyException ie = new InvalidRequestBodyException("유효하지 않은 Request Body 입니다.");
         return ResponseEntity.status(e.getStatusCode()).body(ErrorResponse.of(ie, e.getBindingResult()));
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    protected ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
+        log.error("handleHttpRequestMethodNotSupportedException", e);
+        MethodNotAllowedException me = new MethodNotAllowedException();
+        return ResponseEntity.status(e.getStatusCode()).body(ErrorResponse.of(me));
     }
 }
