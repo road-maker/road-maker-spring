@@ -2,8 +2,8 @@ package com.roadmaker.comment.controller;
 
 import com.roadmaker.comment.dto.CommentDto;
 import com.roadmaker.comment.service.CommentService;
-import com.roadmaker.commons.annotation.LoginMember;
-import com.roadmaker.commons.annotation.LoginRequired;
+import com.roadmaker.global.annotation.LoginMember;
+import com.roadmaker.global.annotation.LoginRequired;
 import com.roadmaker.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

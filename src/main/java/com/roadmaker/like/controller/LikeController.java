@@ -1,7 +1,7 @@
 package com.roadmaker.like.controller;
 
-import com.roadmaker.commons.annotation.LoginMember;
-import com.roadmaker.commons.annotation.LoginRequired;
+import com.roadmaker.global.annotation.LoginMember;
+import com.roadmaker.global.annotation.LoginRequired;
 import com.roadmaker.like.dto.LikeRoadmapResponse;
 import com.roadmaker.like.service.LikeService;
 import com.roadmaker.member.entity.Member;

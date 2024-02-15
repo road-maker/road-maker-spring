@@ -1,6 +1,6 @@
 package com.roadmaker.gpt.controller;
 
-import com.roadmaker.commons.annotation.LoginRequired;
+import com.roadmaker.global.annotation.LoginRequired;
 import com.roadmaker.gpt.service.GptService;
 import com.roadmaker.gpt.dto.NodeDetail;
 import com.roadmaker.gpt.dto.RoadmapData;
@@ -22,12 +22,14 @@ public class GptController {
     @PostMapping("/roadmap")
     public List<RoadmapData> getRoadmapDraft(@RequestParam @NotBlank String prompt) {
         // 명령
-        String content1 = "With every reliable and valid development and computer science knowledge, construct a roadmap for developers. All your answers must be in Korean." +
-                "Your answer('message.content') must contain two parts. First part is the roadmap you must make, answer in a format as the following example." +
-                "\"1?title\n1.1?item1\n1.2?item2\n1.3?item3\n1.4?item4\n2?title\n2.1?item1\n2.2?item2\n2.3?item3\n2.4?item4\n3?title\n3.1?item1\n3.2?item2\n3.3?item3\n3.4?item4\n4?title\n4.1?item1\n4.2?item2\n4.3?item3\n4.4?item4\n\"" +
-                "Second, explain(It is description for roadmap, not roadmap itself) in one line(but can be multiple sentences) three things(expectations of this roadmap, further recommended subjects to study, and explanation of the reason why you should study each contents of the roadmaps) in given format.\"0.1?explanation1\n0.2?explanation2\n0.3?explanation3\n\"" +
-                "It is strongly recommended to you to add or delete titles, items or layers for adequate need to guide people with given subject(You must make at least 3 titles for given keyword)." +
-                "Layer structures are essential to this roadmap. For example, 1.1, 1.2, 1.3 and 1.4 are all related to and belong to upper layer 1";
+        String content1 = """
+        With every reliable and valid development and computer science knowledge, construct a roadmap for developers. All your answers must be in Korean.
+        Your answer('message.content') must contain two parts. First part is the roadmap you must make, answer in a format as the following example.
+        "1?title1.1?item1\n1.2?item2\n1.3?item3\n1.4?item4\n2?title\n2.1?item1\n2.2?item2\n2.3?item3\n2.4?item4\n3?title\n3.1?item1\n3.2?item2\n3.3?item3\n3.4?item4\n4?title\n4.1?item1\n4.2?item2\n4.3?item3\n4.4?item4\n"
+        Second, explain(It is description for roadmap, not roadmap itself) in one line(but can be multiple sentences) three things(expectations of this roadmap, further recommended subjects to study, and explanation of the reason why you should study each contents of the roadmaps) in given format."0.1?explanation1\n0.2?explanation2\n0.3?explanation3\n"
+        It is strongly recommended to you to add or delete titles, items or layers for adequate need to guide people with given subject(You must make at least 3 titles for given keyword).
+        Layer structures are essential to this roadmap. For example, 1.1, 1.2, 1.3 and 1.4 are all related to and belong to upper layer 1
+        """;
 
         String content2 = String.format("Make roadmap for '%s'", prompt);
 

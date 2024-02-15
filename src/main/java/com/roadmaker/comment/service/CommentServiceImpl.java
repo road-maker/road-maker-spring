@@ -4,7 +4,7 @@ import com.roadmaker.comment.dto.CommentDto;
 import com.roadmaker.comment.dto.CommentResponse;
 import com.roadmaker.comment.entity.Comment;
 import com.roadmaker.comment.entity.CommentRepository;
-import com.roadmaker.commons.exception.NotFoundException;
+import com.roadmaker.global.exception.NotFoundException;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.entity.MemberRepository;
 import com.roadmaker.roadmap.entity.roadmap.RoadmapRepository;
@@ -14,8 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +26,7 @@ public class CommentServiceImpl implements CommentService{
     // api 주소 전달
     @Value("${ip-address}")
     private String ipAddress;
-    private final String commentPage = "/comments?page=";
+    private static final String COMMENT_PAGE = "/comments?page=";
 
     public CommentResponse findCommentByRoadmapIdAndPageRequest (Long roadmapId, Integer page, Integer size) {
         // pageable을 통해 comment를 찾아 commentDTO로 변환
@@ -46,8 +44,8 @@ public class CommentServiceImpl implements CommentService{
 
 
         // 페이지 주소 설정
-        String next = ipAddress+ "api/roadmaps/load-roadmap/" +roadmapId + commentPage + (pageRequest.getPageNumber()+2);
-        String previous = ipAddress+ "api/roadmaps/load-roadmap/" +roadmapId + commentPage + (pageRequest.getPageNumber());
+        String next = ipAddress+ "api/roadmaps/load-roadmap/" +roadmapId + COMMENT_PAGE + (pageRequest.getPageNumber()+2);
+        String previous = ipAddress+ "api/roadmaps/load-roadmap/" +roadmapId + COMMENT_PAGE + (pageRequest.getPageNumber());
         if(pageRequest.getPageNumber() == 0) {
             previous = null;
         } else if (pageRequest.getPageNumber() == comments.getTotalPages() - 1) {
@@ -73,8 +71,8 @@ public class CommentServiceImpl implements CommentService{
         Page<CommentDto> comments = commentRepository.findCommentByMemberId(memberId, pageRequest).map(CommentDto::of);
 
         // 페이지 주소 설정
-        String next = ipAddress + "api/members/" +memberId + commentPage + (pageRequest.getPageNumber()+2);
-        String previous = ipAddress + "api/members/" +memberId + commentPage + (pageRequest.getPageNumber());
+        String next = ipAddress + "api/members/" +memberId + COMMENT_PAGE + (pageRequest.getPageNumber()+2);
+        String previous = ipAddress + "api/members/" +memberId + COMMENT_PAGE + (pageRequest.getPageNumber());
         if(pageRequest.getPageNumber() == 0) {
             previous = null;
         } else if (pageRequest.getPageNumber() == comments.getTotalPages() - 1) {

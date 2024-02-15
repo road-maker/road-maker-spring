@@ -1,7 +1,7 @@
 package com.roadmaker.roadmap.entity.roadmapnode;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.roadmaker.commons.BaseTimeEntity;
+import com.roadmaker.global.BaseTimeEntity;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import com.roadmaker.roadmap.entity.roadmapnodedata.RoadmapNodeData;
 import com.roadmaker.roadmap.entity.roadmapnodeposition.RoadmapNodePosition;

@@ -1,8 +1,8 @@
 package com.roadmaker.roadmap.service;
 
 import com.roadmaker.comment.entity.CommentRepository;
-import com.roadmaker.commons.exception.ConflictException;
-import com.roadmaker.commons.exception.NotFoundException;
+import com.roadmaker.global.exception.ConflictException;
+import com.roadmaker.global.exception.NotFoundException;
 import com.roadmaker.image.dto.UploadImageResponse;
 import com.roadmaker.image.service.ImageService;
 import com.roadmaker.inprogressroadmap.entity.InProgressRoadmap;

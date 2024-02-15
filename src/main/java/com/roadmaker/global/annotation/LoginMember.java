@@ -1,4 +1,4 @@
-package com.roadmaker.commons.annotation;
+package com.roadmaker.global.annotation;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 

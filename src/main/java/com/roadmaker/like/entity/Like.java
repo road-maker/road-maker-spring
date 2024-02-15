@@ -1,6 +1,6 @@
 package com.roadmaker.like.entity;
 
-import com.roadmaker.commons.BaseTimeEntity;
+import com.roadmaker.global.BaseTimeEntity;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import jakarta.persistence.*;

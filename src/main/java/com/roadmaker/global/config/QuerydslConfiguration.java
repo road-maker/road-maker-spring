@@ -1,4 +1,4 @@
-package com.roadmaker.commons.config;
+package com.roadmaker.global.config;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;

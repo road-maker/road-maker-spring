@@ -1,4 +1,4 @@
-package com.roadmaker.commons.exception;
+package com.roadmaker.global.exception;
 
 public class ConflictException extends RuntimeException{
     public ConflictException() {
