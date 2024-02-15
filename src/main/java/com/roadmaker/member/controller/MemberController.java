@@ -10,6 +10,7 @@ import com.roadmaker.image.dto.UploadImageResponse;
 import com.roadmaker.member.dto.*;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.exception.EmailAlreadyRegisteredException;
+import com.roadmaker.member.exception.NicknameAlreadyRegisteredException;
 import com.roadmaker.member.service.MemberService;
 import com.roadmaker.roadmap.dto.RoadmapDto;
 import com.roadmaker.roadmap.service.RoadmapService;
@@ -40,14 +41,11 @@ public class MemberController {
         if (memberService.isDuplicatedEmail(signupRequest.getEmail())) {
             throw new EmailAlreadyRegisteredException();
         }
-
         if(memberService.isDuplicatedNickname(signupRequest.getNickname())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("닉네임 중복");
+            throw new NicknameAlreadyRegisteredException();
         }
 
         memberService.signUp(signupRequest);
-
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
