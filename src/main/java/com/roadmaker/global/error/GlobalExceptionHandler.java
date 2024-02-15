@@ -28,11 +28,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ErrorResponse.of(ise));
     }
 
-    @ExceptionHandler(UnAuthenticatedException.class)
-    public ResponseEntity<HttpStatus> authenticatedException() {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-    }
-
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<HttpStatus> notFoundException() {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
