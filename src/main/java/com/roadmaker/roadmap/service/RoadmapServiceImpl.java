@@ -1,7 +1,7 @@
 package com.roadmaker.roadmap.service;
 
 import com.roadmaker.comment.entity.CommentRepository;
-import com.roadmaker.global.exception.NotFoundException;
+import com.roadmaker.global.error.exception.NotFoundException;
 import com.roadmaker.image.dto.UploadImageResponse;
 import com.roadmaker.image.service.ImageService;
 import com.roadmaker.inprogressroadmap.entity.InProgressRoadmap;
