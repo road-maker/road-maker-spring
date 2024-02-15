@@ -2,6 +2,7 @@ package com.roadmaker.global.error;
 
 import com.roadmaker.global.common.ErrorResponse;
 import com.roadmaker.global.error.exception.InternalServerError;
+import com.roadmaker.global.error.exception.InvalidRequestBodyException;
 import com.roadmaker.global.exception.ConflictException;
 import com.roadmaker.global.exception.NotFoundException;
 import com.roadmaker.member.exception.UnAuthenticatedException;
@@ -10,6 +11,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -48,24 +50,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<List<ValidationError>> validationNotValidException(MethodArgumentNotValidException e) {
-        List<ValidationError> errors = e.getBindingResult()
-                .getFieldErrors().stream()
-                .map(fieldError -> new ValidationError(fieldError.getField(), fieldError.getDefaultMessage()))
-                .toList();
-
-        return ResponseEntity.badRequest().body(errors);
-    }
-
-    @Getter
-    @Setter
-    public class ValidationError {
-        private String field;
-        private String message;
-
-        public ValidationError(String field, String message) {
-            this.field = field;
-            this.message = message;
-        }
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        log.error("handleMethodArgumentNotValidException", e);
+        InvalidRequestBodyException ie = new InvalidRequestBodyException("유효하지 않은 Request Body 입니다.");
+        return ResponseEntity.status(e.getStatusCode()).body(ErrorResponse.of(ie, e.getBindingResult()));
     }
 }
