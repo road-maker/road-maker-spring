@@ -3,20 +3,14 @@ package com.roadmaker.global.error;
 import com.roadmaker.global.common.ErrorResponse;
 import com.roadmaker.global.error.exception.InternalServerError;
 import com.roadmaker.global.error.exception.InvalidRequestBodyException;
-import com.roadmaker.global.exception.ConflictException;
 import com.roadmaker.global.exception.NotFoundException;
 import com.roadmaker.member.exception.UnAuthenticatedException;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.util.List;
 
 @RestControllerAdvice
 @Slf4j
@@ -42,11 +36,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<HttpStatus> notFoundException() {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    }
-
-    @ExceptionHandler(ConflictException.class)
-    public ResponseEntity<HttpStatus> conflictException() {
-        return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
