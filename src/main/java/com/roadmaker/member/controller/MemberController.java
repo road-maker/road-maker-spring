@@ -7,8 +7,6 @@ import com.roadmaker.global.annotation.LoginRequired;
 import com.roadmaker.image.dto.UploadImageResponse;
 import com.roadmaker.member.dto.*;
 import com.roadmaker.member.entity.Member;
-import com.roadmaker.member.exception.EmailAlreadyRegisteredException;
-import com.roadmaker.member.exception.NicknameAlreadyRegisteredException;
 import com.roadmaker.member.service.MemberService;
 import com.roadmaker.roadmap.dto.RoadmapDto;
 import com.roadmaker.roadmap.service.RoadmapService;
@@ -17,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,19 +27,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
-    public final PasswordEncoder passwordEncoder;
     private final RoadmapService roadmapService;
     private final CommentService commentService;
 
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@Valid @RequestBody SignupRequest signupRequest) {
-        if (memberService.isDuplicatedEmail(signupRequest.getEmail())) {
-            throw new EmailAlreadyRegisteredException();
-        }
-        if(memberService.isDuplicatedNickname(signupRequest.getNickname())) {
-            throw new NicknameAlreadyRegisteredException();
-        }
-
         memberService.signUp(signupRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -87,13 +76,7 @@ public class MemberController {
     @LoginRequired
     @PatchMapping(path="/save-profile")
     public ResponseEntity<MemberResponse> changeProfile(@Valid @RequestBody MypageRequest request, @LoginMember Member member) {
-        //1. 내 닉네임 안 바꾸는 경우 예외 처리 -> saveprofile에서.
-        //2. 내가 넣으려는 닉네임이 중복되는 경우 예외 409처리
-        //2. 비즈니스 로직 처리
         MemberResponse memberResponse = memberService.saveProfile(request, member);
-        if (memberResponse == null) {
-            throw new NicknameAlreadyRegisteredException();
-        }
         return new ResponseEntity<>(memberResponse, HttpStatus.CREATED);
     }
 
