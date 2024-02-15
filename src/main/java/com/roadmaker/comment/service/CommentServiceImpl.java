@@ -4,10 +4,9 @@ import com.roadmaker.comment.dto.CommentDto;
 import com.roadmaker.comment.dto.CommentResponse;
 import com.roadmaker.comment.entity.Comment;
 import com.roadmaker.comment.entity.CommentRepository;
-import com.roadmaker.global.exception.NotFoundException;
 import com.roadmaker.member.entity.Member;
-import com.roadmaker.member.entity.MemberRepository;
 import com.roadmaker.roadmap.entity.roadmap.RoadmapRepository;
+import com.roadmaker.roadmap.exception.RoadmapNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -18,10 +17,8 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService{
-
     private final CommentRepository commentRepository;
     private final RoadmapRepository roadmapRepository;
-    private final MemberRepository memberRepository;
 
     // api 주소 전달
     @Value("${ip-address}")
@@ -31,8 +28,9 @@ public class CommentServiceImpl implements CommentService{
     public CommentResponse findCommentByRoadmapIdAndPageRequest (Long roadmapId, Integer page, Integer size) {
         // pageable을 통해 comment를 찾아 commentDTO로 변환
 
-        if(roadmapRepository.findById(roadmapId).orElse(null) == null) {
-            throw new NotFoundException();
+        boolean isExist = roadmapRepository.existsById(roadmapId);
+        if (!isExist) {
+            throw new RoadmapNotFoundException();
         }
 
         // 1 페이지부터 시작하도록

@@ -20,6 +20,7 @@ import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNodeRepository;
 import com.roadmaker.roadmap.entity.roadmapviewport.RoadmapViewport;
 import com.roadmaker.roadmap.entity.roadmapviewport.RoadmapViewportRepository;
 import com.roadmaker.roadmap.exception.RoadmapAlreadyJoinedException;
+import com.roadmaker.roadmap.exception.RoadmapNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -132,7 +133,7 @@ public class RoadmapServiceImpl implements RoadmapService{
 
     @Override
     public Roadmap findRoadmapById(Long roadmapId) {
-        return roadmapRepository.findById(roadmapId).orElseThrow(NotFoundException::new);
+        return roadmapRepository.findById(roadmapId).orElseThrow(RoadmapNotFoundException::new);
     }
 
     public List<RoadmapDto> findRoadmapJoinedByMemberId(Long memberId){
