@@ -4,7 +4,6 @@ import com.roadmaker.comment.dto.CommentResponse;
 import com.roadmaker.comment.service.CommentService;
 import com.roadmaker.global.annotation.LoginMember;
 import com.roadmaker.global.annotation.LoginRequired;
-import com.roadmaker.global.exception.ConflictException;
 import com.roadmaker.global.exception.NotFoundException;
 import com.roadmaker.image.dto.UploadImageResponse;
 import com.roadmaker.member.dto.*;
@@ -99,12 +98,10 @@ public class MemberController {
         //2. 내가 넣으려는 닉네임이 중복되는 경우 예외 409처리
         //2. 비즈니스 로직 처리
         MemberResponse memberResponse = memberService.saveProfile(request, member);
-        if(memberResponse!=null) {
-            //3. 응답 메세지 처리
-            return new ResponseEntity<>(memberResponse, HttpStatus.CREATED); //
-        } else {
-            throw new ConflictException();
+        if (memberResponse == null) {
+            throw new NicknameAlreadyRegisteredException();
         }
+        return new ResponseEntity<>(memberResponse, HttpStatus.CREATED);
     }
 
     @LoginRequired
