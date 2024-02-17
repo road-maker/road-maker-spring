@@ -7,18 +7,15 @@ import com.roadmaker.member.entity.MemberRepository;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import com.roadmaker.roadmap.entity.roadmap.RoadmapRepository;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-public class LikeServiceImpl implements LikeService{
+@RequiredArgsConstructor
+public class LikeServiceImpl implements LikeService {
     private final LikeRepository likeRepository;
     private final RoadmapRepository roadmapRepository;
     private final MemberRepository memberRepository;
-    public LikeServiceImpl(LikeRepository likeRepository, RoadmapRepository roadmapRepository, MemberRepository memberRepository) {
-        this.likeRepository = likeRepository;
-        this.roadmapRepository = roadmapRepository;
-        this.memberRepository = memberRepository;
-    }
 
     @Transactional
     public boolean isLiked(Long roadmapId, Long memberId) {
