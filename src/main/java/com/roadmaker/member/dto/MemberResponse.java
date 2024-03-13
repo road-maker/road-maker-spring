@@ -17,8 +17,6 @@ public class MemberResponse {
     private String githubUrl;
     private String blogUrl;
     private String baekjoonId;
-//    private Integer level;
-//    private Integer exp;
 
     public static MemberResponse of(Member member) {
         return MemberResponse.builder()
@@ -30,8 +28,6 @@ public class MemberResponse {
                 .githubUrl(member.getGithubUrl())
                 .blogUrl(member.getBlogUrl())
                 .baekjoonId(member.getBaekjoonId())
-//                .level(member.getLevel())
-//                .exp(member.getExp())
                 .build();
     }
 }
