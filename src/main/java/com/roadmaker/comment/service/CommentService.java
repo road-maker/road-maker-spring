@@ -15,7 +15,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class CommentService {
@@ -87,6 +89,7 @@ public class CommentService {
                 .build();
     }
 
+    @Transactional
     public void saveComment(CommentDto commentDto, Member member) {
         Roadmap roadmap = roadmapService.findRoadmapById(commentDto.getRoadmapId());
 
