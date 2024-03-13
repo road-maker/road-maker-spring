@@ -26,9 +26,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Optional;
 
-@Service
-@Slf4j
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
+@Service
 public class MemberService {
     private final MemberRepository memberRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
@@ -72,14 +73,6 @@ public class MemberService {
         return UploadImageResponse.builder().url(imageUrl).build();
     }
 
-    public boolean isDuplicatedEmail(String email) {
-        return memberRepository.findByEmail(email).isPresent();
-    }
-
-    public boolean isDuplicatedNickname(String nickname) {
-        return memberRepository.findByNickname(nickname).isPresent();
-    }
-
     public Optional<Member> getLoggedInMember() {
         String token = jwtProvider.resolveToken(httpServletRequest);
 
@@ -108,7 +101,6 @@ public class MemberService {
         member.setBio(request.getBio());
         member.setBaekjoonId(request.getBaekjoonId());
         member.setBlogUrl(request.getBlogUrl());
-        memberRepository.save(member);
 
         return MemberResponse.of(member);
     }
@@ -126,5 +118,13 @@ public class MemberService {
     public MemberResponse findMemberByMemberId(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         return MemberResponse.of(member);
+    }
+
+    private boolean isDuplicatedEmail(String email) {
+        return memberRepository.findByEmail(email).isPresent();
+    }
+
+    private boolean isDuplicatedNickname(String nickname) {
+        return memberRepository.findByNickname(nickname).isPresent();
     }
 }

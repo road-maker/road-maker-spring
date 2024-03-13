@@ -6,10 +6,11 @@ import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.entity.MemberRepository;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import com.roadmaker.roadmap.entity.roadmap.RoadmapRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class LikeService {
@@ -17,7 +18,6 @@ public class LikeService {
     private final RoadmapRepository roadmapRepository;
     private final MemberRepository memberRepository;
 
-    @Transactional
     public boolean isLiked(Long roadmapId, Long memberId) {
         return likeRepository.existsByRoadmapIdAndMemberId(roadmapId, memberId);
     }
@@ -35,7 +35,6 @@ public class LikeService {
         likeRepository.deleteByRoadmapIdAndMemberId(roadmapId, memberId);
     }
 
-    @Transactional
     public int getLikeCount(Long roadmapId) {
         return likeRepository.countByRoadmapId(roadmapId);
     }
