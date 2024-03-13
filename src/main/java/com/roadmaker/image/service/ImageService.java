@@ -6,7 +6,6 @@ import io.awspring.cloud.s3.S3Template;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,7 +20,6 @@ public class ImageService {
     @Value("${spring.cloud.aws.s3.bucket}")
     private String bucketName;
 
-    @Transactional
     public String uploadImage(MultipartFile image) throws IOException {
         String originalFilename = image.getOriginalFilename();
         String extension = StringUtils.getFilenameExtension(originalFilename);
