@@ -15,11 +15,7 @@ public class MypageResponse {
     private String email;
     private String nickname;
     private String bio;
-//    private String avatarUrl;
-//    private String githubUrl;
     private String blogUrl;
     private String backjoonId;
-//    private int level;
-//    private int exp;
     private List<InProgressRoadmapDto> inProcessRoadmaps;
 }

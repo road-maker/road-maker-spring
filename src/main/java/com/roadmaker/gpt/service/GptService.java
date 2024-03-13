@@ -80,9 +80,6 @@ public class GptService {
                 String id = parts[0].trim();
                 String content = parts[1].trim();
 
-//                if (id.length() > 3) {
-//                    continue;
-//                }
                 // 새 문장을 만들어 formattedGptRoadmapResponses에 추가합니다.
                 RoadmapData roadmapData = new RoadmapData(id, content);
                 formattedRoadmapRespons.add(roadmapData);
@@ -95,7 +92,7 @@ public class GptService {
     public NodeDetail makeDetails(String course) {
         String content1 =
                 "With every reliable and valid development and computer science knowledge, explain the concept of the provided argument. All your answers must be in Korean." +
-                "Your answer should be in innerHTML format and you should only use tags <h1>, <p>, <b>, <ul> and <li>. Your answers should only be in paragraphs.";
+                        "Your answer should be in innerHTML format and you should only use tags <h1>, <p>, <b>, <ul> and <li>. Your answers should only be in paragraphs.";
         String content2 = String.format(course);
 
         ChatCompletionRequest completionRequest = ChatCompletionRequest.builder()
@@ -111,7 +108,7 @@ public class GptService {
     public NodeDetail makeDetails(String course, String id) {
         String content1 =
                 "With every reliable and valid development and computer science knowledge, explain the concept of the provided argument. All your answers must be in Korean." +
-                "Your answer should be in innerHTML format and you should only use tags <h1>, <p>, <b>, <ul> and <li>. Your answers should only be in paragraphs.";
+                        "Your answer should be in innerHTML format and you should only use tags <h1>, <p>, <b>, <ul> and <li>. Your answers should only be in paragraphs.";
         String content2 = String.format(course);
 
         ChatCompletionRequest completionRequest = ChatCompletionRequest.builder()
@@ -153,6 +150,7 @@ public class GptService {
         class Task implements Callable<NodeDetail> { // 보다 복잡한 task를 정의
             private final String course;
             private final String id;
+
             public Task(String course, String id) {
                 this.course = course;
                 this.id = id;
@@ -164,11 +162,11 @@ public class GptService {
             }
         }
 
-        for(RoadmapData individualResponse : response) {
+        for (RoadmapData individualResponse : response) {
             String id = individualResponse.getId();
             String course = individualResponse.getContent();
 
-            Future<NodeDetail> future = executor.submit(new Task(course,id));
+            Future<NodeDetail> future = executor.submit(new Task(course, id));
             futures.add(future);
         }
 
@@ -181,8 +179,8 @@ public class GptService {
         List<NodeDetail> detailResponses = Collections.synchronizedList(new ArrayList<>());
         List<Future<NodeDetail>> futures = makeDetailsThread(response);
         //Future형태의 데이터를 반환해야하는 형태의 데이터로 변환
-        for(Future<NodeDetail> future : futures) {
-            try{
+        for (Future<NodeDetail> future : futures) {
+            try {
                 NodeDetail gptResponse = future.get();
                 detailResponses.add(gptResponse);
             } catch (InterruptedException e) {

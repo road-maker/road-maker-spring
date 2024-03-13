@@ -13,8 +13,6 @@ public class MypageRequest {
     @NotBlank
     private String nickname;
     private String bio;
-//    private String avatarUrl;
-//    private String githubUrl;
     private String blogUrl;
     private String baekjoonId;
 }
