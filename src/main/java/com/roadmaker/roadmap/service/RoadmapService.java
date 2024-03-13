@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+@Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class RoadmapService {
@@ -59,6 +60,7 @@ public class RoadmapService {
 
     private static final String SORT_PROPERTIES = "CreatedAt";
 
+    @Transactional
     public Long createRoadmap(CreateRoadmapRequest createRoadmapRequest, Member member) {
         // viewport 저장하기
         RoadmapViewport viewport = createRoadmapRequest.getViewport().toEntity();
@@ -199,6 +201,7 @@ public class RoadmapService {
         return inProgressRoadmapRepository.countByRoadmapId(roadmap.getId());
     }
 
+    @Transactional
     public boolean changeNodeStatus(NodeStatusChangeDto nodeStatusChangeDto) {
 
         Long nodeId = nodeStatusChangeDto.getInProgressNodeId();
@@ -209,12 +212,10 @@ public class RoadmapService {
         }
 
         inProgressNode.setDone(!Boolean.TRUE.equals(nodeStatusChangeDto.getDone()));
-        inProgressNodeRepository.save(inProgressNode);
 
         return true;
     }
 
-    //얘도 수정 염두
     public RoadmapFindResponse findRoadmapByKeyword(String keyword, Integer size, Integer page) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, SORT_PROPERTIES));
         return roadmapRepository.findBySearchOption(pageRequest, keyword);
