@@ -1,16 +1,42 @@
 package com.roadmaker.like.service;
 
-public interface LikeService {
+import com.roadmaker.like.entity.Like;
+import com.roadmaker.like.entity.LikeRepository;
+import com.roadmaker.member.entity.Member;
+import com.roadmaker.member.entity.MemberRepository;
+import com.roadmaker.roadmap.entity.roadmap.Roadmap;
+import com.roadmaker.roadmap.entity.roadmap.RoadmapRepository;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
-    // Check if a member has liked a roadmap
-    public boolean isLiked(Long roadmapId, Long memberId);
+@Service
+@RequiredArgsConstructor
+public class LikeService {
+    private final LikeRepository likeRepository;
+    private final RoadmapRepository roadmapRepository;
+    private final MemberRepository memberRepository;
 
-    // Get the number of likes for a roadmap
-    public int getLikeCount(Long roadmapId);
+    @Transactional
+    public boolean isLiked(Long roadmapId, Long memberId) {
+        return likeRepository.existsByRoadmapIdAndMemberId(roadmapId, memberId);
+    }
 
-    // Like a roadmap for a member
-    public void likeRoadmap(Long roadmapId, Long memberId);
+    @Transactional
+    public void likeRoadmap(Long roadmapId, Long memberId) {
+        Roadmap roadmap = roadmapRepository.findById(roadmapId).orElseThrow();
+        Member member = memberRepository.findById(memberId).orElseThrow();
+        Like like = new Like(roadmap, member);
+        likeRepository.save(like);
+    }
 
-    // Unlike a roadmap for a member
-    public void unlikeRoadmap(Long roadmapId, Long memberId);
+    @Transactional
+    public void unlikeRoadmap(Long roadmapId, Long memberId) {
+        likeRepository.deleteByRoadmapIdAndMemberId(roadmapId, memberId);
+    }
+
+    @Transactional
+    public int getLikeCount(Long roadmapId) {
+        return likeRepository.countByRoadmapId(roadmapId);
+    }
 }
