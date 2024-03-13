@@ -1,11 +1,24 @@
 package com.roadmaker.member.service;
 
 import com.roadmaker.image.dto.UploadImageResponse;
+import com.roadmaker.image.service.ImageService;
+import com.roadmaker.member.authentication.JwtProvider;
 import com.roadmaker.member.dto.MemberResponse;
 import com.roadmaker.member.dto.MypageRequest;
 import com.roadmaker.member.dto.SignupRequest;
 import com.roadmaker.member.dto.TokenInfo;
 import com.roadmaker.member.entity.Member;
+import com.roadmaker.member.entity.MemberRepository;
+import com.roadmaker.member.exception.EmailAlreadyRegisteredException;
+import com.roadmaker.member.exception.MemberNotFoundException;
+import com.roadmaker.member.exception.NicknameAlreadyRegisteredException;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,26 +27,104 @@ import java.io.IOException;
 import java.util.Optional;
 
 @Service
-@Transactional
-public interface MemberService {
-    // 회원가입
-    public void signUp(SignupRequest signupRequest);
+@Slf4j
+@RequiredArgsConstructor
+public class MemberService {
+    private final MemberRepository memberRepository;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final JwtProvider jwtProvider;
+    private final PasswordEncoder passwordEncoder;
+    private final HttpServletRequest httpServletRequest;
+    private final ImageService imageService;
 
-    // 로그인
-    public TokenInfo login(String email, String password);
+    @Transactional
+    public void signUp(SignupRequest signupRequest) {
+        if (isDuplicatedEmail(signupRequest.getEmail())) {
+            throw new EmailAlreadyRegisteredException();
+        }
+        if (isDuplicatedNickname(signupRequest.getNickname())) {
+            throw new NicknameAlreadyRegisteredException();
+        }
 
-    public UploadImageResponse uploadMemberAvatar(Member member, MultipartFile image) throws IOException;
+        Member member = signupRequest.toEntity(passwordEncoder);
+        memberRepository.save(member);
+    }
 
-    public boolean isDuplicatedEmail(String email);
+    @Transactional
+    public TokenInfo login(String email, String password) {
+        // 로그인 ID/PW를 기반으로 authentication객체 생성
+        // authentication은 인증 여부를 확인하는 authenticated 값이 false
+        UsernamePasswordAuthenticationToken authenticationToken
+                = new UsernamePasswordAuthenticationToken(email, password);
+        //검증: 비밀번호 체크. authenticate 메서드가 실행될 때,
+        //CustomUserDetailsService에서 만든 loadByUsername실행
+        Authentication authentication
+                = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        //인증 정보 기반으로 JWT 토큰 생성
+        return jwtProvider.generateToken(authentication);
+    }
 
-    public boolean isDuplicatedNickname(String nickname);
+    @Transactional
+    public UploadImageResponse uploadMemberAvatar(Member member, MultipartFile image) throws IOException {
+        String imageUrl = imageService.uploadImage(image);
+        member.setAvatarUrl(imageUrl);
 
-    public Optional<Member> getLoggedInMember();
+        return UploadImageResponse.builder().url(imageUrl).build();
+    }
 
-    public MemberResponse saveProfile(MypageRequest request, Member member);
+    public boolean isDuplicatedEmail(String email) {
+        return memberRepository.findByEmail(email).isPresent();
+    }
 
-    public MemberResponse findMemberByEmail(String email);
-    public MemberResponse findMemberByNickname(String nickname);
-    public MemberResponse findMemberByMemberId(Long memberId);
+    public boolean isDuplicatedNickname(String nickname) {
+        return memberRepository.findByNickname(nickname).isPresent();
+    }
 
+    public Optional<Member> getLoggedInMember() {
+        String token = jwtProvider.resolveToken(httpServletRequest);
+
+        if (token == null || !jwtProvider.validationToken(token)) {
+            return Optional.empty();
+        }
+
+
+        Authentication authentication = jwtProvider.getAuthentication(token);
+        String email = authentication.getName();
+
+        return memberRepository.findByEmail(email);
+    }
+
+    @Transactional
+    public MemberResponse saveProfile(MypageRequest request, Member member) {
+        //1. 내가 입력한 닉네임이 이미 내 닉네임과 동일한 경우 충돌 피하기 위함
+        if (!request.getNickname().equals(member.getNickname())) {
+            //2. 다른 동일한 닉네임이 존재할 경우 409리턴하도록
+            if (isDuplicatedNickname(request.getNickname())) {
+                throw new NicknameAlreadyRegisteredException();
+            }
+            member.setNickname(request.getNickname());
+        }
+
+        member.setBio(request.getBio());
+        member.setBaekjoonId(request.getBaekjoonId());
+        member.setBlogUrl(request.getBlogUrl());
+        memberRepository.save(member);
+
+        return MemberResponse.of(member);
+    }
+
+    public MemberResponse findMemberByEmail(String email) {
+        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+        return MemberResponse.of(member);
+    }
+
+    public MemberResponse findMemberByNickname(String nickname) {
+        Member member = memberRepository.findByNickname(nickname).orElseThrow(MemberNotFoundException::new);
+        return MemberResponse.of(member);
+    }
+
+    public MemberResponse findMemberByMemberId(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
+        return MemberResponse.of(member);
+    }
 }
