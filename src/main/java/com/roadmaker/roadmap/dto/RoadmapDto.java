@@ -1,6 +1,6 @@
 package com.roadmaker.roadmap.dto;
 
-import com.roadmaker.member.dto.MemberResponse;
+import com.roadmaker.member.dto.response.MemberResponse;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import lombok.*;

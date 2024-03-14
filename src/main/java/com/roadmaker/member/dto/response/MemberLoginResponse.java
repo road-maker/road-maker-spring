@@ -1,4 +1,4 @@
-package com.roadmaker.member.dto;
+package com.roadmaker.member.dto.response;
 
 import com.roadmaker.member.entity.Member;
 import lombok.*;
@@ -8,12 +8,12 @@ import lombok.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
-public class LoginResponse {
+public class MemberLoginResponse {
     private TokenInfo tokenInfo;
     private MemberResponse member;
 
-    public static LoginResponse of(Member member, TokenInfo tokenInfo) {
-        return LoginResponse.builder()
+    public static MemberLoginResponse of(Member member, TokenInfo tokenInfo) {
+        return MemberLoginResponse.builder()
                 .member(MemberResponse.of(member))
                 .tokenInfo(tokenInfo)
                 .build();

@@ -1,4 +1,4 @@
-package com.roadmaker.member.dto;
+package com.roadmaker.member.dto.request;
 
 import com.roadmaker.member.entity.Member;
 import jakarta.validation.constraints.Email;
@@ -9,7 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
 @Setter
-public class SignupRequest {
+public class MemberSignupRequest {
     @Email
     @NotBlank
     private String email;

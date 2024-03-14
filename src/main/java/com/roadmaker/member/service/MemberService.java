@@ -3,10 +3,10 @@ package com.roadmaker.member.service;
 import com.roadmaker.image.dto.UploadImageResponse;
 import com.roadmaker.image.service.ImageService;
 import com.roadmaker.member.authentication.JwtProvider;
-import com.roadmaker.member.dto.MemberResponse;
-import com.roadmaker.member.dto.MypageRequest;
-import com.roadmaker.member.dto.SignupRequest;
-import com.roadmaker.member.dto.TokenInfo;
+import com.roadmaker.member.dto.response.MemberResponse;
+import com.roadmaker.member.dto.request.MemberUpdateRequest;
+import com.roadmaker.member.dto.request.MemberSignupRequest;
+import com.roadmaker.member.dto.response.TokenInfo;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.entity.MemberRepository;
 import com.roadmaker.member.exception.EmailAlreadyRegisteredException;
@@ -39,15 +39,15 @@ public class MemberService {
     private final ImageService imageService;
 
     @Transactional
-    public void signUp(SignupRequest signupRequest) {
-        if (isDuplicatedEmail(signupRequest.getEmail())) {
+    public void signUp(MemberSignupRequest request) {
+        if (isDuplicatedEmail(request.getEmail())) {
             throw new EmailAlreadyRegisteredException();
         }
-        if (isDuplicatedNickname(signupRequest.getNickname())) {
+        if (isDuplicatedNickname(request.getNickname())) {
             throw new NicknameAlreadyRegisteredException();
         }
 
-        Member member = signupRequest.toEntity(passwordEncoder);
+        Member member = request.toEntity(passwordEncoder);
         memberRepository.save(member);
     }
 
@@ -88,7 +88,7 @@ public class MemberService {
     }
 
     @Transactional
-    public MemberResponse saveProfile(MypageRequest request, Member member) {
+    public MemberResponse saveProfile(MemberUpdateRequest request, Member member) {
         //1. 내가 입력한 닉네임이 이미 내 닉네임과 동일한 경우 충돌 피하기 위함
         if (!request.getNickname().equals(member.getNickname())) {
             //2. 다른 동일한 닉네임이 존재할 경우 409리턴하도록

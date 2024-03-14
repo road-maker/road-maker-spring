@@ -1,4 +1,4 @@
-package com.roadmaker.member.dto;
+package com.roadmaker.member.dto.response;
 
 import com.roadmaker.roadmap.dto.InProgressRoadmapDto;
 import lombok.Builder;

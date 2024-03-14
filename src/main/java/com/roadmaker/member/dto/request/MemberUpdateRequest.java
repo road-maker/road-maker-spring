@@ -1,4 +1,4 @@
-package com.roadmaker.member.dto;
+package com.roadmaker.member.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class MypageRequest {
+public class MemberUpdateRequest {
     private Long memberId;
     @NotBlank
     private String nickname;

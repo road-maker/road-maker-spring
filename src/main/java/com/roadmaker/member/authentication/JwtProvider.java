@@ -1,6 +1,6 @@
 package com.roadmaker.member.authentication;
 
-import com.roadmaker.member.dto.TokenInfo;
+import com.roadmaker.member.dto.response.TokenInfo;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,11 +1,11 @@
-package com.roadmaker.member.dto;
+package com.roadmaker.member.dto.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class LoginRequest {
+public class MemberLoginRequest {
     @Email
     @NotBlank
     private String email;

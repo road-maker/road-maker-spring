@@ -5,7 +5,12 @@ import com.roadmaker.comment.service.CommentService;
 import com.roadmaker.global.annotation.LoginMember;
 import com.roadmaker.global.annotation.LoginRequired;
 import com.roadmaker.image.dto.UploadImageResponse;
-import com.roadmaker.member.dto.*;
+import com.roadmaker.member.dto.request.MemberLoginRequest;
+import com.roadmaker.member.dto.request.MemberSignupRequest;
+import com.roadmaker.member.dto.request.MemberUpdateRequest;
+import com.roadmaker.member.dto.response.MemberLoginResponse;
+import com.roadmaker.member.dto.response.MemberResponse;
+import com.roadmaker.member.dto.response.TokenInfo;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.service.MemberService;
 import com.roadmaker.roadmap.dto.RoadmapDto;
@@ -22,34 +27,31 @@ import java.io.IOException;
 import java.util.List;
 
 @Slf4j
-@RestController
 @RequestMapping("/api/members")
 @RequiredArgsConstructor
+@RestController
 public class MemberController {
     private final MemberService memberService;
     private final RoadmapService roadmapService;
     private final CommentService commentService;
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@Valid @RequestBody SignupRequest signupRequest) {
-        memberService.signUp(signupRequest);
+    public ResponseEntity<String> signup(@Valid @RequestBody MemberSignupRequest request) {
+        memberService.signUp(request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PostMapping(path="/signin")
-    public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest loginRequest) {
-        String email = loginRequest.getEmail();
-        String password = loginRequest.getPassword();
+    @PostMapping("/signin")
+    public ResponseEntity<MemberLoginResponse> login(@Valid @RequestBody MemberLoginRequest request) {
+        TokenInfo tokenInfo = memberService.login(request.getEmail(), request.getPassword());
+        MemberResponse member = memberService.findMemberByEmail(request.getEmail());
 
-        TokenInfo tokenInfo = memberService.login(email, password);
-        MemberResponse member = memberService.findMemberByEmail(email);
-
-        LoginResponse loginResponse = LoginResponse.builder()
+        MemberLoginResponse memberLoginResponse = MemberLoginResponse.builder()
                 .member(member)
                 .tokenInfo(tokenInfo)
                 .build();
 
-        return new ResponseEntity<>(loginResponse, HttpStatus.OK);
+        return new ResponseEntity<>(memberLoginResponse, HttpStatus.OK);
     }
 
     @LoginRequired
@@ -60,28 +62,31 @@ public class MemberController {
     }
 
 
-    @GetMapping(path="/{memberId}")
+    @GetMapping("/{memberId}")
     public ResponseEntity<MemberResponse> findMember(@PathVariable Long memberId) {
         MemberResponse memberResponse = memberService.findMemberByMemberId(memberId);
         return new ResponseEntity<>(memberResponse, HttpStatus.OK);
     }
 
-    @GetMapping(path="/{memberId}/comments")
-    public ResponseEntity<CommentResponse> findMemberComments(@PathVariable Long memberId, @RequestParam(name="page") Integer page) {
+    @GetMapping("/{memberId}/comments")
+    public ResponseEntity<CommentResponse> findMemberComments(@PathVariable Long memberId, @RequestParam(name = "page") Integer page) {
         final int size = 8;
         CommentResponse commentsInPage = commentService.findByMemberIdAndPageRequest(memberId, page, size);
         return new ResponseEntity<>(commentsInPage, HttpStatus.OK);
     }
 
     @LoginRequired
-    @PatchMapping(path="/save-profile")
-    public ResponseEntity<MemberResponse> changeProfile(@Valid @RequestBody MypageRequest request, @LoginMember Member member) {
+    @PatchMapping("/save-profile")
+    public ResponseEntity<MemberResponse> changeProfile(
+            @Valid @RequestBody MemberUpdateRequest request,
+            @LoginMember Member member
+    ) {
         MemberResponse memberResponse = memberService.saveProfile(request, member);
         return new ResponseEntity<>(memberResponse, HttpStatus.CREATED);
     }
 
     @LoginRequired
-    @GetMapping(path="/{nickname}/in-progress-roadmaps")
+    @GetMapping("/{nickname}/in-progress-roadmaps")
     public ResponseEntity<List<RoadmapDto>> callRoadmapJoined(@PathVariable String nickname) {
         Long memberId = memberService.findMemberByNickname(nickname).getId();
         //해당 멤버를 찾을 수 없는경우: 발생할 일 없음
@@ -92,7 +97,7 @@ public class MemberController {
     }
 
     @LoginRequired
-    @GetMapping(path="/{nickname}/roadmaps")
+    @GetMapping("/{nickname}/roadmaps")
     public ResponseEntity<List<RoadmapDto>> callRoadmapCreated(@PathVariable String nickname) {
         Long memberId = memberService.findMemberByNickname(nickname).getId();
 
