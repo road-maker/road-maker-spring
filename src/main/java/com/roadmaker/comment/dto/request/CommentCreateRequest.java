@@ -2,35 +2,26 @@ package com.roadmaker.comment.dto.request;
 
 import com.roadmaker.comment.entity.Comment;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
-@Data @Builder @AllArgsConstructor
+@Data
 public class CommentCreateRequest {
-    @NotBlank
+    @NotNull
     Long roadmapId;
+
     @NotBlank
     String content;
-    @NotBlank
-    String nickname;
 
-    String createdAt;
-    String updatedAt;
-
-    private static String formatDate(LocalDateTime dateTime) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy. M. dd");
-        return dateTime.format(formatter);
+    @Builder
+    private CommentCreateRequest(Long roadmapId, String content) {
+        this.roadmapId = roadmapId;
+        this.content = content;
     }
 
     public static CommentCreateRequest of(Comment comment) {
         return CommentCreateRequest.builder()
-                .createdAt(formatDate(comment.getCreatedAt()))
-                .updatedAt(formatDate(comment.getUpdatedAt()))
-                .nickname(comment.getMember().getNickname())
                 .content(comment.getContent())
                 .roadmapId(comment.getRoadmap().getId())
                 .build();
