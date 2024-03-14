@@ -1,5 +1,6 @@
-package com.roadmaker.comment.dto;
+package com.roadmaker.comment.dto.response;
 
+import com.roadmaker.comment.dto.request.CommentCreateRequest;
 import lombok.*;
 
 import java.util.List;
@@ -14,5 +15,5 @@ public class CommentResponse {
     Long totalPage;
     String next;
     String previous;
-    List<CommentDto> result;
+    List<CommentCreateRequest> result;
 }

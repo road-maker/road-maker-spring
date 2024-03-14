@@ -1,14 +1,13 @@
 package com.roadmaker.comment.service;
 
-import com.roadmaker.comment.dto.CommentDto;
-import com.roadmaker.comment.dto.CommentResponse;
+import com.roadmaker.comment.dto.request.CommentCreateRequest;
+import com.roadmaker.comment.dto.response.CommentResponse;
 import com.roadmaker.comment.entity.Comment;
 import com.roadmaker.comment.entity.CommentRepository;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import com.roadmaker.roadmap.entity.roadmap.RoadmapRepository;
 import com.roadmaker.roadmap.exception.RoadmapNotFoundException;
-import com.roadmaker.roadmap.service.RoadmapService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -23,12 +22,21 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommentService {
     private final CommentRepository commentRepository;
     private final RoadmapRepository roadmapRepository;
-    private final RoadmapService roadmapService;
 
     // api 주소 전달
     @Value("${ip-address}")
     private String ipAddress;
     private static final String COMMENT_PAGE = "/comments?page=";
+
+    @Transactional
+    public void createComment(CommentCreateRequest request, Member member) {
+        Roadmap roadmap = roadmapRepository.findById(request.getRoadmapId())
+                .orElseThrow(RoadmapNotFoundException::new);
+
+        Comment comment = Comment.create(request.getContent(), roadmap, member);
+
+        commentRepository.save(comment);
+    }
 
     public CommentResponse findCommentByRoadmapIdAndPageRequest(Long roadmapId, Integer page, Integer size) {
         // pageable을 통해 comment를 찾아 commentDTO로 변환
@@ -43,7 +51,7 @@ public class CommentService {
 
         //페이지네이션, commentDto로 가공, 불러온 페이지 내에 넘버링 부여
         PageRequest pageRequest = PageRequest.of(pageMod, size, Sort.by(Sort.Direction.DESC, "CreatedAt"));
-        Page<CommentDto> comments = commentRepository.findCommentByRoadmapId(roadmapId, pageRequest).map(CommentDto::of);
+        Page<CommentCreateRequest> comments = commentRepository.findCommentByRoadmapId(roadmapId, pageRequest).map(CommentCreateRequest::of);
 
 
         // 페이지 주소 설정
@@ -70,7 +78,7 @@ public class CommentService {
 
         //페이지네이션, commentDto로 가공, 불러온 페이지 내에 넘버링 부여
         PageRequest pageRequest = PageRequest.of(pageMod, size, Sort.by(Sort.Direction.DESC, "CreatedAt"));
-        Page<CommentDto> comments = commentRepository.findCommentByMemberId(memberId, pageRequest).map(CommentDto::of);
+        Page<CommentCreateRequest> comments = commentRepository.findCommentByMemberId(memberId, pageRequest).map(CommentCreateRequest::of);
 
         // 페이지 주소 설정
         String next = ipAddress + "api/members/" + memberId + COMMENT_PAGE + (pageRequest.getPageNumber() + 2);
@@ -87,18 +95,5 @@ public class CommentService {
                 .next(next)
                 .result(comments.getContent())
                 .build();
-    }
-
-    @Transactional
-    public void saveComment(CommentDto commentDto, Member member) {
-        Roadmap roadmap = roadmapService.findRoadmapById(commentDto.getRoadmapId());
-
-        Comment comment = Comment.builder()
-                .roadmap(roadmap)
-                .content(commentDto.getContent())
-                .member(member)
-                .build();
-
-        commentRepository.save(comment);
     }
 }

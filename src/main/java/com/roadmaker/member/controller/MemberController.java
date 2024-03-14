@@ -1,6 +1,6 @@
 package com.roadmaker.member.controller;
 
-import com.roadmaker.comment.dto.CommentResponse;
+import com.roadmaker.comment.dto.response.CommentResponse;
 import com.roadmaker.comment.service.CommentService;
 import com.roadmaker.global.annotation.LoginMember;
 import com.roadmaker.global.annotation.LoginRequired;

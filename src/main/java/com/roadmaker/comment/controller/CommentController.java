@@ -1,21 +1,20 @@
 package com.roadmaker.comment.controller;
 
-import com.roadmaker.comment.dto.CommentDto;
+import com.roadmaker.comment.dto.request.CommentCreateRequest;
 import com.roadmaker.comment.service.CommentService;
 import com.roadmaker.global.annotation.LoginMember;
 import com.roadmaker.global.annotation.LoginRequired;
 import com.roadmaker.member.entity.Member;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@Validated
 @RequiredArgsConstructor
 @RequestMapping("/api/comments")
 public class CommentController {
@@ -23,8 +22,11 @@ public class CommentController {
 
     @LoginRequired
     @PostMapping
-    public ResponseEntity<HttpStatus> saveComment(@LoginMember Member member, @RequestBody CommentDto commentDto) {
-        commentService.saveComment(commentDto, member);
+    public ResponseEntity<HttpStatus> createComment(
+            @LoginMember Member member,
+            @Valid @RequestBody CommentCreateRequest commentCreateRequest
+    ) {
+        commentService.createComment(commentCreateRequest, member);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

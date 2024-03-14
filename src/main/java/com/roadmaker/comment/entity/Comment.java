@@ -33,9 +33,17 @@ public class Comment extends BaseTimeEntity {
     private String content;
 
     @Builder
-    Comment(Roadmap roadmap, Member member, String content) {
+    private Comment(Roadmap roadmap, Member member, String content) {
         this.roadmap = roadmap;
         this.member = member;
         this.content = content;
+    }
+
+    public static Comment create(String content, Roadmap roadmap, Member member) {
+        return Comment.builder()
+                .content(content)
+                .roadmap(roadmap)
+                .member(member)
+                .build();
     }
 }

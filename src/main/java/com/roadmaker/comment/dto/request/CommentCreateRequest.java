@@ -1,4 +1,4 @@
-package com.roadmaker.comment.dto;
+package com.roadmaker.comment.dto.request;
 
 import com.roadmaker.comment.entity.Comment;
 import jakarta.validation.constraints.NotBlank;
@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Data @Builder @AllArgsConstructor
-public class CommentDto {
+public class CommentCreateRequest {
     @NotBlank
     Long roadmapId;
     @NotBlank
@@ -26,8 +26,8 @@ public class CommentDto {
         return dateTime.format(formatter);
     }
 
-    public static CommentDto of(Comment comment) {
-        return CommentDto.builder()
+    public static CommentCreateRequest of(Comment comment) {
+        return CommentCreateRequest.builder()
                 .createdAt(formatDate(comment.getCreatedAt()))
                 .updatedAt(formatDate(comment.getUpdatedAt()))
                 .nickname(comment.getMember().getNickname())
