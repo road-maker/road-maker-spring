@@ -9,8 +9,6 @@ import org.springframework.validation.FieldError;
 import java.util.List;
 
 @Getter
-@RequiredArgsConstructor
-@AllArgsConstructor
 public class ErrorResponse {
     private final int httpStatus;
     private final String message;
@@ -19,13 +17,30 @@ public class ErrorResponse {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<ValidationError> errors;
 
+    @Builder
+    private ErrorResponse(int httpStatus, String message, String errorCode, List<ValidationError> errors) {
+        this.httpStatus = httpStatus;
+        this.message = message;
+        this.errorCode = errorCode;
+        this.errors = errors;
+    }
+
     public static ErrorResponse of(ApiException e) {
-        return new ErrorResponse(e.getHttpStatus().value(), e.getMessage(), e.getErrorCode());
+        return ErrorResponse.builder()
+                .httpStatus(e.getHttpStatus().value())
+                .message(e.getMessage())
+                .errorCode(e.getErrorCode())
+                .build();
     }
 
     public static ErrorResponse of(ApiException e, BindingResult bindingResult) {
         List<ValidationError> errors = bindingResult.getFieldErrors().stream().map(ValidationError::of).toList();
-        return new ErrorResponse(e.getHttpStatus().value(), e.getMessage(), e.getErrorCode(), errors);
+        return ErrorResponse.builder()
+                .httpStatus(e.getHttpStatus().value())
+                .message(e.getMessage())
+                .errorCode(e.getErrorCode())
+                .errors(errors)
+                .build();
     }
 
     @Builder
