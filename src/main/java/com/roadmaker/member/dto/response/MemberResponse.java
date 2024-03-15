@@ -5,18 +5,27 @@ import lombok.*;
 
 @Getter
 @ToString
-@Builder
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor
 public class MemberResponse {
-    private Long id;
-    private String email;
-    private String nickname;
-    private String bio;
-    private String avatarUrl;
-    private String githubUrl;
-    private String blogUrl;
-    private String baekjoonId;
+    private final Long id;
+    private final String email;
+    private final String nickname;
+    private final String bio;
+    private final String avatarUrl;
+    private final String githubUrl;
+    private final String blogUrl;
+    private final String baekjoonId;
+
+    @Builder
+    private MemberResponse(Long id, String email, String nickname, String bio, String avatarUrl, String githubUrl, String blogUrl, String baekjoonId) {
+        this.id = id;
+        this.email = email;
+        this.nickname = nickname;
+        this.bio = bio;
+        this.avatarUrl = avatarUrl;
+        this.githubUrl = githubUrl;
+        this.blogUrl = blogUrl;
+        this.baekjoonId = baekjoonId;
+    }
 
     public static MemberResponse of(Member member) {
         return MemberResponse.builder()
