@@ -6,14 +6,18 @@ import lombok.*;
 import java.util.List;
 
 @Getter
-@Setter
 @ToString
-@Builder
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor
 public class CommentResponse {
-    Long totalPage;
-    String next;
-    String previous;
-    List<CommentCreateRequest> result;
+    private final Long totalPage;
+    private final String next;
+    private final String previous;
+    private final List<CommentCreateRequest> result;
+
+    @Builder
+    private CommentResponse(Long totalPage, String next, String previous, List<CommentCreateRequest> result) {
+        this.totalPage = totalPage;
+        this.next = next;
+        this.previous = previous;
+        this.result = result;
+    }
 }
