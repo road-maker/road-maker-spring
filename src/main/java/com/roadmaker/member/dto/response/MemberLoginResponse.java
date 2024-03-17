@@ -6,12 +6,8 @@ import lombok.*;
 @Getter
 @ToString
 @Builder
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor
-public class MemberLoginResponse {
-    private TokenInfo tokenInfo;
-    private MemberResponse member;
-
+@RequiredArgsConstructor
+public record MemberLoginResponse(TokenInfo tokenInfo, MemberResponse member) {
     public static MemberLoginResponse of(Member member, TokenInfo tokenInfo) {
         return MemberLoginResponse.builder()
                 .member(MemberResponse.of(member))
