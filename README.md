@@ -76,19 +76,20 @@ RoadMaker는 사용자가 자신만의 개발 로드맵을 쉽게 만들고 공�
 
 ![image](https://github.com/road-maker/road-maker-spring/assets/60874549/3a0a5263-fe33-4df0-827e-504b50dffbcc) 
 
-<a id="poster"></a>
-## 5. 프로젝트 포스터
+[//]: # (<a id="poster"></a>)
 
-![ROADMAKER POSTER](https://github.com/road-maker/road-maker-spring/assets/60874549/03e43fc1-e4ed-46ed-8330-d74cd11ff934)
+[//]: # (## 5. 프로젝트 포스터)
+
+[//]: # (![ROADMAKER POSTER]&#40;https://github.com/road-maker/road-maker-spring/assets/60874549/03e43fc1-e4ed-46ed-8330-d74cd11ff934&#41;)
 
 <a id="commit-convention"></a>
-## 6. 커밋 컨벤션
+## 5. 커밋 컨벤션
 
 본 프로젝트에서는 AngularJS commit Convention을 채택했습니다.
 
 > [#이슈 번호] 이슈 타입: 커밋 메시지
 
-### 6.1. 타입 목록
+### 5.1. 타입 목록
 
 Type | Description
 -- | --
