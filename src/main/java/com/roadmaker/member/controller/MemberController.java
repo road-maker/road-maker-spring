@@ -10,7 +10,6 @@ import com.roadmaker.member.dto.request.MemberSignupRequest;
 import com.roadmaker.member.dto.request.MemberUpdateRequest;
 import com.roadmaker.member.dto.response.MemberLoginResponse;
 import com.roadmaker.member.dto.response.MemberResponse;
-import com.roadmaker.member.dto.response.TokenInfo;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.service.MemberService;
 import com.roadmaker.roadmap.dto.RoadmapDto;
@@ -43,15 +42,8 @@ public class MemberController {
 
     @PostMapping("/signin")
     public ResponseEntity<MemberLoginResponse> login(@Valid @RequestBody MemberLoginRequest request) {
-        TokenInfo tokenInfo = memberService.login(request.getEmail(), request.getPassword());
-        MemberResponse member = memberService.findMemberByEmail(request.getEmail());
-
-        MemberLoginResponse memberLoginResponse = MemberLoginResponse.builder()
-                .member(member)
-                .tokenInfo(tokenInfo)
-                .build();
-
-        return new ResponseEntity<>(memberLoginResponse, HttpStatus.OK);
+        MemberLoginResponse response = memberService.login(request.getEmail(), request.getPassword());
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @LoginRequired

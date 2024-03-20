@@ -37,7 +37,7 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
 	// security
-	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.security:spring-security-core:6.2.2'
 
 	// aws
 	implementation platform("io.awspring.cloud:spring-cloud-aws-dependencies:3.0.0")

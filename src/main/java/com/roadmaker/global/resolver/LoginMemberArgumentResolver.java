@@ -1,9 +1,9 @@
 package com.roadmaker.global.resolver;
 
+import com.roadmaker.auth.service.AuthService;
 import com.roadmaker.global.annotation.LoginMember;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.exception.UnAuthenticatedException;
-import com.roadmaker.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -15,7 +15,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Component
 @RequiredArgsConstructor
 public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
-    private final MemberService memberService;
+    private final AuthService authService;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -24,6 +24,6 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
 
     @Override
     public Member resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        return memberService.getLoggedInMember().orElseThrow(UnAuthenticatedException::new);
+        return authService.getLoggedInMember().orElseThrow(UnAuthenticatedException::new);
     }
 }

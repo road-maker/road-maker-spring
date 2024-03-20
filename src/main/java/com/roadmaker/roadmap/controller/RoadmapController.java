@@ -1,5 +1,6 @@
 package com.roadmaker.roadmap.controller;
 
+import com.roadmaker.auth.service.AuthService;
 import com.roadmaker.comment.dto.response.CommentResponse;
 import com.roadmaker.comment.service.CommentService;
 import com.roadmaker.global.annotation.LoginMember;
@@ -34,6 +35,7 @@ import java.util.Optional;
 @RequestMapping("/api/roadmaps")
 public class RoadmapController {
 
+    private final AuthService authService;
     private final MemberService memberService;
     private final RoadmapService roadmapService;
     private final InProgressNodeRepository inProgressNodeRepository;
@@ -79,7 +81,7 @@ public class RoadmapController {
 
     @GetMapping("/{roadmapId}")
     public ResponseEntity<RoadmapResponse> getRoadmap(@PathVariable Long roadmapId) {
-        Optional<Member> memberOpt = memberService.getLoggedInMember();
+        Optional<Member> memberOpt = authService.getLoggedInMember();
         Roadmap roadmap = roadmapService.findRoadmapById(roadmapId);
         Boolean isLiked = false;
 

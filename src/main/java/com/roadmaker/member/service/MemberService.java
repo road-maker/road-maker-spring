@@ -1,30 +1,28 @@
 package com.roadmaker.member.service;
 
+import com.roadmaker.member.authentication.JwtProvider;
 import com.roadmaker.image.dto.UploadImageResponse;
 import com.roadmaker.image.service.ImageService;
-import com.roadmaker.member.authentication.JwtProvider;
+import com.roadmaker.member.dto.response.MemberLoginResponse;
 import com.roadmaker.member.dto.response.MemberResponse;
 import com.roadmaker.member.dto.request.MemberUpdateRequest;
 import com.roadmaker.member.dto.request.MemberSignupRequest;
-import com.roadmaker.member.dto.response.TokenInfo;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.entity.MemberRepository;
 import com.roadmaker.member.exception.EmailAlreadyRegisteredException;
 import com.roadmaker.member.exception.MemberNotFoundException;
 import com.roadmaker.member.exception.NicknameAlreadyRegisteredException;
+import com.roadmaker.member.exception.UnAuthenticatedException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Optional;
+import java.util.Date;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -32,7 +30,6 @@ import java.util.Optional;
 @Service
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtProvider jwtProvider;
     private final PasswordEncoder passwordEncoder;
     private final HttpServletRequest httpServletRequest;
@@ -52,17 +49,18 @@ public class MemberService {
     }
 
     @Transactional
-    public TokenInfo login(String email, String password) {
-        // 로그인 ID/PW를 기반으로 authentication객체 생성
-        // authentication은 인증 여부를 확인하는 authenticated 값이 false
-        UsernamePasswordAuthenticationToken authenticationToken
-                = new UsernamePasswordAuthenticationToken(email, password);
-        //검증: 비밀번호 체크. authenticate 메서드가 실행될 때,
-        //CustomUserDetailsService에서 만든 loadByUsername실행
-        Authentication authentication
-                = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        //인증 정보 기반으로 JWT 토큰 생성
-        return jwtProvider.generateToken(authentication);
+    public MemberLoginResponse login(String email, String password) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(MemberNotFoundException::new);
+
+        boolean isMatched = passwordEncoder.matches(password, member.getPassword());
+        if (!isMatched) {
+            throw new UnAuthenticatedException();
+        }
+
+        String accessToken = jwtProvider.generate(member.getId().toString(), new Date((new Date()).getTime() + 1000 * 60 * 60 * 24));
+
+        return MemberLoginResponse.of(member, accessToken);
     }
 
     @Transactional
@@ -71,20 +69,6 @@ public class MemberService {
         member.setAvatarUrl(imageUrl);
 
         return UploadImageResponse.builder().url(imageUrl).build();
-    }
-
-    public Optional<Member> getLoggedInMember() {
-        String token = jwtProvider.resolveToken(httpServletRequest);
-
-        if (token == null || !jwtProvider.validationToken(token)) {
-            return Optional.empty();
-        }
-
-
-        Authentication authentication = jwtProvider.getAuthentication(token);
-        String email = authentication.getName();
-
-        return memberRepository.findByEmail(email);
     }
 
     @Transactional
