@@ -20,8 +20,16 @@ public class AuthService {
     private final JwtProvider jwtProvider;
 
     public Optional<Member> getLoggedInMember() {
-        String accessToken = httpServletRequest.getHeader("Authorization");
+        String auth = httpServletRequest.getHeader("Authorization");
+
+        if (!auth.startsWith("Bearer")) {
+            throw new UnAuthenticatedException();
+        }
+
+        String accessToken = auth.split(" ")[1].trim();
+
         boolean result = jwtProvider.validationToken(accessToken);
+
         if (!result) {
             throw new UnAuthenticatedException();
         }
