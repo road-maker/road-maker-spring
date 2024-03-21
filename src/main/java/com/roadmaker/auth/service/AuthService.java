@@ -3,7 +3,6 @@ package com.roadmaker.auth.service;
 import com.roadmaker.member.authentication.JwtProvider;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.entity.MemberRepository;
-import com.roadmaker.member.exception.UnAuthenticatedException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,8 +21,8 @@ public class AuthService {
     public Optional<Member> getLoggedInMember() {
         String auth = httpServletRequest.getHeader("Authorization");
 
-        if (!auth.startsWith("Bearer")) {
-            throw new UnAuthenticatedException();
+        if (auth == null || !auth.startsWith("Bearer")) {
+            return Optional.empty();
         }
 
         String accessToken = auth.split(" ")[1].trim();
@@ -31,7 +30,7 @@ public class AuthService {
         boolean result = jwtProvider.validationToken(accessToken);
 
         if (!result) {
-            throw new UnAuthenticatedException();
+            return Optional.empty();
         }
 
         String memberId = jwtProvider.extractSubject(accessToken);
