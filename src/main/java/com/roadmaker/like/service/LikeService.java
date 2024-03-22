@@ -1,11 +1,13 @@
 package com.roadmaker.like.service;
 
+import com.roadmaker.like.dto.LikeRoadmapResponse;
 import com.roadmaker.like.entity.Like;
 import com.roadmaker.like.entity.LikeRepository;
 import com.roadmaker.member.entity.Member;
 import com.roadmaker.member.entity.MemberRepository;
 import com.roadmaker.roadmap.entity.roadmap.Roadmap;
 import com.roadmaker.roadmap.entity.roadmap.RoadmapRepository;
+import com.roadmaker.roadmap.exception.RoadmapNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,20 +24,24 @@ public class LikeService {
         return likeRepository.existsByRoadmapIdAndMemberId(roadmapId, memberId);
     }
 
-    @Transactional
-    public void likeRoadmap(Long roadmapId, Long memberId) {
-        Roadmap roadmap = roadmapRepository.findById(roadmapId).orElseThrow();
-        Member member = memberRepository.findById(memberId).orElseThrow();
-        Like like = new Like(roadmap, member);
-        likeRepository.save(like);
-    }
-
-    @Transactional
-    public void unlikeRoadmap(Long roadmapId, Long memberId) {
-        likeRepository.deleteByRoadmapIdAndMemberId(roadmapId, memberId);
-    }
-
     public int getLikeCount(Long roadmapId) {
         return likeRepository.countByRoadmapId(roadmapId);
+    }
+
+    @Transactional
+    public LikeRoadmapResponse toggleLikeRoadmap(Long roadmapId, Member member) {
+
+        if (isLiked(roadmapId, member.getId())) {
+            likeRepository.deleteByRoadmapIdAndMemberId(roadmapId, member.getId());
+            return LikeRoadmapResponse.from(false, getLikeCount(roadmapId));
+        }
+
+        Roadmap roadmap = roadmapRepository.findById(roadmapId)
+                .orElseThrow(RoadmapNotFoundException::new);
+
+        Like like = new Like(roadmap, member);
+        likeRepository.save(like);
+
+        return LikeRoadmapResponse.from(true, getLikeCount(roadmapId));
     }
 }
