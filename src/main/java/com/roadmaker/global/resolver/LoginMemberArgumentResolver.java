@@ -1,9 +1,9 @@
 package com.roadmaker.global.resolver;
 
-import com.roadmaker.auth.service.AuthService;
+import com.roadmaker.v1.auth.service.AuthService;
 import com.roadmaker.global.annotation.LoginMember;
-import com.roadmaker.member.entity.Member;
-import com.roadmaker.member.exception.UnAuthenticatedException;
+import com.roadmaker.v1.member.entity.Member;
+import com.roadmaker.v1.member.exception.UnAuthenticatedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;

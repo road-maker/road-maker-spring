@@ -5,7 +5,6 @@ import com.roadmaker.global.error.exception.InternalServerError;
 import com.roadmaker.global.error.exception.InvalidRequestBodyException;
 import com.roadmaker.global.error.exception.MethodNotAllowedException;
 import com.roadmaker.global.error.exception.NotFoundException;
-import com.roadmaker.member.exception.UnAuthenticatedException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

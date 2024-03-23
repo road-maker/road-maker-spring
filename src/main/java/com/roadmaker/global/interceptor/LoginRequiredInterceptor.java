@@ -1,9 +1,9 @@
 package com.roadmaker.global.interceptor;
 
-import com.roadmaker.auth.service.AuthService;
+import com.roadmaker.v1.auth.service.AuthService;
 import com.roadmaker.global.annotation.LoginRequired;
-import com.roadmaker.member.entity.Member;
-import com.roadmaker.member.exception.UnAuthenticatedException;
+import com.roadmaker.v1.member.entity.Member;
+import com.roadmaker.v1.member.exception.UnAuthenticatedException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
