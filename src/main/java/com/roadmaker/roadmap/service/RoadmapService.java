@@ -20,6 +20,7 @@ import com.roadmaker.roadmap.entity.roadmapnode.RoadmapNodeRepository;
 import com.roadmaker.roadmap.entity.roadmapviewport.RoadmapViewport;
 import com.roadmaker.roadmap.entity.roadmapviewport.RoadmapViewportRepository;
 import com.roadmaker.roadmap.exception.RoadmapAlreadyJoinedException;
+import com.roadmaker.roadmap.exception.RoadmapForbiddenAccessException;
 import com.roadmaker.roadmap.exception.RoadmapNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -30,9 +31,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -92,11 +91,19 @@ public class RoadmapService {
     }
 
     @Transactional
-    public UploadImageResponse uploadThumbnail(Roadmap roadmap, MultipartFile image) throws IOException {
-        String imageUrl = imageService.uploadImage(image);
-        roadmap.setThumbnailUrl(imageUrl);
+    public UploadImageResponse uploadThumbnail(Long roadmapId, Long memberId, String thumbnailUrl) {
+        Roadmap roadmap = roadmapRepository.findById(roadmapId)
+                .orElseThrow(RoadmapNotFoundException::new);
 
-        return UploadImageResponse.builder().url(imageUrl).build();
+        if (!roadmap.isOwner(memberId)) {
+            throw new RoadmapForbiddenAccessException("자신이 생성한 로드에만 썸네일을 등록할 수 있습니다.");
+        }
+
+        roadmap.updateThumbnail(thumbnailUrl);
+
+        return UploadImageResponse.builder()
+                .url(thumbnailUrl)
+                .build();
     }
 
     public RoadmapFindResponse findByPage(Integer page, Integer size, String flag) {

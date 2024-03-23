@@ -52,6 +52,14 @@ public class Roadmap extends BaseTimeEntity {
     @Setter
     private RoadmapViewport roadmapViewport;
 
+    @Builder
+    public Roadmap(String title, String description, String thumbnailUrl, Member member) {
+        this.title = title;
+        this.description = description;
+        this.thumbnailUrl = thumbnailUrl;
+        this.member = member;
+    }
+
     public int getLikeCount() {
         return likes.size();
     }
@@ -60,11 +68,11 @@ public class Roadmap extends BaseTimeEntity {
         return inProgressRoadmaps.size();
     }
 
-    @Builder
-    public Roadmap(String title, String description, String thumbnailUrl, Member member) {
-        this.title = title;
-        this.description = description;
+    public void updateThumbnail(String thumbnailUrl) {
         this.thumbnailUrl = thumbnailUrl;
-        this.member = member;
+    }
+
+    public boolean isOwner(Long memberId) {
+        return this.member.getId().equals(memberId);
     }
 }
