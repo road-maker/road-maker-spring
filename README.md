@@ -11,7 +11,6 @@
 2. [서비스 소개](#intro)
 3. [기술적 issue 해결 과정](#issue)
 4. [프로젝트 아키텍처](#frontend)
-5. [프로젝트 포스터](#poster)
 5. [커밋 컨벤션](#commit-convention)
 
 
