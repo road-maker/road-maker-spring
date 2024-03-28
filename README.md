@@ -1,6 +1,6 @@
 # RoadMaker
 
-로드메이커는 누구나 학습 로드맵을 만들고, 공유할 수 있는 플랫폼 입니다.
+로드메이커는 누구나 학습 로드맵을 만들고, 공유할 수 있는 플랫폼 입니다. 현재 전체 리팩토링 과정중에 있습니다.
 
 ![image](https://github.com/road-maker/road-maker-spring/assets/60874549/9bcc467d-9963-48c1-9e61-afb6722c7bff)
 
