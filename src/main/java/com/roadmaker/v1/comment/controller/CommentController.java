@@ -27,6 +27,6 @@ public class CommentController {
             @Valid @RequestBody CommentCreateRequest commentCreateRequest
     ) {
         commentService.createComment(commentCreateRequest, member);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }
