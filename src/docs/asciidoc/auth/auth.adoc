@@ -29,3 +29,24 @@ include::{snippets}/auth-signup-duplicated-nickname/request-fields.adoc[]
 include::{snippets}/auth-signup-duplicated-nickname/http-response.adoc[]
 include::{snippets}/auth-signup-duplicated-nickname/response-fields.adoc[]
 
+=== 로그인
+
+==== HTTP Request
+include::{snippets}/auth-login/http-request.adoc[]
+include::{snippets}/auth-login/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/auth-login/http-response.adoc[]
+include::{snippets}/auth-login/response-fields.adoc[]
+
+=== 로그인 실패
+
+==== HTTP Request
+include::{snippets}/auth-login-fail/http-request.adoc[]
+include::{snippets}/auth-login-fail/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/auth-login-fail/http-response.adoc[]
+include::{snippets}/auth-login-fail/response-fields.adoc[]
+
+

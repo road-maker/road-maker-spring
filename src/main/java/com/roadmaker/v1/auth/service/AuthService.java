@@ -1,6 +1,8 @@
 package com.roadmaker.v1.auth.service;
 
+import com.roadmaker.v1.auth.dto.request.AuthLoginRequest;
 import com.roadmaker.v1.auth.dto.request.AuthSignupRequest;
+import com.roadmaker.v1.auth.dto.response.AuthLoginResponse;
 import com.roadmaker.v1.auth.dto.response.AuthSignupResponse;
 import com.roadmaker.v1.member.authentication.JwtProvider;
 import com.roadmaker.v1.member.entity.Member;
@@ -22,6 +24,10 @@ public class AuthService {
 
     public AuthSignupResponse signup(AuthSignupRequest request) {
         return new AuthSignupResponse(1L, "accesstoken");
+    }
+
+    public AuthLoginResponse login(AuthLoginRequest request) {
+        return new AuthLoginResponse(1L, "accesstokekn");
     }
 
     public Optional<Member> getLoggedInMember() {
