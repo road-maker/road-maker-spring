@@ -1,0 +1,31 @@
+[[auth-signup]]
+=== 회원 가입
+
+==== HTTP Request
+include::{snippets}/auth-signup/http-request.adoc[]
+include::{snippets}/auth-signup/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/auth-signup/http-response.adoc[]
+include::{snippets}/auth-signup/response-fields.adoc[]
+
+=== 중복된 이메일로 회원 가입 실패
+
+==== HTTP Request
+include::{snippets}/auth-signup-duplicated-email/http-request.adoc[]
+include::{snippets}/auth-signup-duplicated-email/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/auth-signup-duplicated-email/http-response.adoc[]
+include::{snippets}/auth-signup-duplicated-email/response-fields.adoc[]
+
+=== 중복된 닉네임으로 회원 가입 실패
+
+==== HTTP Request
+include::{snippets}/auth-signup-duplicated-nickname/http-request.adoc[]
+include::{snippets}/auth-signup-duplicated-nickname/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/auth-signup-duplicated-nickname/http-response.adoc[]
+include::{snippets}/auth-signup-duplicated-nickname/response-fields.adoc[]
+

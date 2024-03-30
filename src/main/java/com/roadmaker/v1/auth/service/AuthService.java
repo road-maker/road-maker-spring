@@ -1,5 +1,7 @@
 package com.roadmaker.v1.auth.service;
 
+import com.roadmaker.v1.auth.dto.request.AuthSignupRequest;
+import com.roadmaker.v1.auth.dto.response.AuthSignupResponse;
 import com.roadmaker.v1.member.authentication.JwtProvider;
 import com.roadmaker.v1.member.entity.Member;
 import com.roadmaker.v1.member.entity.MemberRepository;
@@ -17,6 +19,10 @@ public class AuthService {
     private final MemberRepository memberRepository;
     private final HttpServletRequest httpServletRequest;
     private final JwtProvider jwtProvider;
+
+    public AuthSignupResponse signup(AuthSignupRequest request) {
+        return new AuthSignupResponse(1L, "accesstoken");
+    }
 
     public Optional<Member> getLoggedInMember() {
         String auth = httpServletRequest.getHeader("Authorization");
