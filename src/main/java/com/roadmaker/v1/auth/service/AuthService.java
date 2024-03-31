@@ -7,11 +7,15 @@ import com.roadmaker.v1.auth.dto.response.AuthSignupResponse;
 import com.roadmaker.v1.member.authentication.JwtProvider;
 import com.roadmaker.v1.member.entity.Member;
 import com.roadmaker.v1.member.entity.MemberRepository;
+import com.roadmaker.v1.member.exception.EmailAlreadyRegisteredException;
+import com.roadmaker.v1.member.exception.NicknameAlreadyRegisteredException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.Optional;
 
 @Transactional(readOnly = true)
@@ -21,11 +25,28 @@ public class AuthService {
     private final MemberRepository memberRepository;
     private final HttpServletRequest httpServletRequest;
     private final JwtProvider jwtProvider;
+    private final PasswordEncoder passwordEncoder;
 
+    @Transactional
     public AuthSignupResponse signup(AuthSignupRequest request) {
-        return new AuthSignupResponse(1L, "accesstoken");
+        checkEmailDuplicate(request.email());
+        checkNicknameDuplicate(request.nickname());
+
+        Member member = Member.builder()
+                .email(request.email())
+                .password(passwordEncoder.encode(request.password()))
+                .nickname(request.nickname())
+                .build();
+
+        Member savedMember = memberRepository.save(member);
+
+        String accessToken = generateAccessToken(savedMember);
+
+        return AuthSignupResponse.of(savedMember.getId(), accessToken);
     }
 
+
+    @Transactional
     public AuthLoginResponse login(AuthLoginRequest request) {
         return new AuthLoginResponse(1L, "accesstokekn");
     }
@@ -48,5 +69,22 @@ public class AuthService {
         String memberId = jwtProvider.extractSubject(accessToken);
 
         return memberRepository.findById(Long.parseLong(memberId));
+    }
+
+    private void checkEmailDuplicate(String email) {
+        if (memberRepository.existsByEmail(email)) {
+            throw new EmailAlreadyRegisteredException();
+        }
+    }
+
+    private void checkNicknameDuplicate(String nickname) {
+        if (memberRepository.existsByNickname(nickname)) {
+            throw new NicknameAlreadyRegisteredException();
+        }
+    }
+
+    private String generateAccessToken(Member member) {
+        Date oneDayAfter = new Date((new Date()).getTime() + 1000 * 60 * 60 * 24);
+        return jwtProvider.generate(member.getId().toString(), oneDayAfter);
     }
 }
