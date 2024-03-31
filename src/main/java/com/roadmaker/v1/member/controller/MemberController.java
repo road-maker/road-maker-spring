@@ -5,10 +5,7 @@ import com.roadmaker.v1.comment.service.CommentService;
 import com.roadmaker.global.annotation.LoginMember;
 import com.roadmaker.global.annotation.LoginRequired;
 import com.roadmaker.v1.image.dto.UploadImageResponse;
-import com.roadmaker.v1.member.dto.request.MemberLoginRequest;
-import com.roadmaker.v1.member.dto.request.MemberSignupRequest;
 import com.roadmaker.v1.member.dto.request.MemberUpdateRequest;
-import com.roadmaker.v1.member.dto.response.MemberLoginResponse;
 import com.roadmaker.v1.member.dto.response.MemberResponse;
 import com.roadmaker.v1.member.entity.Member;
 import com.roadmaker.v1.member.service.MemberService;
@@ -33,18 +30,6 @@ public class MemberController {
     private final MemberService memberService;
     private final RoadmapService roadmapService;
     private final CommentService commentService;
-
-    @PostMapping("/signup")
-    public ResponseEntity<String> signup(@Valid @RequestBody MemberSignupRequest request) {
-        memberService.signUp(request);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
-    @PostMapping("/signin")
-    public ResponseEntity<MemberLoginResponse> login(@Valid @RequestBody MemberLoginRequest request) {
-        MemberLoginResponse response = memberService.login(request.getEmail(), request.getPassword());
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
 
     @LoginRequired
     @PostMapping("/me/avatar")

@@ -1,28 +1,20 @@
 package com.roadmaker.v1.member.service;
 
-import com.roadmaker.v1.member.authentication.JwtProvider;
 import com.roadmaker.v1.image.dto.UploadImageResponse;
 import com.roadmaker.v1.image.service.ImageService;
-import com.roadmaker.v1.member.dto.response.MemberLoginResponse;
 import com.roadmaker.v1.member.dto.response.MemberResponse;
 import com.roadmaker.v1.member.dto.request.MemberUpdateRequest;
-import com.roadmaker.v1.member.dto.request.MemberSignupRequest;
 import com.roadmaker.v1.member.entity.Member;
 import com.roadmaker.v1.member.entity.MemberRepository;
-import com.roadmaker.v1.member.exception.EmailAlreadyRegisteredException;
 import com.roadmaker.v1.member.exception.MemberNotFoundException;
 import com.roadmaker.v1.member.exception.NicknameAlreadyRegisteredException;
-import com.roadmaker.v1.member.exception.UnAuthenticatedException;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Date;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -30,38 +22,7 @@ import java.util.Date;
 @Service
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final JwtProvider jwtProvider;
-    private final PasswordEncoder passwordEncoder;
-    private final HttpServletRequest httpServletRequest;
     private final ImageService imageService;
-
-    @Transactional
-    public void signUp(MemberSignupRequest request) {
-        if (isDuplicatedEmail(request.getEmail())) {
-            throw new EmailAlreadyRegisteredException();
-        }
-        if (isDuplicatedNickname(request.getNickname())) {
-            throw new NicknameAlreadyRegisteredException();
-        }
-
-        Member member = request.toEntity(passwordEncoder);
-        memberRepository.save(member);
-    }
-
-    @Transactional
-    public MemberLoginResponse login(String email, String password) {
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(MemberNotFoundException::new);
-
-        boolean isMatched = passwordEncoder.matches(password, member.getPassword());
-        if (!isMatched) {
-            throw new UnAuthenticatedException();
-        }
-
-        String accessToken = jwtProvider.generate(member.getId().toString(), new Date((new Date()).getTime() + 1000 * 60 * 60 * 24));
-
-        return MemberLoginResponse.of(member, accessToken);
-    }
 
     @Transactional
     public UploadImageResponse uploadMemberAvatar(Member member, MultipartFile image) throws IOException {
@@ -89,11 +50,6 @@ public class MemberService {
         return MemberResponse.of(member);
     }
 
-    public MemberResponse findMemberByEmail(String email) {
-        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
-        return MemberResponse.of(member);
-    }
-
     public MemberResponse findMemberByNickname(String nickname) {
         Member member = memberRepository.findByNickname(nickname).orElseThrow(MemberNotFoundException::new);
         return MemberResponse.of(member);
@@ -102,10 +58,6 @@ public class MemberService {
     public MemberResponse findMemberByMemberId(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         return MemberResponse.of(member);
-    }
-
-    private boolean isDuplicatedEmail(String email) {
-        return memberRepository.findByEmail(email).isPresent();
     }
 
     private boolean isDuplicatedNickname(String nickname) {
