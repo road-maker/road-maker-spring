@@ -4,6 +4,7 @@ import com.roadmaker.v1.auth.dto.request.AuthLoginRequest;
 import com.roadmaker.v1.auth.dto.request.AuthSignupRequest;
 import com.roadmaker.v1.auth.dto.response.AuthLoginResponse;
 import com.roadmaker.v1.auth.dto.response.AuthSignupResponse;
+import com.roadmaker.v1.auth.exception.LoginFailedException;
 import com.roadmaker.v1.member.authentication.JwtProvider;
 import com.roadmaker.v1.member.entity.Member;
 import com.roadmaker.v1.member.entity.MemberRepository;
@@ -48,7 +49,14 @@ public class AuthService {
 
     @Transactional
     public AuthLoginResponse login(AuthLoginRequest request) {
-        return new AuthLoginResponse(1L, "accesstokekn");
+        Member member = memberRepository.findByEmail(request.email())
+                .orElseThrow(LoginFailedException::new);
+
+        checkPasswordMatch(request.password(), member.getPassword());
+
+        String accessToken = generateAccessToken(member);
+
+        return AuthLoginResponse.of(member.getId(), accessToken);
     }
 
     public Optional<Member> getLoggedInMember() {
@@ -86,5 +94,12 @@ public class AuthService {
     private String generateAccessToken(Member member) {
         Date oneDayAfter = new Date((new Date()).getTime() + 1000 * 60 * 60 * 24);
         return jwtProvider.generate(member.getId().toString(), oneDayAfter);
+    }
+
+    private void checkPasswordMatch(String rawPassword, String encodedPassword) {
+        boolean isMatched = passwordEncoder.matches(rawPassword, encodedPassword);
+        if(!isMatched) {
+            throw new LoginFailedException();
+        }
     }
 }

@@ -1,7 +1,10 @@
 package com.roadmaker.v1.auth.service;
 
+import com.roadmaker.v1.auth.dto.request.AuthLoginRequest;
 import com.roadmaker.v1.auth.dto.request.AuthSignupRequest;
+import com.roadmaker.v1.auth.dto.response.AuthLoginResponse;
 import com.roadmaker.v1.auth.dto.response.AuthSignupResponse;
+import com.roadmaker.v1.auth.exception.LoginFailedException;
 import com.roadmaker.v1.member.authentication.JwtProvider;
 import com.roadmaker.v1.member.entity.Member;
 import com.roadmaker.v1.member.entity.MemberRepository;
@@ -18,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Date;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -105,6 +109,75 @@ class AuthServiceTest {
         assertThatThrownBy(() -> authService.signup(request))
                 .isInstanceOf(NicknameAlreadyRegisteredException.class)
                 .hasMessage("이미 등록된 닉네임입니다.");
+    }
+
+    @DisplayName("로그인에 성공하면 엑세스 토큰을 반환한다.")
+    @Test
+    void login() {
+        // given
+        AuthLoginRequest request = AuthLoginRequest.builder()
+                .email("tester@roadmaker.site")
+                .password("road1234")
+                .build();
+
+        Member member = Member.builder()
+                .email(request.email())
+                .password("encodedPassword")
+                .build();
+
+        ReflectionTestUtils.setField(member, "id", 1L);
+
+        given(memberRepository.findByEmail(request.email())).willReturn(Optional.of(member));
+        given(passwordEncoder.matches(request.password(), "encodedPassword")).willReturn(true);
+        given(jwtProvider.generate(eq(member.getId().toString()), any(Date.class))).willReturn("accessToken");
+
+        // when
+        AuthLoginResponse response = authService.login(request);
+
+        //then
+        assertThat(response.accessToken()).isEqualTo("accessToken");
+    }
+
+    @DisplayName("등록되지 않은 이메일로 로그인 시, 로그인에 실패한다.")
+    @Test
+    void loginWithUnRegisteredEmail() {
+        // given
+        AuthLoginRequest request = AuthLoginRequest.builder()
+                .email("tester@roadmaker.site")
+                .password("road1234")
+                .build();
+
+        given(memberRepository.findByEmail(request.email())).willReturn(Optional.empty());
+
+        // when then
+        assertThatThrownBy(() -> authService.login(request))
+                .isInstanceOf(LoginFailedException.class)
+                .hasMessage("아이디가 존재하지 않거나 비밀번호가 일치하지 않습니다.");
+    }
+
+    @DisplayName("비밀번호가 일치하지 않을 시, 로그인에 실패한다.")
+    @Test
+    void loginWithNotMatchedPassword() {
+        // given
+        AuthLoginRequest request = AuthLoginRequest.builder()
+                .email("tester@roadmaker.site")
+                .password("road1234")
+                .build();
+
+        Member member = Member.builder()
+                .email(request.email())
+                .password("encodedPassword")
+                .build();
+
+        ReflectionTestUtils.setField(member, "id", 1L);
+
+        given(memberRepository.findByEmail(request.email())).willReturn(Optional.of(member));
+        given(passwordEncoder.matches(request.password(), "encodedPassword")).willReturn(false);
+
+        // when then
+        assertThatThrownBy(() -> authService.login(request))
+                .isInstanceOf(LoginFailedException.class)
+                .hasMessage("아이디가 존재하지 않거나 비밀번호가 일치하지 않습니다.");
     }
 
 }
