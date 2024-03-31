@@ -47,7 +47,6 @@ public class AuthService {
     }
 
 
-    @Transactional
     public AuthLoginResponse login(AuthLoginRequest request) {
         Member member = memberRepository.findByEmail(request.email())
                 .orElseThrow(LoginFailedException::new);
