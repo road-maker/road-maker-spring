@@ -44,7 +44,6 @@ public class MemberService {
         }
 
         member.setBio(request.getBio());
-        member.setBaekjoonId(request.getBaekjoonId());
         member.setBlogUrl(request.getBlogUrl());
 
         return MemberResponse.of(member);

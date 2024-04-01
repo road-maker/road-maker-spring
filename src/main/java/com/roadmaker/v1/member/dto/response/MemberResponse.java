@@ -13,10 +13,9 @@ public class MemberResponse {
     private final String avatarUrl;
     private final String githubUrl;
     private final String blogUrl;
-    private final String baekjoonId;
 
     @Builder
-    private MemberResponse(Long id, String email, String nickname, String bio, String avatarUrl, String githubUrl, String blogUrl, String baekjoonId) {
+    private MemberResponse(Long id, String email, String nickname, String bio, String avatarUrl, String githubUrl, String blogUrl) {
         this.id = id;
         this.email = email;
         this.nickname = nickname;
@@ -24,7 +23,6 @@ public class MemberResponse {
         this.avatarUrl = avatarUrl;
         this.githubUrl = githubUrl;
         this.blogUrl = blogUrl;
-        this.baekjoonId = baekjoonId;
     }
 
     public static MemberResponse of(Member member) {
@@ -36,7 +34,6 @@ public class MemberResponse {
                 .avatarUrl(member.getAvatarUrl())
                 .githubUrl(member.getGithubUrl())
                 .blogUrl(member.getBlogUrl())
-                .baekjoonId(member.getBaekjoonId())
                 .build();
     }
 }
