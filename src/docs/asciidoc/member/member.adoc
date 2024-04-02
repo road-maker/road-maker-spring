@@ -37,3 +37,26 @@ include::{snippets}/member-avatar-upload/request-parts.adoc[]
 include::{snippets}/member-avatar-upload/response-body.adoc[]
 include::{snippets}/member-avatar-upload/response-fields.adoc[]
 
+=== 회원 조회
+
+==== HTTP Request
+
+include::{snippets}/member-find-by-id/http-request.adoc[]
+include::{snippets}/member-find-by-id/path-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/member-find-by-id/response-body.adoc[]
+include::{snippets}/member-find-by-id/response-fields.adoc[]
+
+=== 회원 조회 실패
+
+==== HTTP Request
+
+include::{snippets}/member-find-by-id-not-found/http-request.adoc[]
+include::{snippets}/member-find-by-id-not-found/path-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/member-find-by-id-not-found/response-body.adoc[]
+include::{snippets}/member-find-by-id-not-found/response-fields.adoc[]

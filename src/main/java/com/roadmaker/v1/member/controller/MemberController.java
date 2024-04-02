@@ -6,7 +6,7 @@ import com.roadmaker.global.annotation.LoginMember;
 import com.roadmaker.global.annotation.LoginRequired;
 import com.roadmaker.v1.image.service.ImageService;
 import com.roadmaker.v1.member.dto.request.MemberUpdateRequest;
-import com.roadmaker.v1.member.dto.response.MemberResponse;
+import com.roadmaker.v1.member.dto.response.MemberFindResponse;
 import com.roadmaker.v1.member.entity.Member;
 import com.roadmaker.v1.member.service.MemberAvatarUpdateResponse;
 import com.roadmaker.v1.member.service.MemberService;
@@ -45,8 +45,8 @@ public class MemberController {
     }
 
     @GetMapping("/{memberId}")
-    public ResponseEntity<MemberResponse> findMember(@PathVariable Long memberId) {
-        MemberResponse memberResponse = memberService.findMemberByMemberId(memberId);
+    public ResponseEntity<MemberFindResponse> findMember(@PathVariable Long memberId) {
+        MemberFindResponse memberResponse = memberService.findMemberByMemberId(memberId);
         return new ResponseEntity<>(memberResponse, HttpStatus.OK);
     }
 

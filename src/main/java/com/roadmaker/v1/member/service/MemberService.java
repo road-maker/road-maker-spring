@@ -1,5 +1,6 @@
 package com.roadmaker.v1.member.service;
 
+import com.roadmaker.v1.member.dto.response.MemberFindResponse;
 import com.roadmaker.v1.member.dto.response.MemberResponse;
 import com.roadmaker.v1.member.dto.request.MemberUpdateRequest;
 import com.roadmaker.v1.member.entity.Member;
@@ -36,9 +37,9 @@ public class MemberService {
         return MemberResponse.of(member);
     }
 
-    public MemberResponse findMemberByMemberId(Long memberId) {
+    public MemberFindResponse findMemberByMemberId(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
-        return MemberResponse.of(member);
+        return MemberFindResponse.of(member);
     }
 
     private void validateNicknameUpdate(String oldNickname, String newNickname) {
