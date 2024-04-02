@@ -12,13 +12,16 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Builder @Getter @Setter
+@Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "MEMBER")
 public class Member extends BaseTimeEntity implements UserDetails {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true)
@@ -41,6 +44,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
     public String getPassword() {
         return password;
     }
+
     @Override
     public String getUsername() {
         return email;
@@ -97,5 +101,9 @@ public class Member extends BaseTimeEntity implements UserDetails {
         if (githubUrl != null) {
             this.githubUrl = githubUrl;
         }
+    }
+
+    public void updateAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 }
