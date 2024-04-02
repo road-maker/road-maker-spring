@@ -80,4 +80,22 @@ public class Member extends BaseTimeEntity implements UserDetails {
         this.password = password;
         this.nickname = nickname;
     }
+
+    public void updateProfile(String nickname, String bio, String blogUrl, String githubUrl) {
+        if (nickname != null) {
+            this.nickname = nickname;
+        }
+
+        if (bio != null) {
+            this.bio = bio;
+        }
+
+        if (blogUrl != null) {
+            this.blogUrl = blogUrl;
+        }
+
+        if (githubUrl != null) {
+            this.githubUrl = githubUrl;
+        }
+    }
 }
