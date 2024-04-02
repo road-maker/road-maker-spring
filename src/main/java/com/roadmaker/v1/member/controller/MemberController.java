@@ -33,28 +33,10 @@ public class MemberController {
     private final CommentService commentService;
     private final ImageService imageService;
 
-    @LoginRequired
-    @PostMapping("/profile/avatar")
-    public ResponseEntity<MemberAvatarUpdateResponse> uploadMemberAvatar(
-            @RequestPart(value = "file") MultipartFile image,
-            @LoginMember Member member
-    ) throws IOException {
-        String avatarUrl = imageService.uploadImage(image);
-        MemberAvatarUpdateResponse response = memberService.updateAvatarUrl(member, avatarUrl);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
-    }
-
     @GetMapping("/{memberId}")
     public ResponseEntity<MemberFindResponse> findMember(@PathVariable Long memberId) {
         MemberFindResponse memberResponse = memberService.findMemberByMemberId(memberId);
         return new ResponseEntity<>(memberResponse, HttpStatus.OK);
-    }
-
-    @GetMapping("/{memberId}/comments")
-    public ResponseEntity<CommentResponse> findMemberComments(@PathVariable Long memberId, @RequestParam(name = "page") Integer page) {
-        final int size = 8;
-        CommentResponse commentsInPage = commentService.findByMemberIdAndPageRequest(memberId, page, size);
-        return new ResponseEntity<>(commentsInPage, HttpStatus.OK);
     }
 
     @LoginRequired
@@ -66,6 +48,25 @@ public class MemberController {
         memberService.updateProfile(request, member);
         return ResponseEntity.ok().build();
     }
+
+    @LoginRequired
+    @PostMapping("/profile/avatar")
+    public ResponseEntity<MemberAvatarUpdateResponse> uploadMemberAvatar(
+            @RequestPart(value = "file") MultipartFile image,
+            @LoginMember Member member
+    ) throws IOException {
+        String avatarUrl = imageService.uploadImage(image);
+        MemberAvatarUpdateResponse response = memberService.updateAvatarUrl(member, avatarUrl);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{memberId}/comments")
+    public ResponseEntity<CommentResponse> findMemberComments(@PathVariable Long memberId, @RequestParam(name = "page") Integer page) {
+        final int size = 8;
+        CommentResponse commentsInPage = commentService.findByMemberIdAndPageRequest(memberId, page, size);
+        return new ResponseEntity<>(commentsInPage, HttpStatus.OK);
+    }
+
 
     @LoginRequired
     @GetMapping("/{nickname}/in-progress-roadmaps")
