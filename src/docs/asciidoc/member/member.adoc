@@ -1,0 +1,27 @@
+[[member-update-profile]]
+=== 회원 프로필 업데이트
+
+==== HTTP Request
+
+include::{snippets}/member-update-profile/request-body.adoc[]
+include::{snippets}/member-update-profile/request-fields.adoc[]
+
+==== HTTP Response
+
+```
+HTTP/1.1 200 OK
+```
+
+[[member-update-profile-duplicated-nickname]]
+=== 닉네임 중복으로 회원 업데이트 실패
+
+==== HTTP Request
+
+include::{snippets}/member-update-profile-duplicated-nickname/request-body.adoc[]
+include::{snippets}/member-update-profile-duplicated-nickname/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/member-update-profile-duplicated-nickname/response-body.adoc[]
+include::{snippets}/member-update-profile-duplicated-nickname/response-fields.adoc[]
+

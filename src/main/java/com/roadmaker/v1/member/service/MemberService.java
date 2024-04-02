@@ -33,20 +33,10 @@ public class MemberService {
     }
 
     @Transactional
-    public MemberResponse saveProfile(MemberUpdateRequest request, Member member) {
-        //1. 내가 입력한 닉네임이 이미 내 닉네임과 동일한 경우 충돌 피하기 위함
-        if (!request.getNickname().equals(member.getNickname())) {
-            //2. 다른 동일한 닉네임이 존재할 경우 409리턴하도록
-            if (isDuplicatedNickname(request.getNickname())) {
-                throw new NicknameAlreadyRegisteredException();
-            }
-            member.setNickname(request.getNickname());
-        }
+    public void updateProfile(MemberUpdateRequest request, Member member) {
+        validateNicknameUpdate(member.getNickname(), request.nickname());
 
-        member.setBio(request.getBio());
-        member.setBlogUrl(request.getBlogUrl());
-
-        return MemberResponse.of(member);
+        member.updateProfile(request.nickname(), request.bio(), request.blogUrl(), request.githubUrl());
     }
 
     public MemberResponse findMemberByNickname(String nickname) {
@@ -59,7 +49,15 @@ public class MemberService {
         return MemberResponse.of(member);
     }
 
-    private boolean isDuplicatedNickname(String nickname) {
-        return memberRepository.findByNickname(nickname).isPresent();
+    private void validateNicknameUpdate(String oldNickname, String newNickname) {
+        if (!oldNickname.equals(newNickname)) {
+            checkNicknameDuplicate(newNickname);
+        }
+    }
+
+    private void checkNicknameDuplicate(String nickname) {
+        if (memberRepository.existsByNickname(nickname)) {
+            throw new NicknameAlreadyRegisteredException();
+        }
     }
 }

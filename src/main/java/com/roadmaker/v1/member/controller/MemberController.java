@@ -38,7 +38,6 @@ public class MemberController {
         return new ResponseEntity<>(uploadImageResponse, HttpStatus.CREATED);
     }
 
-
     @GetMapping("/{memberId}")
     public ResponseEntity<MemberResponse> findMember(@PathVariable Long memberId) {
         MemberResponse memberResponse = memberService.findMemberByMemberId(memberId);
@@ -53,13 +52,13 @@ public class MemberController {
     }
 
     @LoginRequired
-    @PatchMapping("/save-profile")
-    public ResponseEntity<MemberResponse> changeProfile(
+    @PatchMapping("/profile")
+    public ResponseEntity<Object> updateProfile(
             @Valid @RequestBody MemberUpdateRequest request,
             @LoginMember Member member
     ) {
-        MemberResponse memberResponse = memberService.saveProfile(request, member);
-        return new ResponseEntity<>(memberResponse, HttpStatus.CREATED);
+        memberService.updateProfile(request, member);
+        return ResponseEntity.ok().build();
     }
 
     @LoginRequired
