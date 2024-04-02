@@ -8,13 +8,10 @@ endif::[]
 :toc: left
 :toclevels: 2
 :sectlinks:
+:sectnums:
 
-[[Auth-API]]
 == Auth API
-
 include::auth/auth.adoc[]
 
-[[Member-API]]
 == Member API
-
 include::member/member.adoc[]

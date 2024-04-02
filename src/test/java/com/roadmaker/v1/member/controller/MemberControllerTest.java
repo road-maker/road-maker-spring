@@ -169,9 +169,16 @@ class MemberControllerTest extends RestDocsSupport {
         given(imageService.uploadImage(any())).willReturn(avatarUrl);
         given(memberService.updateAvatarUrl(any(Member.class), anyString())).willReturn(response);
 
+        MockMultipartFile mockImage = new MockMultipartFile(
+                "file",
+                "avatar.jpg",
+                "image/jpeg",
+                "avatar".getBytes()
+        );
+
         // when
         ResultActions result = mockMvc.perform(multipart("/api/members/profile/avatar")
-                .file("file", "example".getBytes()));
+                .file(mockImage));
 
         //then
         result

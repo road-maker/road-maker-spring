@@ -1,62 +1,61 @@
-[[member-update-profile]]
-=== 회원 프로필 업데이트
+=== 회원 조회
 
-==== HTTP Request
+*요청 예시*
+include::{snippets}/member-find-by-id/http-request.adoc[]
 
-include::{snippets}/member-update-profile/request-body.adoc[]
+*패스 파라미터*
+include::{snippets}/member-find-by-id/path-parameters.adoc[]
+
+*응답 예시*
+include::{snippets}/member-find-by-id/response-body.adoc[]
+
+*응답 필드*
+include::{snippets}/member-find-by-id/response-fields.adoc[]
+
+==== 회원 조회 오류
+
+===== 존재하지 않는 회원
+
+*응답 예시*
+include::{snippets}/member-find-by-id-not-found/response-body.adoc[]
+
+*응답 필드*
+include::{snippets}/member-find-by-id-not-found/response-fields.adoc[]
+
+=== 회원 프로필 수정
+
+*요청 예시*
+include::{snippets}/member-update-profile/http-request.adoc[]
+
+*요청 필드*
 include::{snippets}/member-update-profile/request-fields.adoc[]
 
-==== HTTP Response
-
+*응답 예시*
 [source]
 ----
 HTTP/1.1 200 OK
 ----
 
-[[member-update-profile-duplicated-nickname]]
-=== 닉네임 중복으로 회원 업데이트 실패
+==== 회원 프로필 수정 오류
 
-==== HTTP Request
+===== 닉네임 중복으로 인한 수정 실패
 
-include::{snippets}/member-update-profile-duplicated-nickname/request-body.adoc[]
-include::{snippets}/member-update-profile-duplicated-nickname/request-fields.adoc[]
-
-==== HTTP Response
-
+*응답 예시*
 include::{snippets}/member-update-profile-duplicated-nickname/response-body.adoc[]
+
+*응답 필드*
 include::{snippets}/member-update-profile-duplicated-nickname/response-fields.adoc[]
 
 === 회원 프로필 이미지 등록
 
-==== HTTP Request
+*요청 예시*
+include::{snippets}/member-avatar-upload/http-request.adoc[]
 
+*요청 필드*
 include::{snippets}/member-avatar-upload/request-parts.adoc[]
 
-==== HTTP Response
-
+*응답 예시*
 include::{snippets}/member-avatar-upload/response-body.adoc[]
+
+*응답 필드*
 include::{snippets}/member-avatar-upload/response-fields.adoc[]
-
-=== 회원 조회
-
-==== HTTP Request
-
-include::{snippets}/member-find-by-id/http-request.adoc[]
-include::{snippets}/member-find-by-id/path-parameters.adoc[]
-
-==== HTTP Response
-
-include::{snippets}/member-find-by-id/response-body.adoc[]
-include::{snippets}/member-find-by-id/response-fields.adoc[]
-
-=== 회원 조회 실패
-
-==== HTTP Request
-
-include::{snippets}/member-find-by-id-not-found/http-request.adoc[]
-include::{snippets}/member-find-by-id-not-found/path-parameters.adoc[]
-
-==== HTTP Response
-
-include::{snippets}/member-find-by-id-not-found/response-body.adoc[]
-include::{snippets}/member-find-by-id-not-found/response-fields.adoc[]
