@@ -1,11 +1,13 @@
 package com.roadmaker.v1.member.dto.response;
 
 import com.roadmaker.v1.member.entity.Member;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.ToString;
 
 @Getter
 @ToString
-public class MemberResponse {
+public class MemberFindResponse {
     private final Long id;
     private final String email;
     private final String nickname;
@@ -15,7 +17,7 @@ public class MemberResponse {
     private final String blogUrl;
 
     @Builder
-    private MemberResponse(Long id, String email, String nickname, String bio, String avatarUrl, String githubUrl, String blogUrl) {
+    private MemberFindResponse(Long id, String email, String nickname, String bio, String avatarUrl, String githubUrl, String blogUrl) {
         this.id = id;
         this.email = email;
         this.nickname = nickname;
@@ -25,8 +27,8 @@ public class MemberResponse {
         this.blogUrl = blogUrl;
     }
 
-    public static MemberResponse of(Member member) {
-        return MemberResponse.builder()
+    public static MemberFindResponse of(Member member) {
+        return MemberFindResponse.builder()
                 .id(member.getId())
                 .email(member.getEmail())
                 .nickname(member.getNickname())

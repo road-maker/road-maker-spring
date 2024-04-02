@@ -1,52 +1,57 @@
-[[auth-signup]]
 === 회원 가입
 
-==== HTTP Request
+*요청 예시*
 include::{snippets}/auth-signup/http-request.adoc[]
+
+*요청 필드*
 include::{snippets}/auth-signup/request-fields.adoc[]
 
-==== HTTP Response
+*응답 예시*
 include::{snippets}/auth-signup/http-response.adoc[]
+
+*응답 필드*
 include::{snippets}/auth-signup/response-fields.adoc[]
 
-=== 중복된 이메일로 회원 가입 실패
+==== 회원 가입 오류
 
-==== HTTP Request
-include::{snippets}/auth-signup-duplicated-email/http-request.adoc[]
-include::{snippets}/auth-signup-duplicated-email/request-fields.adoc[]
+===== 이메일 중복으로 회원 가입 실패
 
-==== HTTP Response
+*응답 예시*
 include::{snippets}/auth-signup-duplicated-email/http-response.adoc[]
+
+*응답 필드*
 include::{snippets}/auth-signup-duplicated-email/response-fields.adoc[]
 
-=== 중복된 닉네임으로 회원 가입 실패
+===== 닉네임 중복으로 회원 가입 실패
 
-==== HTTP Request
-include::{snippets}/auth-signup-duplicated-nickname/http-request.adoc[]
-include::{snippets}/auth-signup-duplicated-nickname/request-fields.adoc[]
-
-==== HTTP Response
+*응답 예시*
 include::{snippets}/auth-signup-duplicated-nickname/http-response.adoc[]
+
+*응답 필드*
 include::{snippets}/auth-signup-duplicated-nickname/response-fields.adoc[]
 
 === 로그인
 
-==== HTTP Request
+*요청 예시*
 include::{snippets}/auth-login/http-request.adoc[]
+
+*요청 필드*
 include::{snippets}/auth-login/request-fields.adoc[]
 
-==== HTTP Response
+*응답 예시*
 include::{snippets}/auth-login/http-response.adoc[]
+
+*응답 필드*
 include::{snippets}/auth-login/response-fields.adoc[]
 
-=== 로그인 실패
+==== 로그인 오류
 
-==== HTTP Request
-include::{snippets}/auth-login-fail/http-request.adoc[]
-include::{snippets}/auth-login-fail/request-fields.adoc[]
+===== 로그인 실패
 
-==== HTTP Response
+*응답 예시*
 include::{snippets}/auth-login-fail/http-response.adoc[]
+
+*응답 필드*
 include::{snippets}/auth-login-fail/response-fields.adoc[]
 
 

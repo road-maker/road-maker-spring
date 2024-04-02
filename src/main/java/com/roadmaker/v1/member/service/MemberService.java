@@ -1,7 +1,6 @@
 package com.roadmaker.v1.member.service;
 
-import com.roadmaker.v1.image.dto.UploadImageResponse;
-import com.roadmaker.v1.image.service.ImageService;
+import com.roadmaker.v1.member.dto.response.MemberFindResponse;
 import com.roadmaker.v1.member.dto.response.MemberResponse;
 import com.roadmaker.v1.member.dto.request.MemberUpdateRequest;
 import com.roadmaker.v1.member.entity.Member;
@@ -12,9 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -22,32 +18,18 @@ import java.io.IOException;
 @Service
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final ImageService imageService;
 
     @Transactional
-    public UploadImageResponse uploadMemberAvatar(Member member, MultipartFile image) throws IOException {
-        String imageUrl = imageService.uploadImage(image);
-        member.setAvatarUrl(imageUrl);
-
-        return UploadImageResponse.builder().url(imageUrl).build();
+    public MemberAvatarUpdateResponse updateAvatarUrl(Member member, String avatarUrl) {
+        member.updateAvatarUrl(avatarUrl);
+        return MemberAvatarUpdateResponse.builder().avatarUrl(avatarUrl).build();
     }
 
     @Transactional
-    public MemberResponse saveProfile(MemberUpdateRequest request, Member member) {
-        //1. 내가 입력한 닉네임이 이미 내 닉네임과 동일한 경우 충돌 피하기 위함
-        if (!request.getNickname().equals(member.getNickname())) {
-            //2. 다른 동일한 닉네임이 존재할 경우 409리턴하도록
-            if (isDuplicatedNickname(request.getNickname())) {
-                throw new NicknameAlreadyRegisteredException();
-            }
-            member.setNickname(request.getNickname());
-        }
+    public void updateProfile(MemberUpdateRequest request, Member member) {
+        validateNicknameUpdate(member.getNickname(), request.nickname());
 
-        member.setBio(request.getBio());
-        member.setBaekjoonId(request.getBaekjoonId());
-        member.setBlogUrl(request.getBlogUrl());
-
-        return MemberResponse.of(member);
+        member.updateProfile(request.nickname(), request.bio(), request.blogUrl(), request.githubUrl());
     }
 
     public MemberResponse findMemberByNickname(String nickname) {
@@ -55,12 +37,20 @@ public class MemberService {
         return MemberResponse.of(member);
     }
 
-    public MemberResponse findMemberByMemberId(Long memberId) {
+    public MemberFindResponse findMemberByMemberId(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
-        return MemberResponse.of(member);
+        return MemberFindResponse.of(member);
     }
 
-    private boolean isDuplicatedNickname(String nickname) {
-        return memberRepository.findByNickname(nickname).isPresent();
+    private void validateNicknameUpdate(String oldNickname, String newNickname) {
+        if (!oldNickname.equals(newNickname)) {
+            checkNicknameDuplicate(newNickname);
+        }
+    }
+
+    private void checkNicknameDuplicate(String nickname) {
+        if (memberRepository.existsByNickname(nickname)) {
+            throw new NicknameAlreadyRegisteredException();
+        }
     }
 }

@@ -12,13 +12,16 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Builder @Getter @Setter
+@Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "MEMBER")
 public class Member extends BaseTimeEntity implements UserDetails {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true)
@@ -36,17 +39,12 @@ public class Member extends BaseTimeEntity implements UserDetails {
     private String githubUrl;
     @Column
     private String blogUrl;
-    @Column
-    private String baekjoonId;
-    @Column(nullable = false)
-    private int level;
-    @Column(nullable = false)
-    private int exp;
 
     @Override
     public String getPassword() {
         return password;
     }
+
     @Override
     public String getUsername() {
         return email;
@@ -85,7 +83,27 @@ public class Member extends BaseTimeEntity implements UserDetails {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
-        this.level = 1;
-        this.exp = 0;
+    }
+
+    public void updateProfile(String nickname, String bio, String blogUrl, String githubUrl) {
+        if (nickname != null) {
+            this.nickname = nickname;
+        }
+
+        if (bio != null) {
+            this.bio = bio;
+        }
+
+        if (blogUrl != null) {
+            this.blogUrl = blogUrl;
+        }
+
+        if (githubUrl != null) {
+            this.githubUrl = githubUrl;
+        }
+    }
+
+    public void updateAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 }

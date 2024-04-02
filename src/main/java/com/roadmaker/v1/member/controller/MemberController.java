@@ -4,10 +4,11 @@ import com.roadmaker.v1.comment.dto.response.CommentResponse;
 import com.roadmaker.v1.comment.service.CommentService;
 import com.roadmaker.global.annotation.LoginMember;
 import com.roadmaker.global.annotation.LoginRequired;
-import com.roadmaker.v1.image.dto.UploadImageResponse;
+import com.roadmaker.v1.image.service.ImageService;
 import com.roadmaker.v1.member.dto.request.MemberUpdateRequest;
-import com.roadmaker.v1.member.dto.response.MemberResponse;
+import com.roadmaker.v1.member.dto.response.MemberFindResponse;
 import com.roadmaker.v1.member.entity.Member;
+import com.roadmaker.v1.member.service.MemberAvatarUpdateResponse;
 import com.roadmaker.v1.member.service.MemberService;
 import com.roadmaker.v1.roadmap.dto.RoadmapDto;
 import com.roadmaker.v1.roadmap.service.RoadmapService;
@@ -30,19 +31,33 @@ public class MemberController {
     private final MemberService memberService;
     private final RoadmapService roadmapService;
     private final CommentService commentService;
-
-    @LoginRequired
-    @PostMapping("/me/avatar")
-    public ResponseEntity<UploadImageResponse> uploadMemberAvatar(@RequestPart(value = "file") MultipartFile multipartFile, @LoginMember Member member) throws IOException {
-        UploadImageResponse uploadImageResponse = memberService.uploadMemberAvatar(member, multipartFile);
-        return new ResponseEntity<>(uploadImageResponse, HttpStatus.CREATED);
-    }
-
+    private final ImageService imageService;
 
     @GetMapping("/{memberId}")
-    public ResponseEntity<MemberResponse> findMember(@PathVariable Long memberId) {
-        MemberResponse memberResponse = memberService.findMemberByMemberId(memberId);
+    public ResponseEntity<MemberFindResponse> findMember(@PathVariable Long memberId) {
+        MemberFindResponse memberResponse = memberService.findMemberByMemberId(memberId);
         return new ResponseEntity<>(memberResponse, HttpStatus.OK);
+    }
+
+    @LoginRequired
+    @PatchMapping("/profile")
+    public ResponseEntity<Object> updateProfile(
+            @Valid @RequestBody MemberUpdateRequest request,
+            @LoginMember Member member
+    ) {
+        memberService.updateProfile(request, member);
+        return ResponseEntity.ok().build();
+    }
+
+    @LoginRequired
+    @PostMapping("/profile/avatar")
+    public ResponseEntity<MemberAvatarUpdateResponse> uploadMemberAvatar(
+            @RequestPart(value = "file") MultipartFile image,
+            @LoginMember Member member
+    ) throws IOException {
+        String avatarUrl = imageService.uploadImage(image);
+        MemberAvatarUpdateResponse response = memberService.updateAvatarUrl(member, avatarUrl);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/{memberId}/comments")
@@ -52,15 +67,6 @@ public class MemberController {
         return new ResponseEntity<>(commentsInPage, HttpStatus.OK);
     }
 
-    @LoginRequired
-    @PatchMapping("/save-profile")
-    public ResponseEntity<MemberResponse> changeProfile(
-            @Valid @RequestBody MemberUpdateRequest request,
-            @LoginMember Member member
-    ) {
-        MemberResponse memberResponse = memberService.saveProfile(request, member);
-        return new ResponseEntity<>(memberResponse, HttpStatus.CREATED);
-    }
 
     @LoginRequired
     @GetMapping("/{nickname}/in-progress-roadmaps")
