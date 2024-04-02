@@ -7,11 +7,13 @@ import com.roadmaker.v1.auth.dto.response.AuthLoginResponse;
 import com.roadmaker.v1.auth.dto.response.AuthSignupResponse;
 import com.roadmaker.v1.auth.exception.LoginFailedException;
 import com.roadmaker.v1.auth.service.AuthService;
+import com.roadmaker.v1.member.controller.MemberController;
 import com.roadmaker.v1.member.exception.EmailAlreadyRegisteredException;
 import com.roadmaker.v1.member.exception.NicknameAlreadyRegisteredException;
 import com.roadmaker.v1.member.exception.UnAuthenticatedException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
@@ -25,6 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@WebMvcTest(AuthController.class)
 class AuthControllerTest extends RestDocsSupport {
 
     @MockBean
