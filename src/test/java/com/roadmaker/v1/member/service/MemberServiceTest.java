@@ -1,5 +1,6 @@
 package com.roadmaker.v1.member.service;
 
+import com.roadmaker.v1.image.dto.UploadImageResponse;
 import com.roadmaker.v1.image.service.ImageService;
 import com.roadmaker.v1.member.dto.request.MemberUpdateRequest;
 import com.roadmaker.v1.member.entity.Member;
@@ -80,6 +81,26 @@ class MemberServiceTest {
         assertThatThrownBy(() -> memberService.updateProfile(request, member))
                 .isInstanceOf(NicknameAlreadyRegisteredException.class)
                 .hasMessage("이미 등록된 닉네임입니다.");
+    }
+
+    @DisplayName("회원의 프로필 사진을 변경할 수 있다.")
+    @Test
+    void updateAvatarUrl() {
+        // given
+        Member member = Member.builder()
+                .email("tester@roadmaker.site")
+                .password("road1234")
+                .nickname("기존 닉네임")
+                .build();
+
+        String avatarUrl = "https://roadmaker-images.s3.amazonaws.com/1a9e014c-9870-4979-b20d-2187f3c73a63.webp";
+
+        // when
+        MemberAvatarUpdateResponse response = memberService.updateAvatarUrl(member, avatarUrl);
+
+        //then
+        assertThat(response.avatarUrl()).isEqualTo(avatarUrl);
+        assertThat(member.getAvatarUrl()).isEqualTo(avatarUrl);
     }
 
 }

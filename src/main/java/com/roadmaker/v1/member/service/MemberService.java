@@ -1,7 +1,5 @@
 package com.roadmaker.v1.member.service;
 
-import com.roadmaker.v1.image.dto.UploadImageResponse;
-import com.roadmaker.v1.image.service.ImageService;
 import com.roadmaker.v1.member.dto.response.MemberResponse;
 import com.roadmaker.v1.member.dto.request.MemberUpdateRequest;
 import com.roadmaker.v1.member.entity.Member;
@@ -12,9 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -22,14 +17,11 @@ import java.io.IOException;
 @Service
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final ImageService imageService;
 
     @Transactional
-    public UploadImageResponse uploadMemberAvatar(Member member, MultipartFile image) throws IOException {
-        String imageUrl = imageService.uploadImage(image);
-        member.setAvatarUrl(imageUrl);
-
-        return UploadImageResponse.builder().url(imageUrl).build();
+    public MemberAvatarUpdateResponse updateAvatarUrl(Member member, String avatarUrl) {
+        member.updateAvatarUrl(avatarUrl);
+        return MemberAvatarUpdateResponse.builder().avatarUrl(avatarUrl).build();
     }
 
     @Transactional
