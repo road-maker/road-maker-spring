@@ -4,6 +4,11 @@ on:
   push:
     branches:
       - 'main'
+  workflow_dispatch:
+    logLevel:
+      description: 'Log level'
+      required: false
+      default: 'warning'
 
 env:
   S3_BUCKET_NAME: roadmaker
