@@ -116,8 +116,8 @@ public class RoadmapController {
 
     @GetMapping("/{roadmapId}/comments")
     public List<RoadmapCommentPagingResponse> findRoadmapComments(
-            @PathVariable Long roadmapId,
-            @RequestParam("lastCommentId") Long lastCommentId,
+            @PathVariable(name = "roadmapId") Long roadmapId,
+            @RequestParam(name = "lastCommentId", defaultValue = "0") Long lastCommentId,
             @RequestParam(name = "size", defaultValue = "20") Integer size) {
         return roadmapService.findRoadmapComments(roadmapId, lastCommentId, size);
     }

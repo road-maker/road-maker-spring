@@ -1,5 +1,6 @@
 package com.roadmaker.v1.roadmap.service;
 
+import com.roadmaker.v1.comment.entity.Comment;
 import com.roadmaker.v1.comment.entity.CommentRepository;
 import com.roadmaker.global.error.exception.NotFoundException;
 import com.roadmaker.v1.image.dto.UploadImageResponse;
@@ -29,6 +30,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -230,7 +232,8 @@ public class RoadmapService {
     }
 
     public List<RoadmapCommentPagingResponse> findRoadmapComments(Long roadmapId, Long lastCommentId, Integer size) {
-        // 간단하게 repository pattern 사용해서 처리해버릴까
-        return null;
+        Pageable pageable = PageRequest.of(0, size);
+        Page<Comment> comments = commentRepository.findByIdGreaterThanAndRoadmapId(lastCommentId, roadmapId, pageable);
+        return comments.stream().map(RoadmapCommentPagingResponse::of).toList();
     }
 }
