@@ -4,8 +4,10 @@ import com.roadmaker.v1.comment.entity.Comment;
 import com.roadmaker.v1.member.entity.Member;
 import lombok.Builder;
 
+import java.time.LocalDateTime;
+
 @Builder
-public record RoadmapCommentPagingResponse(Long id, String content, Commenter member) {
+public record RoadmapCommentPagingResponse(Long id, String content, String createdAt, Commenter member) {
 
     @Builder
     private record Commenter(Long id, String nickname, String avatarUrl) {
@@ -22,6 +24,7 @@ public record RoadmapCommentPagingResponse(Long id, String content, Commenter me
         return RoadmapCommentPagingResponse.builder()
                 .id(comment.getId())
                 .content(comment.getContent())
+                .createdAt(comment.getCreatedAt().toString())
                 .member(Commenter.of(comment.getMember()))
                 .build();
     }
