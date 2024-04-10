@@ -1,5 +1,6 @@
 package com.roadmaker.v1.roadmap.service;
 
+import com.roadmaker.v1.comment.entity.Comment;
 import com.roadmaker.v1.comment.entity.CommentRepository;
 import com.roadmaker.global.error.exception.NotFoundException;
 import com.roadmaker.v1.image.dto.UploadImageResponse;
@@ -9,6 +10,7 @@ import com.roadmaker.v1.inprogressroadmap.entity.InProgressRoadmapRepository;
 import com.roadmaker.v1.member.entity.Member;
 import com.roadmaker.v1.member.entity.MemberRepository;
 import com.roadmaker.v1.roadmap.dto.*;
+import com.roadmaker.v1.roadmap.dto.response.RoadmapCommentPagingResponse;
 import com.roadmaker.v1.roadmap.entity.inprogressnode.InProgressNode;
 import com.roadmaker.v1.roadmap.entity.inprogressnode.InProgressNodeRepository;
 import com.roadmaker.v1.roadmap.entity.roadmap.Roadmap;
@@ -28,6 +30,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -226,5 +229,11 @@ public class RoadmapService {
     public RoadmapFindResponse findRoadmapByKeyword(String keyword, Integer size, Integer page) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, SORT_PROPERTIES));
         return roadmapRepository.findBySearchOption(pageRequest, keyword);
+    }
+
+    public List<RoadmapCommentPagingResponse> findRoadmapComments(Long roadmapId, Long lastCommentId, Integer size) {
+        Pageable pageable = PageRequest.of(0, size);
+        Page<Comment> comments = commentRepository.findByIdGreaterThanAndRoadmapId(lastCommentId, roadmapId, pageable);
+        return comments.stream().map(RoadmapCommentPagingResponse::of).toList();
     }
 }

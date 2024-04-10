@@ -15,3 +15,6 @@ include::auth/auth.adoc[]
 
 == Member API
 include::member/member.adoc[]
+
+== Comment API
+include::comment/comment.adoc[]
