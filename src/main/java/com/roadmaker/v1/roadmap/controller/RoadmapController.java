@@ -12,6 +12,7 @@ import com.roadmaker.v1.inprogressroadmap.entity.InProgressRoadmapRepository;
 import com.roadmaker.v1.like.service.LikeService;
 import com.roadmaker.v1.member.entity.Member;
 import com.roadmaker.v1.roadmap.dto.*;
+import com.roadmaker.v1.roadmap.dto.response.RoadmapCommentPagingResponse;
 import com.roadmaker.v1.roadmap.entity.inprogressnode.InProgressNode;
 import com.roadmaker.v1.roadmap.entity.inprogressnode.InProgressNodeRepository;
 import com.roadmaker.v1.roadmap.entity.roadmap.Roadmap;
@@ -111,6 +112,14 @@ public class RoadmapController {
         RoadmapResponse roadmapResponse = RoadmapResponse.of(roadmap, false);
 
         return new ResponseEntity<>(roadmapResponse, HttpStatus.OK);
+    }
+
+    @GetMapping("/{roadmapId}/comments")
+    public List<RoadmapCommentPagingResponse> findRoadmapComments(
+            @PathVariable Long roadmapId,
+            @RequestParam("lastCommentId") Long lastCommentId,
+            @RequestParam(name = "size", defaultValue = "20") Integer size) {
+        return roadmapService.findRoadmapComments(roadmapId, lastCommentId, size);
     }
 
     @GetMapping(path = "/load-roadmap/{roadmapId}/comments")

@@ -1,0 +1,16 @@
+=== 로드맵 댓글 조회
+
+*요청 예시*
+include::{snippets}/find-roadmap-comments/http-request.adoc[]
+
+*패스 파라미터*
+include::{snippets}/find-roadmap-comments/path-parameters.adoc[]
+
+*쿼리 스트링*
+include::{snippets}/find-roadmap-comments/query-parameters.adoc[]
+
+*응답 예시*
+include::{snippets}/find-roadmap-comments/http-response.adoc[]
+
+*응답 필드*
+include::{snippets}/find-roadmap-comments/response-fields.adoc[]

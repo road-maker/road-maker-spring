@@ -9,6 +9,7 @@ import com.roadmaker.v1.inprogressroadmap.entity.InProgressRoadmapRepository;
 import com.roadmaker.v1.member.entity.Member;
 import com.roadmaker.v1.member.entity.MemberRepository;
 import com.roadmaker.v1.roadmap.dto.*;
+import com.roadmaker.v1.roadmap.dto.response.RoadmapCommentPagingResponse;
 import com.roadmaker.v1.roadmap.entity.inprogressnode.InProgressNode;
 import com.roadmaker.v1.roadmap.entity.inprogressnode.InProgressNodeRepository;
 import com.roadmaker.v1.roadmap.entity.roadmap.Roadmap;
@@ -226,5 +227,10 @@ public class RoadmapService {
     public RoadmapFindResponse findRoadmapByKeyword(String keyword, Integer size, Integer page) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, SORT_PROPERTIES));
         return roadmapRepository.findBySearchOption(pageRequest, keyword);
+    }
+
+    public List<RoadmapCommentPagingResponse> findRoadmapComments(Long roadmapId, Long lastCommentId, Integer size) {
+        // 간단하게 repository pattern 사용해서 처리해버릴까
+        return null;
     }
 }
