@@ -20,7 +20,10 @@ import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.ResultActions;
+import software.amazon.awssdk.services.s3.endpoints.internal.Ref;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
@@ -99,6 +102,7 @@ class RoadmapControllerTest extends RestDocsSupport {
 
         ReflectionTestUtils.setField(member, "id", 1L);
         ReflectionTestUtils.setField(comment, "id", 1L);
+        ReflectionTestUtils.setField(comment, "createdAt", LocalDateTime.of(2024, 4, 10, 17, 20, 30));
 
         RoadmapCommentPagingResponse response = RoadmapCommentPagingResponse.of(comment);
 
@@ -127,6 +131,8 @@ class RoadmapControllerTest extends RestDocsSupport {
                                         .description("댓글 ID"),
                                 fieldWithPath("[].content").type(JsonFieldType.STRING)
                                         .description("댓글 내용"),
+                                fieldWithPath("[].createdAt").type(JsonFieldType.STRING)
+                                        .description("댓글 작성 시간"),
                                 fieldWithPath("[].member.id").type(JsonFieldType.NUMBER)
                                         .description("작성자 ID"),
                                 fieldWithPath("[].member.nickname").type(JsonFieldType.STRING)
