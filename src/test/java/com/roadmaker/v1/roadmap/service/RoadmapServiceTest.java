@@ -23,7 +23,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.util.ReflectionTestUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -81,6 +83,7 @@ class RoadmapServiceTest {
                 .member(member)
                 .content("좋은 로드맵, 감사합니다!")
                 .build();
+        ReflectionTestUtils.setField(comment, "createdAt", LocalDateTime.of(2024, 4, 10, 17, 20, 30));
 
         List<Comment> mockComments = List.of(comment);
         Page<Comment> mockPage = new PageImpl<>(mockComments);
